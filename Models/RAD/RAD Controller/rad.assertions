@@ -1,0 +1,299 @@
+// === Emergency Stop Control ===
+// assertion R1: SDressingControl::GarmentAcquisition is reachable in CDressingControl
+// assertion R2: SDressingControl is deadlock-free
+// assertion R3: SDressingControl is deterministic
+// assertion R4: SDressingControl::GarmentAcquistion is deterministic
+// false
+assertion ES1: SEmergencyStopControl is deadlock-free
+// false
+assertion ES2: SEmergencyStopControl is divergence-free
+// false
+assertion ES3: SEmergencyStopControl is deterministic
+// true
+csp SpecES4 associated to SEmergencyStopControl csp-begin
+    channel done4
+    DONE4 = done4 -> DONE4
+    SpecES4 = SEmergencyStopControl::O__(0) [ SEmergencyStopControl::emergencyStop.in <-> SEmergencyStopControl::emergencyStop.out ] SEmergencyStopControl::emergencyStop.out -> DONE4
+csp-end
+assertion ES4: SpecES4 is deadlock-free
+csp SpecES5 associated to SEmergencyStopControl csp-begin
+    EVENSTOPS = SEmergencyStopControl::emergencyStop.out -> ODDSTOPS
+    ODDSTOPS = SEmergencyStopControl::resumeDressing.out -> EVENSTOPS
+    EVENESTOPS = SEmergencyStopControl::environmentalStop.out -> ODDESTOPS
+    ODDESTOPS = SEmergencyStopControl::environmentalResume.out -> EVENESTOPS
+    SpecES5 = EVENESTOPS [SEmergencyStopControl::environmentalStop.out <-> SEmergencyStopControl::environmentalStop.in,
+    	                  SEmergencyStopControl::environmentalResume.out <-> SEmergencyStopControl::environmentalResume.in] (
+    	                  	EVENSTOPS
+    	                  	[ SEmergencyStopControl::emergencyStop.out <-> SEmergencyStopControl::emergencyStop.in,
+    	                  	  SEmergencyStopControl::resumeDressing.out <-> SEmergencyStopControl::resumeDressing.in ]
+    	                  	SEmergencyStopControl::O__(0)
+    	                  )
+csp-end
+// fails
+assertion ES5: SpecES5 is deadlock-free
+csp SpecAlwaysAllowMovement associated to SEmergencyStopControl csp-begin
+	SpecAlwaysAllowMovement = (SEmergencyStopControl::allowMovement.out -> SpecAlwaysAllowMovement) |~| DIV
+csp-end
+assertion ES6a: SpecES5 refines SpecAlwaysAllowMovement in the traces model
+assertion ES6b: SpecES5 refines SpecAlwaysAllowMovement in the failures model 
+assertion ES6c: SpecES5 refines SpecAlwaysAllowMovement 
+csp ESHiddenStops associated to SEmergencyStopControl csp-begin
+	ESHiddenStops = (SEmergencyStopControl::O__(0) \ {SEmergencyStopControl::emergencyStop.in, SEmergencyStopControl::resumeDressing.in,
+		                                              SEmergencyStopControl::environmentalStop.in, SEmergencyStopControl::environmentalResume.in})
+csp-end
+csp ESChaoticMovement associated to SEmergencyStopControl csp-begin
+	ESChaoticMovement = CHAOS({SEmergencyStopControl::allowMovement.out})|~|DIV
+csp-end
+assertion ES7: ESChaoticMovement refines ESHiddenStops
+assertion ES8: ESHiddenStops refines ESChaoticMovement in the traces model
+assertion ES9: ESHiddenStops refines ESChaoticMovement in the failures model
+// False due to emergency stop loops
+assertion ES10: ESHiddenStops refines ESChaoticMovement
+
+// === R17: the garment cannot be picked up until a request has been made ===
+
+// === First version of nothing until request has been made ===
+csp GANothingUntilRequest associated to SDressingControl csp-begin
+	AnyEvents = CHAOS({
+		SDressingControl::dressingRequest.in, SDressingControl::gripperEngaged.in.true, SDressingControl::gripperEngaged.in.false,
+		SDressingControl::gripCorrect.in.true, SDressingControl::gripCorrect.in.false,
+		SDressingControl::checkCorrectGripCall,
+		SDressingControl::garmentDetected.in, SDressingControl::detectGarmentCall, SDressingControl::invalidPoseDetected.in,
+		SDressingControl::releaseGripCall, SDressingControl::gripCall, SDressingControl::setConfigurationCall,
+		SDressingControl::detectUserPoseCall, SDressingControl::poseDetected.in,
+		SDressingControl::dressedJoint.out.0, SDressingControl::dressedJoint.out.1, SDressingControl::dressedJoint.out.2,
+		SDressingControl::movementStart.out, SDressingControl::movementEnd.in, SDressingControl::snaggingDetected.in,
+		SDressingControl::checkFaultCall, SDressingControl::correctedMovement.out
+	})
+	GANothingUntilRequest = (
+		(SDressingControl::dressingRequest.in -> SKIP);
+		AnyEvents
+	)
+csp-end
+assertion GA1t: SDressingControl refines GANothingUntilRequest in the traces model
+assertion GA1f: SDressingControl refines GANothingUntilRequest in the failures model
+assertion GA1fd: SDressingControl refines GANothingUntilRequest
+/* We should perform two stage verification that the garment has been gripped correctly before starting.
+ * This requires us to check both that a request has been made and for the user to confirm the correctness
+ * of garment acquisition.
+ */
+csp GATwoStageGripVerification associated to SDressingControl csp-begin
+	PreGripEvents = CHAOS({SDressingControl::gripperEngaged.in.false, SDressingControl::gripperEngaged.in.true,
+		SDressingControl::gripCorrect.in.false, SDressingControl::checkCorrectGripCall,SDressingControl::detectGarmentCall,
+		SDressingControl::garmentDetected.in, SDressingControl::movementStart.out, SDressingControl::movementEnd.in,
+		SDressingControl::gripCall, SDressingControl::releaseGripCall})
+	X = (PreGripEvents |~|
+ 		(PreGripEvents /\ (SDressingControl::gripCall -> SDressingControl::gripperEngaged.in.true -> SDressingControl::checkCorrectGripCall -> SDressingControl::gripCorrect.in.true -> SKIP)))
+	GATwoStageGripVerification = (
+		(SDressingControl::dressingRequest.in -> SKIP);
+		X;
+		AnyEvents
+	)
+csp-end
+csp GATwoStageGripVerification2 associated to SDressingControl csp-begin
+	X2 = (PreGripEvents [+ {SDressingControl::gripperEngaged.in.false, SDressingControl::gripperEngaged.in.true,
+ 		SDressingControl::gripCorrect.in.false, SDressingControl::checkCorrectGripCall,SDressingControl::detectGarmentCall,
+ 		SDressingControl::garmentDetected.in, SDressingControl::movementStart.out, SDressingControl::movementEnd.in,
+ 		SDressingControl::gripCall, SDressingControl::releaseGripCall} +]
+ 		(PreGripEvents /\ (SDressingControl::gripCall -> SDressingControl::gripperEngaged.in.true -> SDressingControl::checkCorrectGripCall -> SDressingControl::gripCorrect.in.true -> SKIP)))
+	GATwoStageGripVerification2 = (
+		(SDressingControl::dressingRequest.in -> SKIP);
+		X2;
+		AnyEvents
+	)
+csp-end
+assertion GA2t: SDressingControl refines GATwoStageGripVerification in the traces model
+assertion GA2f: SDressingControl refines GATwoStageGripVerification in the failures model
+assertion GA2fd: SDressingControl refines GATwoStageGripVerification
+
+assertion GA2X12l: GATwoStageGripVerification refines GATwoStageGripVerification2
+assertion GA2X12r: GATwoStageGripVerification2 refines GATwoStageGripVerification
+
+csp GACorrectionAfterSnagging associated to SDressingControl csp-begin
+	NonCorrectionEvents = CHAOS({
+		SDressingControl::dressingRequest.in, SDressingControl::gripperEngaged.in.true, SDressingControl::gripperEngaged.in.false,
+		SDressingControl::gripCorrect.in.true, SDressingControl::gripCorrect.in.false,
+		SDressingControl::checkCorrectGripCall,
+		SDressingControl::garmentDetected.in, SDressingControl::detectGarmentCall, SDressingControl::invalidPoseDetected.in,
+		SDressingControl::releaseGripCall, SDressingControl::gripCall, SDressingControl::setConfigurationCall,
+		SDressingControl::detectUserPoseCall, SDressingControl::poseDetected.in,
+		SDressingControl::dressedJoint.out.0, SDressingControl::dressedJoint.out.1, SDressingControl::dressedJoint.out.2,
+		SDressingControl::movementStart.out, SDressingControl::movementEnd.in, SDressingControl::checkFaultCall
+	})
+	GACorrectionAfterSnagging = NonCorrectionEvents [+ {SDressingControl::dressingRequest.in, SDressingControl::gripperEngaged.in.true, SDressingControl::gripperEngaged.in.false,
+		SDressingControl::gripCorrect.in.true, SDressingControl::gripCorrect.in.false,
+		SDressingControl::checkCorrectGripCall,
+		SDressingControl::garmentDetected.in, SDressingControl::detectGarmentCall, SDressingControl::invalidPoseDetected.in,
+		SDressingControl::releaseGripCall, SDressingControl::gripCall, SDressingControl::setConfigurationCall,
+		SDressingControl::detectUserPoseCall, SDressingControl::poseDetected.in,
+		SDressingControl::dressedJoint.out.0, SDressingControl::dressedJoint.out.1, SDressingControl::dressedJoint.out.2,
+		SDressingControl::movementStart.out, SDressingControl::movementEnd.in, SDressingControl::checkFaultCall} +] NonCorrectionEvents
+		/\ SDressingControl::checkFaultCall -> SDressingControl::snaggingDetected.in -> SDressingControl::correctedMovement.out -> GACorrectionAfterSnagging
+csp-end
+assertion GA3t: SDressingControl refines GACorrectionAfterSnagging in the traces model
+assertion GA3f: SDressingControl refines GACorrectionAfterSnagging in the failures model
+assertion GA3fd: SDressingControl refines GACorrectionAfterSnagging
+csp GACorrectionAfterSnagging2 associated to SDressingControl csp-begin
+	GACorrectionAfterSnagging2 = NonCorrectionEvents |~| (NonCorrectionEvents /\ (
+			SDressingControl::checkFaultCall -> SDressingControl::snaggingDetected.in -> SDressingControl::correctedMovement.out -> GACorrectionAfterSnagging))
+csp-end
+assertion GA4t: SDressingControl refines GACorrectionAfterSnagging2 in the traces model
+assertion GA4f: SDressingControl refines GACorrectionAfterSnagging2 in the failures model
+assertion GA4fd: SDressingControl refines GACorrectionAfterSnagging2
+
+assertion GA5l: GACorrectionAfterSnagging refines GACorrectionAfterSnagging2
+assertion GA5r: GACorrectionAfterSnagging2 refines GACorrectionAfterSnagging
+
+
+// Work in progress properties for the rest of the dressing behaviour
+/*
+csp GAFilteredBehaviour associated to SDressingControl csp-begin
+	GAFilteredBehaviour = SDressingControl::O__(0) \ {| SDressingControl::movementStart.out, SDressingControl::movementEnd.in |}
+csp-end
+csp GADressingBehaviour associated to SDressingControl csp-begin
+	PoseDetectionLoop = SDressingControl::detectUserPoseCall -> SDressingControl::poseDetected.in -> (SDressingControl::invalidPoseDetected.in -> PoseDetectionLoop [] SKIP)
+	GADressingBehaviour = (
+		(SDressingControl::dressingRequest.in -> SDressingControl::detectGarmentCall -> SDressingControl::garmentDetected.in -> SKIP);
+		(SDressingControl::gripCall -> SDressingControl::detectUserPoseCall -> SDressingControl::poseDetected.in -> SKIP);
+		PoseDetectionLoop; (SDressingControl::dressedJoint.out.2 -> SKIP);
+		PoseDetectionLoop; (SDressingControl::dressedJoint.out.1 -> SKIP);
+		PoseDetectionLoop; (SDressingControl::dressedJoint.out.0 -> SKIP);
+		(SDressingControl::releaseGripCall -> STOP)
+	)
+csp-end
+assertion GA3tl: GAFilteredBehaviour refines GADressingBehaviour in the traces model
+assertion GA3fl: GAFilteredBehaviour refines GADressingBehaviour in the failures model
+assertion GA3fdl: GAFilteredBehaviour refines GADressingBehaviour
+assertion GA3tr: GADressingBehaviour refines GAFilteredBehaviour in the traces model
+assertion GA3fr: GADressingBehaviour refines GAFilteredBehaviour in the failures model
+assertion GA3fdr: GADressingBehaviour refines GAFilteredBehaviour
+*/
+/* Overall this specification captures "preservation of behaviour under interrupts":
+ * The robot still performs dressing even if it has to repeatedly pause and resume in the middle.
+ */
+/*
+csp GAControllerMoveAndGrip associated to CDressingControl csp-begin
+	GAControllerMove = (CDressingControl::setConfigurationCall -> (   CDressingControl::atTarget.in.false -> GAControllerMove
+								        						   [] CDressingControl::atTarget.in.true ->  SKIP) )
+	GAControllerDressingJoint = CHAOS({CDressingControl::setConfigurationCall, CDressingControl::atTarget.in.true, CDressingControl::atTarget.in.false,
+							           CDressingControl::invalidPoseDetected.in, CDressingControl::detectUserPoseCall, CDressingControl::poseDetected.in})
+	GAControllerMoveAndGrip = (
+		(CDressingControl::dressingRequest.in -> CDressingControl::detectGarmentCall -> CDressingControl::garmentDetected.in -> SKIP);
+		(GAControllerMove; (CDressingControl::gripCall -> SKIP));
+		(CDressingControl::detectUserPoseCall -> CDressingControl::poseDetected.in -> SKIP);
+		GAControllerMove;
+		(GAControllerDressingJoint /\ (CDressingControl::dressedJoint.out.2 -> SKIP));
+		(GAControllerDressingJoint /\ (CDressingControl::dressedJoint.out.1 -> SKIP));
+		(GAControllerDressingJoint /\ (CDressingControl::dressedJoint.out.0 -> SKIP));
+		(CDressingControl::releaseGripCall -> SKIP)
+	)
+csp-end
+csp GADressingControllerActive associated to CDressingControl csp-begin
+	StopStart = CDressingControl::emergencyStop.out -> CDressingControl::resumeDressing.out -> StopStart
+	ENoise = CDressingControl::backgroundNoiseLevel.out.NoiseLevel_High -> CDressingControl::backgroundNoiseLevel.out.NoiseLevel_Low -> ENoise
+	EOtherAgents = CDressingControl::otherAgentDetected.out.true -> CDressingControl::otherAgentDetected.out.false -> EOtherAgents
+	GADressingControllerActive = (((CDressingControl::O__(0)
+								    [CDressingControl::emergencyStop.in <-> CDressingControl::emergencyStop.out,
+								     CDressingControl::resumeDressing.in <-> CDressingControl::resumeDressing.out] 
+								    StopStart)
+								    [  CDressingControl::backgroundNoiseLevel.in.x <-> CDressingControl::backgroundNoiseLevel.out.x
+								   	 | x <- NoiseLevel ]
+								    ENoise)
+								    [  CDressingControl::otherAgentDetected.in.x <-> CDressingControl::otherAgentDetected.out.x
+								     | x <- Bool ]
+								    EOtherAgents)
+								   
+csp-end
+//  [CDressingControl::backgroundNoiseLevel.in.NoiseLevel_Low <-> CDressingControl::backgroundNoiseLevel.out.NoiseLevel_Low,
+//								   	CDressingControl::backgroundNoiseLevel.in.NoiseLevel_High <-> CDressingControl::backgroundNoiseLevel.out.NoiseLevel_High]
+// [CDressingControl::backgroundNoiseLevel.in.n <-> CDressingControl::backgroundNoiseLevel.out.n | n <- <1,2,3,4,5,6,7,8,9,10>, True]
+
+assertion GA4a: GADressingControllerActive refines GAControllerMoveAndGrip in the traces model
+// False since after movementEnd we must have a detectUserPoseCall whilst the specification can accept completion of dressing
+assertion GA4b: GADressingControllerActive refines GAControllerMoveAndGrip in the failures model
+// False due to potential emergency stop loops
+assertion GA4c: GADressingControllerActive refines GAControllerMoveAndGrip
+*/
+
+/*
+// If we always allow movement the robot will call setConfiguration until grip is released
+csp GAMovementAllowed associated to SDressingControl csp-begin
+	GAAlwaysAllowMovement = SDressingControl::allowMovement.out -> GAAlwaysAllowMovement
+	GAMovementAllowed = (GAAlwaysAllowMovement
+						 [ SDressingControl::allowMovement.out <-> SDressingControl::allowMovement.in ]
+						 SDressingControl::O__(0))
+csp-end
+csp GAMoveAndGrip associated to SDressingControl csp-begin
+	GAMove = ( SDressingControl::setConfigurationCall -> (   SDressingControl::atTarget.in.false -> GAMove
+								        				  [] SDressingControl::atTarget.in.true -> SKIP) )
+	GADetectPoseAndMove1 = (   SDressingControl::setConfigurationCall -> (   SDressingControl::atTarget.in.false -> (   GADetectPoseAndMove1
+																													 [] SDressingControl::invalidPoseDetected.in -> GADetectPoseAndMove )
+	                                                                      [] SDressingControl::atTarget.in.true -> (   SKIP
+	                                                                      	                                        [] SDressingControl::invalidPoseDetected.in -> GADetectPoseAndMove )
+	                                                                      [] SDressingControl::invalidPoseDetected.in -> GADetectPoseAndMove )
+	                        [] SDressingControl::invalidPoseDetected.in -> GADetectPoseAndMove )
+	GADressingJoint = CHAOS({SDressingControl::setConfigurationCall, SDressingControl::atTarget.in.true, SDressingControl::atTarget.in.false,
+							 SDressingControl::invalidPoseDetected.in, SDressingControl::detectUserPoseCall, SDressingControl::poseDetected.in})
+	GADetectPoseAndMove = SDressingControl::detectUserPoseCall -> SDressingControl::poseDetected.in -> GADetectPoseAndMove1
+	GAMoveAndGrip = (
+		(SDressingControl::dressingRequest.in -> SDressingControl::detectGarmentCall -> SDressingControl::garmentDetected.in -> SKIP);
+		(GAMove ; (SDressingControl::gripCall -> SKIP));
+		(SDressingControl::detectUserPoseCall -> SDressingControl::poseDetected.in -> GAMove);
+		(GADressingJoint /\ (SDressingControl::dressedJoint.out.2 -> SKIP));
+		(GADressingJoint /\ (SDressingControl::dressedJoint.out.1 -> SKIP));
+		(GADressingJoint /\ (SDressingControl::dressedJoint.out.0 -> SKIP));
+		(SDressingControl::releaseGripCall -> SKIP)
+	)
+csp-end
+assertion GA2a: GAMovementAllowed refines GAMoveAndGrip in the traces model
+assertion GA2b: GAMovementAllowed refines GAMoveAndGrip in the failures model
+// False due to emergency stop loops
+assertion GA2c: GAMovementAllowed refines GAMoveAndGrip
+csp GAControllerMoveAndGrip associated to CDressingControl csp-begin
+	GAControllerMove = (CDressingControl::setConfigurationCall -> (   CDressingControl::atTarget.in.false -> GAControllerMove
+								        						   [] CDressingControl::atTarget.in.true ->  SKIP) )
+	GAControllerDressingJoint = CHAOS({CDressingControl::setConfigurationCall, CDressingControl::atTarget.in.true, CDressingControl::atTarget.in.false,
+							           CDressingControl::invalidPoseDetected.in, CDressingControl::detectUserPoseCall, CDressingControl::poseDetected.in})
+	GAControllerMoveAndGrip = (
+		(CDressingControl::dressingRequest.in -> CDressingControl::detectGarmentCall -> CDressingControl::garmentDetected.in -> SKIP);
+		(GAControllerMove; (CDressingControl::gripCall -> SKIP));
+		(CDressingControl::detectUserPoseCall -> CDressingControl::poseDetected.in -> SKIP);
+		GAControllerMove;
+		(GAControllerDressingJoint /\ (CDressingControl::dressedJoint.out.2 -> SKIP));
+		(GAControllerDressingJoint /\ (CDressingControl::dressedJoint.out.1 -> SKIP));
+		(GAControllerDressingJoint /\ (CDressingControl::dressedJoint.out.0 -> SKIP));
+		(CDressingControl::releaseGripCall -> SKIP)
+	)
+csp-end
+csp GADressingControllerActive associated to CDressingControl csp-begin
+	StopStart = CDressingControl::emergencyStop.out -> CDressingControl::resumeDressing.out -> StopStart
+	ENoise = CDressingControl::backgroundNoiseLevel.out.NoiseLevel_High -> CDressingControl::backgroundNoiseLevel.out.NoiseLevel_Low -> ENoise
+	EOtherAgents = CDressingControl::otherAgentDetected.out.true -> CDressingControl::otherAgentDetected.out.false -> EOtherAgents
+	GADressingControllerActive = (((CDressingControl::O__(0)
+								    [CDressingControl::emergencyStop.in <-> CDressingControl::emergencyStop.out,
+								     CDressingControl::resumeDressing.in <-> CDressingControl::resumeDressing.out] 
+								    StopStart)
+								    [  CDressingControl::backgroundNoiseLevel.in.x <-> CDressingControl::backgroundNoiseLevel.out.x
+								   	 | x <- NoiseLevel ]
+								    ENoise)
+								    [  CDressingControl::otherAgentDetected.in.x <-> CDressingControl::otherAgentDetected.out.x
+								     | x <- Bool ]
+								    EOtherAgents)
+								   
+csp-end
+//  [CDressingControl::backgroundNoiseLevel.in.NoiseLevel_Low <-> CDressingControl::backgroundNoiseLevel.out.NoiseLevel_Low,
+//								   	CDressingControl::backgroundNoiseLevel.in.NoiseLevel_High <-> CDressingControl::backgroundNoiseLevel.out.NoiseLevel_High]
+// [CDressingControl::backgroundNoiseLevel.in.n <-> CDressingControl::backgroundNoiseLevel.out.n | n <- <1,2,3,4,5,6,7,8,9,10>, True]
+
+assertion GA3a: GADressingControllerActive refines GAControllerMoveAndGrip in the traces model
+assertion GA3b: GADressingControllerActive refines GAControllerMoveAndGrip in the failures model
+// False due to potential emergency stop loops
+assertion GA3c: GADressingControllerActive refines GAControllerMoveAndGrip
+
+	// GAMovementAllowed = (SDressingControl::O__(0) [| {|SDressingControl::dressingRequest, SDressingControl::allowMovement|} |] GAAlwaysAllowMovement) \ { SDressingControl::allowMovement.out, SDressingControl::allowMovement.in }
+//csp GAMoving associated to SDressingControl csp-begin
+//	GAMoving = SDressingControl::dressingRequest.out -> SDr
+//csp-end
+*/
+
+
