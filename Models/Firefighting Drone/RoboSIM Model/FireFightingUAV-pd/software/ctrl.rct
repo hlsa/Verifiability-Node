@@ -1,0 +1,155 @@
+diagram ctrl
+
+// Importing platform interfaces
+import gcs::*
+import m600::*
+import mlx90640::*
+import gimbal::*
+import pump::*
+import rsd435i::*
+
+// Importing communications
+import comm::*
+import controller_comm::*
+
+// Importing state machines
+import fire::*
+import flight::*
+import planning::*
+import spray::*
+import visual::*
+
+// Main controller.
+controller RaspberryPi {
+	//
+	// M600 API operations
+	//
+	
+	requires M600Flight
+	
+	//
+	// Connected peripherals
+	//
+	
+	requires GCS
+	requires MLX90640
+	requires RealSenseD435i
+		
+	uses M600FlightEvents
+	uses M600TelemetryEvents
+	uses M600BatteryTelemetryEvents
+	uses MLX90640Events
+	uses RealSenseD435iEvents
+	
+	uses GCSMissionEvents
+	uses GCSControlEvents 
+	
+	uses SprayPlanningEvents
+	uses GimbalSprayEvents
+
+
+	//
+	// State machines
+	//
+	
+	sref CPlanning = Planning
+	sref CFireDetect = FireDetect
+	sref CVisualNav = VisualNav
+	sref CFlight = Flight
+	sref CBatteryMonitor = BatteryMonitor
+	sref CGimbalAim = GimbalAim
+	
+	
+	//
+	// Connections between state machines
+	//
+	
+	// FireGimbalEvents
+	connection CFireDetect on fgSeenFire      to CGimbalAim  on fgSeenFire
+	// FireVisualEvents
+	connection CFireDetect on fvSeenFire      to CVisualNav  on fvSeenFire
+	connection CFireDetect on wallMetrics     to CVisualNav  on wallMetrics
+	
+	// FirePlanningEvents
+	connection CFireDetect on fireDetected    to CPlanning   on fireDetected
+	connection CFireDetect on fireLost        to CPlanning   on fireLost
+	connection CFireDetect on trackingGained  to CPlanning   on trackingGained
+	connection CFireDetect on trackingLost    to CPlanning   on trackingLost
+	
+	// VisualPlanningEvents (added 2022-05-24)	
+	connection CPlanning   on vnavEnable      to CVisualNav on vnavEnable
+	connection CPlanning   on vnavDisable     to CVisualNav on vnavDisable
+
+	// FlightPlanningEvents
+	connection CPlanning   on navCommand      to CFlight     on navCommand
+	connection CPlanning   on waypoint        to CFlight     on waypoint
+	connection CFlight     on uavStatus       to CPlanning   on uavStatus
+	
+	// GimbalPlanningEvents
+	connection CGimbalAim  on gimbalAimed     to CPlanning   on gimbalAimed
+	
+	// VisualFlightEvents
+	connection CVisualNav  on visualPosition  to CFlight     on visualPosition	
+
+	// BatteryPlanningEvents
+	connection CBatteryMonitor on batteryLow to CPlanning on batteryLow
+	//connection CBatteryMonitor on batteryUnsafe to CPlanning on batteryUnsafe
+
+	//
+	// Connections from Ctrl state machines to ACtrl
+	//
+	
+	// SprayPlanningEvents
+	connection CPlanning   on startSpray      to RaspberryPi on startSpray
+	connection CPlanning   on stopSpray       to RaspberryPi on stopSpray
+	connection RaspberryPi on waterEmpty      to CPlanning   on waterEmpty
+	
+	// GimbalSprayEvents
+	connection CGimbalAim  on gimbalYaw       to RaspberryPi on gimbalYaw
+	connection CGimbalAim  on gimbalPitch     to RaspberryPi on gimbalPitch
+	connection RaspberryPi on gimbalYawAck    to CGimbalAim  on gimbalYawAck
+	connection RaspberryPi on gimbalPitchAck  to CGimbalAim  on gimbalPitchAck
+
+	//
+	// Connections from platform to state machines
+	//
+
+	// M600FlightEvents
+	connection RaspberryPi on fcTakeoffRet              to CFlight on fcTakeoffRet
+	connection RaspberryPi on fcGoHomeRet               to CFlight on fcGoHomeRet
+	connection RaspberryPi on fcLandRet                 to CFlight on fcLandRet
+	connection RaspberryPi on fcControlAuth             to CFlight on fcControlAuth
+	connection RaspberryPi on fcWaypointFinishedMission to CFlight on fcWaypointFinishedMission
+	connection RaspberryPi on fcMoveRelativeRet         to CFlight on fcMoveRelativeRet
+
+	// M600TelemetryEvents
+
+	// M600BatteryTelemetryEvents
+	connection RaspberryPi on batteryInfo       to CBatteryMonitor on batteryInfo
+
+	
+	// MLX90640Events
+	connection RaspberryPi on mlxHeatmap        to CFireDetect on mlxHeatmap
+	//connection RaspberryPi on mlxError          to CFireDetect on mlxError
+	//connection RaspberryPi on mlxInitRet        to CFireDetect on mlxInitRet
+	
+	// RealSenseD435iEvents
+	connection RaspberryPi on rsDepthFrame      to CFireDetect on rsDepthFrame
+	connection RaspberryPi on rsRgbFrame        to CFireDetect on rsRgbFrame
+	// connection RaspberryPi on rsError           to CFireDetect on rsError
+	
+	// GCSMissionEvents
+	connection CPlanning   on missionStatus     to RaspberryPi on missionStatus
+	
+	opref search = search
+}
+
+operation search() {
+	requires SearchVars
+	
+	// Quickfix from Alvaro to make this go through CSP
+	initial I
+	final F
+	transition IF { from I to F }
+}
+

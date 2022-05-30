@@ -1,0 +1,133 @@
+// Communications interfaces used between state machines.
+diagram comm
+
+import datatypes::*
+
+// Interface shared by FireDetect and VisualNav, for forwarding frames captured
+// from the depth camera and sending fire position events.
+interface FireVisualEvents {
+	// TODO(@MattWindsor91): incorporate information from Bilal's email of 8 Nov
+	
+	// Sends information about the wall distance to the visual nav.
+	event wallMetrics: WallMetrics
+	// Sends information about the fire target to the visual nav.
+	event fvSeenFire: FireTarget
+}
+
+// Interface for sending fire positions to the gimbal aimer.
+interface FireGimbalEvents {
+	// Sends information about the fire target to the gimbal aimer.
+	event fgSeenFire: FireTarget	
+}
+
+
+// Interface shared by FireDetect and Planning.
+interface FirePlanningEvents {
+	// A fire has been detected.
+	event fireDetected
+	// The fire has been lost.
+	event fireLost
+	// Communicates that tracking has been achieved.
+	event trackingGained
+	// Communicates that tracking has been lost.
+	event trackingLost
+}
+
+// Interface shared by VisualNav and Planning.
+//
+// This contains enable/disable events for isolating the visual navigation
+// system whenever we are 
+interface VisualPlanningEvents {
+	//
+	// From Planning to Visual
+	//
+	
+	// Visual navigation should turn on now.
+	event vnavEnable
+	// Visual navigation should turn off now.
+	event vnavDisable
+}
+
+// Interface for top-level navigation commands.
+//
+// Waypoint direction goes through Waypoint.
+enumeration NavCommand {
+	// Take off and reach an initial altitude.
+	TakeOff
+	// Return to the home position.
+	GoHome
+	// Land the UAV (abstracting away any sort of confirmation from the GCS).
+	Land
+}
+
+enumeration AircraftStatus {
+	// The UAV is connected.
+	Connected
+	// Takeoff has succeeded, but we have not yet climbed to the initial altitude.
+	TakenOff
+	// We failed to take off.
+	TakeoffError
+	// Takeoff has succeeded and we are at the initial altitude.
+	AtAltitude
+	// We are within tolerance of the requested waypoint.
+	AtWaypoint
+	// We are within tolerance of the home position.
+	AtHome
+	// We have landed.
+	Landed
+	// We failed to land.
+	LandError
+	// We have disconnected from the UAV.
+	Disarmed
+}
+
+// Interface for events shared by Flight and Planning.
+interface FlightPlanningEvents {
+	//
+	// Navigation commands
+	//
+	
+	// Provides a top-level navigation command.
+	event navCommand: NavCommand
+	
+	// Provides a waypoint.
+	event waypoint: Position
+	
+	//
+	// Aircraft status and telemetry
+	//
+	
+	// High level aircraft status.
+	event uavStatus: AircraftStatus
+}
+
+// Interface of events shared by gimbal positioning and planning.
+interface GimbalPlanningEvents {
+	//
+	// From Gimbal to Planning
+	//
+	
+	// Communicates that the gimbal is ready to spray.
+	event gimbalAimed
+}
+
+// Interface of events shared by visual navigation and flight control.
+interface VisualFlightEvents {
+	// Communicates a position command from visual navigation.
+	event visualPosition: RelativeMotion
+}
+
+// Interface of events communicating battery information to planning
+interface BatteryPlanningEvents {	
+	// Fires when the battery has gone mission critical.
+	event batteryLow
+	
+	// NOTE(@MattWindsor91 2022-05-16): after talking with Bilal, I've decided
+	// to remove batteryCritical for now; it seems like this is out of scope of
+	// the model.  This may change if batteryCritical changes to capture eg.
+	// battery failure.
+	
+	// Fires when the battery has gone safety critical.
+	// TODO(@MattWindsor91): question P3: should this be more low-level?
+	//event batteryUnsafe
+}

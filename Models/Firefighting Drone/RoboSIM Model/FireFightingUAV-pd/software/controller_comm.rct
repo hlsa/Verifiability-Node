@@ -1,0 +1,46 @@
+// Communications between the two controllers.
+diagram controller_comm
+
+import datatypes::*
+
+// Interface shared by GimbalAim and SprayAim.
+interface GimbalSprayEvents {
+	//
+	// GimbalAim -> Spray
+	//
+
+	// Requests that the gimbal move to the given yaw (0-180, 90= centre).
+	event gimbalYaw: nat
+	// Requests that the gimbal move to the given pitch (0-180, 90= centre).
+	event gimbalPitch: nat
+	
+	//
+	// Spray -> GimbalAim
+	//
+	
+	// Confirms that the yaw has been set.
+	event gimbalYawAck
+	// Confirms that the pitch has been set.
+	event gimbalPitchAck
+}
+
+// Interface used to communicate between the spray and planning state machines.
+interface SprayPlanningEvents {
+	//
+	// Planning -> Spray
+	//
+	
+	// Note: these two need to be separate rather than a boolean, to allow them to be triggered on.
+	
+	// Turns the spray on.
+	event startSpray
+	// Turns the spray off.
+	event stopSpray
+
+	//
+	// Spray -> Planning
+	//
+
+	// The water tank is empty.
+	event waterEmpty
+}

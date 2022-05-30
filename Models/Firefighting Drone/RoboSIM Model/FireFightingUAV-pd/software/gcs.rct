@@ -1,0 +1,39 @@
+// Interfaces for interacting with the Ground Control System through the
+// robotic platform.
+diagram gcs
+
+// Operations
+interface GCS {
+}
+
+// Mission events
+interface GCSMissionEvents {
+	event missionStatus: MissionStatus
+}
+
+// Control events
+interface GCSControlEvents {
+	
+}
+
+// The overall state of the mission.
+enumeration MissionStatus {
+	Connected      // UAV onboard computer just connected to FCS.
+	TakingOff      // UAV is about to take off.
+	FlyingToWall   // UAV is about to fly to the wall.
+	Searching      // UAV is about to search for a fire.  If after TrackingFire, we lost the fire.
+	TrackingFire   // UAV is now tracking a fire.  If after Spraying, we lost the tracking.
+	Spraying       // UAV is now spraying the fire.
+	SearchComplete // UAV has successfully exhausted its search pattern.
+	GoingHome      // UAV is about to go home.
+	Landing        // UAV is about to land.
+	Disarming      // UAV is about to disarm.
+	
+	//
+	// Errors
+	//
+	
+	ConnectTimeout // We couldn't connect to the flight control in time.
+	BatteryError   // The battery has gone too low to continue the mission.
+	WaterError     // The water level has gone too low to continue the mission.
+}
