@@ -1,0 +1,43 @@
+// The Arduino (arm) controller.
+
+import spray::*
+
+diagram actrl
+
+controller Arduino {
+	// ACtrl <-> Platform
+	requires Pump
+	requires Gimbal
+		
+	// ACtrl <-> Ctrl
+	uses SprayPlanningEvents
+	uses GimbalSprayEvents
+	
+	//
+	// State machines
+	//
+	
+	sref ASpray = Spray
+	sref AAim = Aim
+	sref AWaterMonitor = WaterMonitor
+	
+	//
+	// Event connections
+	//
+	
+	// SprayPlanningEvents
+	connection Arduino     on startSpray  to ASpray  on startSpray
+	connection Arduino     on stopSpray   to ASpray  on stopSpray
+	connection ASpray      on waterEmpty  to Arduino on waterEmpty
+	
+	// FireSprayEvents
+	connection Arduino on gimbalYaw      to AAim    on gimbalYaw
+	connection Arduino on gimbalPitch    to AAim    on gimbalPitch
+	connection AAim    on gimbalYawAck   to Arduino on gimbalYawAck
+	connection AAim    on gimbalPitchAck to Arduino on gimbalPitchAck
+	
+	// Internal
+	connection ASpray        on monitorOn    to AWaterMonitor on monitorOn
+	connection ASpray        on monitorOff   to AWaterMonitor on monitorOff
+	connection AWaterMonitor on monitorEmpty to ASpray        on monitorEmpty
+}

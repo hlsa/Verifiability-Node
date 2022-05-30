@@ -1,0 +1,127 @@
+// The fire detection image processing state machine.
+diagram fire
+
+import comm::*
+import datatypes::*
+import mlx90640::*
+import rsd435i::*
+
+stm FireDetect {
+	requires MLX90640
+	uses MLX90640Events
+	
+	requires RealSenseD435i
+	uses RealSenseD435iEvents
+	
+	uses FireVisualEvents
+	uses FireGimbalEvents
+	uses FirePlanningEvents
+	
+	var fp: FireTarget, fs: FireStatus, wm: WallMetrics, checkDone: boolean
+	var gotD: boolean, gotH: boolean, gotR: boolean
+	
+	// Heat, depth, superimposed frames
+	var rgb: RgbFrame, d: Frame, t: Frame, super: SuperimposedFrame
+
+	// Indices for various points in the frame
+	const LEFT_X: nat, CENTRE_X: nat, RIGHT_X: nat, CENTRE_Y: nat
+
+	initial I
+
+	transition II { from I to Idle action gotD=false; gotH=false; gotR=false }
+	
+	state Idle {}
+	
+	transition IT { from Idle to Idle trigger mlxHeatmap?t action gotH=true }
+	transition ID { from Idle to Idle trigger rsDepthFrame?d action gotD=true }
+	transition IR { from Idle to Idle trigger rsRgbFrame?rgb action gotD=true }		
+	transition IS { from Idle to Superimpose condition gotH /\ gotD /\ gotR }
+	
+	// TODO (@MattWindsor91, 2022-05-12): superimpose RGB frame
+	state Superimpose { entry super = superimpose(rgb, d, t) }
+	
+	transition SW { from Superimpose to CheckWall }
+	
+	state CheckFire {
+		entry checkDone = false
+		initial I
+		transition Init { from I to Algorithm }
+		// TODO(@MattWindsor91 2022-05-20): fp.distance should probably be an average
+		state Algorithm { entry fp = calcFireTarget(super); fp.distance = wm.centreDist; fvSeenFire!fp; fgSeenFire!fp }
+
+		junction WasNoFire
+		junction WasDetected
+		junction WasTracked
+		
+		transition WNF { from Algorithm to WasNoFire   condition fs == FireStatus::NoFire   }
+		transition WDT { from Algorithm to WasDetected condition fs == FireStatus::Detected }
+		transition WTR { from Algorithm to WasTracked  condition fs == FireStatus::Tracked  }
+		
+		state FGain { entry fireDetected }
+		state TGain { entry trackingGained }
+		state TLoss { entry trackingLost }
+		state FLoss { entry fireLost }
+		
+		transition NoFirePass   { from WasNoFire   to Done condition fs == FireStatus::NoFire }
+		transition DetectedPass { from WasDetected to Done condition fs == FireStatus::Detected }
+		transition TrackedPass  { from WasTracked  to Done condition fs == FireStatus::Tracked }
+		transition FGainPass    { from FGain       to Done condition fs != FireStatus::Tracked }
+		transition TGainPass    { from TGain       to Done }
+		transition TLossPass    { from TLoss       to Done condition fs != FireStatus::NoFire }
+		transition FLossPass    { from FLoss       to Done }
+
+		
+		transition FGainNF { from WasNoFire   to FGain condition fs != FireStatus::NoFire }
+		// We can't gain a fire from any of the other two states, as they represent having gained a fire.
+		
+		transition TGainF  { from FGain       to TGain condition fs == FireStatus::Tracked }
+		// Transitions from no-fire to tracked go transitively through FGain.
+		transition TGainDT { from WasDetected to TGain condition fs == FireStatus::Tracked }
+		
+		
+		transition TLossNF { from WasTracked to TLoss condition fs != FireStatus::Tracked }
+		// We can't lose a fire from any of the other two states, as they represent having lost a fire.
+		
+		transition FLossT  { from TLoss to FLoss condition fs == FireStatus::NoFire }
+		// Transitions from tracked to no-fire go transitively through FLoss.
+		transition FLossDT { from WasDetected to FLoss condition fs == FireStatus::NoFire }
+					
+		state Done { entry fs = fp.status; checkDone = true }
+		
+	}
+	
+	transition WF { from CheckWall to CheckFire }
+	
+	// Assumption (2022-05-12): the visual navigation unit is responsible
+	// for deciding which of the wall/fire data to use.
+	
+	state CheckWall {
+		entry
+			// wm = calcWallMetrics(super, LEFT_X, CENTRE_X, RIGHT_X, CENTRE_Y);
+			wm.leftDist = (super.contents)[LEFT_X, CENTRE_Y].d;
+			wm.centreDist = (super.contents)[CENTRE_X, CENTRE_Y].d;
+			wm.rightDist = (super.contents)[RIGHT_X, CENTRE_Y].d;
+			wallMetrics!wm
+	}
+	
+	transition FI { from CheckFire to Idle condition checkDone action gotD=false; gotH = false; gotR = false}
+	
+	// 2022-05-12: allow frames to arrive in any order.
+	
+}
+
+function calcFireTarget(f: SuperimposedFrame): FireTarget {
+	// NOTE(@MattWindsor91 2022-05-18): This is currently a complete black box.
+}
+
+function superimpose(rgb: RgbFrame, d: Frame, t: Frame): SuperimposedFrame {
+	// TODO(@MattWindsor91): this is provisional; we probably need a way of
+	// expressing shifting
+	postcondition
+		// Each pixel in the superimposition is the superimposition of the
+		// pixels of the frames
+		forall i: nat, j: nat @
+			(result.contents)[i,j].rgb == rgb[i,j] /\
+			(result.contents)[i,j].d == d[i,j] /\
+			(result.contents)[i,j].t == t[i,j]
+}

@@ -1,0 +1,86 @@
+diagram uav
+
+import actrl::ACtrl
+import ctrl::Ctrl
+import controller_comm::*
+
+// Importing platform interfaces
+import gcs::*
+import m600::*
+import mlx90640::*
+import gimbal::*
+import pump::*
+import rsd435i::*
+
+module FirefightingUAV {
+
+	robotic platform Platform {
+		provides M600Flight
+		
+		provides GCS
+		provides Gimbal
+		provides MLX90640
+		provides RealSenseD435i
+		provides Pump
+		
+		uses M600FlightEvents
+		uses M600TelemetryEvents
+		uses M600BatteryTelemetryEvents	
+		uses MLX90640Events
+		uses RealSenseD435iEvents
+		
+		uses GCSMissionEvents
+		uses GCSControlEvents
+	}
+
+	//
+	// MAIN CONTROLLER
+	//
+
+	cref ARaspberryPi = RaspberryPi
+
+	// M600FlightEvents
+	connection Platform     on fcTakeoffRet              to ARaspberryPi on fcTakeoffRet              (_async)
+	connection Platform     on fcGoHomeRet               to ARaspberryPi on fcGoHomeRet               (_async)
+	connection Platform     on fcLandRet                 to ARaspberryPi on fcLandRet                 (_async)
+	connection Platform     on fcControlAuth             to ARaspberryPi on fcControlAuth             (_async)
+	connection Platform     on fcWaypointFinishedMission to ARaspberryPi on fcWaypointFinishedMission (_async)
+	connection Platform     on fcMoveRelativeRet         to ARaspberryPi on fcMoveRelativeRet         (_async)
+
+	// M600TelemetryEvents
+	connection Platform     on batteryInfo       to ARaspberryPi on batteryInfo       (_async)
+	
+	// MLX90640Events
+	connection Platform     on mlxHeatmap        to ARaspberryPi on mlxHeatmap        (_async)
+	//connection Platform     on mlxError          to ARaspberryPi on mlxError          (_async)
+	//connection Platform     on mlxInitRet        to ARaspberryPi on mlxInitRet        (_async)
+	
+	// RealSenseD435iEvents
+	connection Platform     on rsDepthFrame      to ARaspberryPi on rsDepthFrame      (_async)
+	connection Platform     on rsRgbFrame        to ARaspberryPi on rsRgbFrame        (_async)
+	// connection Platform     on rsError           to ARaspberryPi on rsError           (_async)
+	
+	// GCSMissionEventrs
+	connection ARaspberryPi on missionStatus     to Platform     on missionStatus     (_async)
+	
+	//
+	// ARM CONTROLLER
+	//
+	
+	cref AnArduino = Arduino
+	
+	//
+	// INTER-CONTROLLER CONNECTIONS
+	//
+			
+	// FireSprayEvents
+	connection ARaspberryPi on gimbalYaw      to AnArduino     on gimbalYaw      (_async)
+	connection ARaspberryPi on gimbalPitch    to AnArduino     on gimbalPitch    (_async)
+	connection AnArduino    on gimbalYawAck   to ARaspberryPi  on gimbalYawAck   (_async)
+	connection AnArduino    on gimbalPitchAck to ARaspberryPi  on gimbalPitchAck (_async)
+	
+	// SprayPlanningEvents
+	connection ARaspberryPi on startSpray    to AnArduino     on startSpray    (_async)
+	connection ARaspberryPi on stopSpray     to AnArduino     on stopSpray     (_async)
+	connection AnArduino    on waterEmpty    to ARaspberryPi  on waterEmpty    (_async)
+}

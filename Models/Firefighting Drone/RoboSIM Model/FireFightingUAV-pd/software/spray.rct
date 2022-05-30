@@ -1,0 +1,99 @@
+// The spray aim and control state machine.
+diagram spray
+
+import comm::*
+import datatypes::*
+import pump::*
+import fire::*
+
+stm Aim {
+	requires Gimbal
+	
+	uses GimbalSprayEvents
+	
+	// Delay to stop the gimbal from being flooded with events.
+	const GIMBAL_FLOOD_DELAY: nat
+	
+	var angle: nat
+	
+	initial I
+	
+	state Waiting {	
+	}
+	
+	transition Init { from I to Waiting }
+
+	transition GimbalYaw { from Waiting to SetYaw trigger gimbalYaw?angle }
+	transition GimbalYawAck { from SetYaw to Waiting action gimbalYawAck }
+	transition GimbalPitch { from Waiting to SetPitch trigger gimbalPitch?angle }
+	transition GimbalPitchAck { from SetPitch to Waiting action gimbalPitchAck }
+	
+	state SetYaw {
+		entry gimbalWritePan(angle); wait(GIMBAL_FLOOD_DELAY)
+	}
+	
+	state SetPitch {
+		entry gimbalWriteTilt(angle); wait(GIMBAL_FLOOD_DELAY)
+	}
+}
+
+stm Spray {
+	requires Pump	
+	uses SprayPlanningEvents
+	
+	event monitorOn
+	event monitorOff
+	event monitorEmpty
+		
+	initial I
+	
+	state Off {
+	}
+	
+	transition Init { from I to Off }
+	
+	transition SwitchOn { from Off to On trigger startSpray action pumpOn(); monitorOn }
+	transition OnOut { from On to Out trigger monitorEmpty action waterEmpty; pumpOff() }
+	
+	state On {
+	}
+	
+	transition SwitchOff { from On to Off trigger stopSpray action monitorOff; pumpOff() }
+	
+	final Out
+	
+	transition OffOut { from Off to Out trigger monitorEmpty action waterEmpty }
+}
+
+stm WaterMonitor {
+	const INITIAL_WATER_LEVEL: real, WATER_FLOW: real
+	const TIME_PER_UNIT: nat = 1
+
+	var water: real = INITIAL_WATER_LEVEL
+	
+	event monitorOn
+	event monitorOff
+	event monitorEmpty
+	
+	initial I
+	
+	state Off {
+		
+	}
+	
+	state On {
+		
+	}
+	
+	final F
+	
+	transition Init { from I to Off }
+	
+	transition SwitchOn { from Off to On trigger monitorOn condition 0 < water }
+	transition SwitchOff { from On to Off trigger monitorOff condition sinceEntry(On) < TIME_PER_UNIT /\ 0 < water }
+	
+	transition Tick { from On to On condition TIME_PER_UNIT <= sinceEntry(On) /\ 0 < water action water = water - WATER_FLOW }
+	
+	transition Out { from On to F condition water <= 0 action monitorEmpty }
+	transition OffOut { from Off to F condition water <= 0 action monitorEmpty }
+}

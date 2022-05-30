@@ -1,0 +1,180 @@
+// The visual navigation state machine.
+diagram visual
+
+import comm::*
+import datatypes::*
+import rsd435i::*
+import fire::*
+
+// Calculates yaw or pitch.
+//
+// One way to calculate this might be to let wallDist be the adjacent, and
+// normalDist the opposite, of a right-angled triangle; then, the yaw is
+// 90 + arctan(dx/distance) as expressed in degrees.
+function calcGimbalAxis(wallDist: real, normalDist: real): nat {
+	// NOTE(@MattWindsor91 2022-05-20): discussion with Shival:
+	// we model the spray as a straight line, so this function works for yaw
+	// and pitch eg. no need to correct for trajectory.
+	precondition
+		0 <= wallDist // TODO(@MattWindsor91 2022-05-18): how do we verify this?
+	postcondition
+		// Result in bounds
+		(0 <= result <= 180) /\
+		// Leftwards positions becomes angles on left side, etc.
+		(normalDist <= 0 => result <= 90) /\
+		(normalDist >= 0 => result >= 90)
+}
+
+// Calculates the change we need in the UAV's yaw.
+function calcYawDelta(wm: WallMetrics): real {
+}
+
+stm VisualNav {
+	// We rely on the fire STM performing all of the image processing, and just
+	// handle the translation from points to commands. 
+	uses FireVisualEvents
+	uses VisualFlightEvents
+	uses VisualPlanningEvents
+	
+	var tgt: FireTarget, wm: WallMetrics, movement: RelativeMotion
+	
+	const TRACK_DIST: real, SCAN_DIST: real // Tracking and scanning distances.
+	// These are normally set to 4m and 6m respectively.
+	
+	initial I
+	transition Init { from I to Inactive }
+	
+	// NOTE(@MattWindsor91 2022-05-23): added inactive/active states to capture
+	// Bilal/Shival's previous assertion that it is the visual navigation that
+	// is turned on and off; this also ensures that we only do visual nav
+	// adjustments when we are NOT doing waypoint movements.
+	state Inactive {
+	}
+	
+	transition Activate { from Inactive to Active trigger vnavEnable }
+	transition Deactivate { from Active to Inactive trigger vnavDisable }
+	
+	// NOTE(@MattWindsor91 2022-05-23): this eats deactivation requests
+	// stemming from quitting the mission when we are already inactive.
+	transition IgnoreDeactivate { from Inactive to Inactive trigger vnavDisable }
+	
+	transition IgnoreW { from Inactive to Inactive trigger wallMetrics?wm }
+	transition IgnoreF { from Inactive to Inactive trigger fvSeenFire?tgt }
+	
+	state Active {		
+		initial I
+		
+		transition Init { from I to Waiting }
+			
+		state Waiting {}
+		
+		transition WW { from Waiting to Wall trigger wallMetrics?wm }
+		
+		state Wall {
+			entry
+				movement.dyaw = calcYawDelta(wm)
+		}
+		transition WF { from Wall to FIsValid trigger fvSeenFire?tgt }
+			
+		// added 2022-05-20: validity checking in visual nav
+		junction FIsValid
+		transition FValid { from FIsValid to Fire condition tgt.status == FireStatus::Tracked }
+		transition FNotValid { from FIsValid to NoFire condition tgt.status != FireStatus::Tracked }
+		
+		state Fire {
+			// Move towards tracking distance.
+			
+			entry
+				movement.dx = tgt.distance - TRACK_DIST;
+				// TODO(@MattWindsor91): is this mapping correct?
+				// eg: right = y <- x; up/down (need to check) = z <- y.
+				movement.dy = tgt.dx;
+				movement.dz = tgt.dy
+		}
+		
+		state NoFire {
+			// Move back towards scanning distance.
+			
+			entry
+				movement.dx = tgt.distance - SCAN_DIST;
+				movement.dy = 0;
+				movement.dz = 0
+			// keep yaw setpoint as previous so we keep turning
+		}
+		
+		transition FCommit { from Fire to Commit }
+		transition NCommit { from NoFire to Commit }
+		
+		junction Commit
+	
+		transition Loop { from Commit to Waiting action visualPosition!movement }
+	}
+}
+
+stm GimbalAim {
+	initial I
+	
+	uses FireGimbalEvents
+	uses GimbalSprayEvents
+	uses GimbalPlanningEvents
+	
+	var tgt: FireTarget, yaw: nat, pitch: nat, tracking: boolean = false
+	// added 2022-05-25: clamping
+	var cYaw: nat, cPitch: nat, YAW_DEAD_ZONE: nat, PITCH_DEAD_ZONE: nat
+	
+	// This should be the same as TRACK_DIST in VisualNav
+	const TRACK_DIST: real
+	
+	transition Init { from I to Waiting action tgt.status = FireStatus::NoFire }
+	
+	state Waiting {
+	}
+	
+	transition GotFire { from Waiting to IsValid trigger fgSeenFire?tgt }
+	
+	state Calculate {
+		entry yaw = calcGimbalAxis(tgt.distance, tgt.dx); pitch = calcGimbalAxis(tgt.distance, tgt.dy)
+	}
+	
+	transition CalcYaw { from Calculate to Clamp }
+
+	state Yaw {
+		entry gimbalYaw!yaw
+	}
+
+	transition YP { from Yaw to Pitch trigger gimbalYawAck }
+			
+	state Pitch {
+		entry gimbalPitch!pitch
+	}
+
+	transition PW { from Pitch to MaybeAimed trigger gimbalPitchAck }
+	
+	// added 2022-05-20: validity checking in visual nav
+	junction IsValid
+	transition Valid { from IsValid to Calculate condition tgt.status == FireStatus::Tracked }
+	transition NotValid { from IsValid to Waiting condition tgt.status != FireStatus::Tracked }
+	
+	// added 2022-05-25: clamping
+	state Clamp {
+		entry cYaw = clamp(yaw, YAW_DEAD_ZONE); cPitch = clamp(pitch, PITCH_DEAD_ZONE)
+	}
+	transition Clamped { from Clamp to Yaw }
+	
+	junction MaybeAimed
+	transition DidAim { from MaybeAimed to Waiting condition cYaw == yaw /\ cPitch == pitch action gimbalAimed }
+	transition DidNotAim { from MaybeAimed to Waiting condition cYaw != yaw \/ cPitch != pitch }
+}
+
+// Clamps an angle into the dead zone.
+//
+// This comes from a discussion with Bilal et al. on 2022-05-23:
+// the gimbal can't physically move through (0, 180) on both axes because of
+// cabling etc.
+function clamp(n: nat, dz: nat): nat {
+	precondition 0 <= n <= 180
+	postcondition
+		(n < dz => result == dz) /\
+		(180 - dz < n => result == 180 - dz) /\
+		(dz <= n <= 180 - dz) => result == n
+}

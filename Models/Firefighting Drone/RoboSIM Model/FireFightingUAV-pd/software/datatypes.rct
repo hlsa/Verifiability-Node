@@ -1,0 +1,91 @@
+// Datatypes used in the design (not mappings of the platform).
+diagram datatypes
+
+// Message telling the spray aim and control machine, as well as the visual nav,
+// where the fire is.
+datatype FireTarget {
+	// TODO(@MattWindsor91): this is provisional.
+	status: FireStatus // True if this message actually describes a fire.
+	distance: real // Distance to the centre of the depth camera, in metres.
+	// TODO(@MattWindsor91 2022-05-18): Or is this the average of left/centre/right dist?
+	
+	// NOTE(@MattWindsor91 2022-05-18): I'm assuming that the fire detection
+	// STM is responsible for translating from pixel distances to metre
+	// distances given information about the field of view of the camera and
+	// the distance.
+	
+	dx: real // Relative X coordinate (+ = right) of the fire on the wall, in metres.
+	dy: real // Relative Y coordinate (+ = up) of the fire on the wall, in metres.
+}
+
+// Message containing the distances to the extremities of the wall (all in metres).
+//
+// The points computed are arbitrary, but equally spaced out on either side of
+// the centre of the frame.
+//
+// The idea here is that we're not necessarily interested in the actual
+// distances so much as the left-centre/right-centre skew.
+datatype WallMetrics {
+	// TODO(@MattWindsor91): this is provisional.
+	leftDist  : real // Distance to a known point on the left of the depth camera image.
+	centreDist: real // Distance to the centre of the depth camera.
+	rightDist : real // Distance to a known point on the right of the depth camera image.
+}
+
+// Latitude/longitude/altitude/heading position, used for waypoints.
+datatype Position {
+	lat: real
+	lon: real
+	alt: real
+	heading: real
+}
+
+// A RGB pixel.
+datatype Rgb {
+	r: real // red
+	g: real // green
+	b: real // blue
+}
+
+// A superimposed pixel.
+datatype Superimpose {
+	rgb: Rgb
+	d: real // depth
+	t: real // thermal
+}
+
+// Size-regulated frame
+datatype Frame {
+	// NOTE (@MattWindsor91): both MLX and RealSense return C float arrays.
+	contents: matrix(real, 960, 720)
+}
+
+// As Frame but with RGB information
+datatype RgbFrame {
+	contents: matrix(Rgb, 960, 720)
+}
+
+// Superimposed frame, containing RGB, thermal, and depth information.
+datatype SuperimposedFrame {
+	contents: matrix(Superimpose, 960, 720)
+}
+
+// A relative (FRU) motion.
+//
+// Added: 2022-05-13
+//
+// Corresponds to: https://developer.dji.com/onboard-api-reference/structDJI_1_1OSDK_1_1Control_1_1CtrlData.html
+// (with hardcoded flags corresponding to those set by positionAndYawCtrl)
+datatype RelativeMotion {
+	dx  : real // X delta (front?)
+	dy  : real // Y delta (right?)
+	dz  : real // Z delta (up?)
+	dyaw: real // Yaw delta
+}
+
+// The classification of a fire.
+enumeration FireStatus {
+	NoFire   // We did not see a fire here.
+	Detected // We think there's a fire, but we're too far away to box it.
+	Tracked  // We were able to box the fire and locate the centre of it.
+}
