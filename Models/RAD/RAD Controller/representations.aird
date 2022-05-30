@@ -4,13 +4,17 @@
     <semanticResources>platform:/plugin/circus.robocalc.robochart.textual/lib/robochart/core.rct</semanticResources>
     <semanticResources>rad.assertions</semanticResources>
     <semanticResources>rad-control.rct</semanticResources>
+    <semanticResources>platform:/plugin/circus.robocalc.robochart.textual/lib/robochart/sequence_toolkit.rct</semanticResources>
+    <semanticResources>platform:/plugin/circus.robocalc.robochart.textual/lib/robochart/relation_toolkit.rct</semanticResources>
+    <semanticResources>platform:/plugin/circus.robocalc.robochart.textual/lib/robochart/set_toolkit.rct</semanticResources>
+    <semanticResources>platform:/plugin/circus.robocalc.robochart.textual/lib/robochart/function_toolkit.rct</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_lnRFEK9mEeykAepXh41ozA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_lsI-AK9mEeykAepXh41ozA" name="rad-control" repPath="#_lrIRYK9mEeykAepXh41ozA" changeId="dc64edee-5bdf-4f72-9045-9e5ee71113b2">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']"/>
         <target xmi:type="robochart:RCPackage" href="rad-control.rct#/"/>
       </ownedRepresentationDescriptors>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_w9ZP0K9mEeykAepXh41ozA" name="rad-control.rct" repPath="#_w9WzkK9mEeykAepXh41ozA" changeId="121da562-b2e0-4e0a-b04a-5eb67f74c638">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_w9ZP0K9mEeykAepXh41ozA" name="rad-control.rct" repPath="#_w9WzkK9mEeykAepXh41ozA" changeId="d12f9012-4183-4645-8190-ba997e377f67">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']"/>
         <target xmi:type="robochart:RCPackage" href="rad-control.rct#/"/>
       </ownedRepresentationDescriptors>
@@ -454,7 +458,7 @@
                         <styles xmi:type="notation:DrawerStyle" xmi:id="_xpjyRK9mEeykAepXh41ozA"/>
                       </children>
                       <styles xmi:type="notation:ShapeStyle" xmi:id="_xpjLMa9mEeykAepXh41ozA" fontName="Cantarell" fontHeight="10"/>
-                      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xpjLMq9mEeykAepXh41ozA"/>
+                      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xpjLMq9mEeykAepXh41ozA" width="735"/>
                     </children>
                     <children xmi:type="notation:Node" xmi:id="_xpjyRa9mEeykAepXh41ozA" type="3008" element="_xHMsEK9mEeykAepXh41ozA">
                       <children xmi:type="notation:Node" xmi:id="_xpkZUK9mEeykAepXh41ozA" visible="false" type="5005"/>
@@ -636,7 +640,7 @@
                         <styles xmi:type="notation:DrawerStyle" xmi:id="_xpkZVK9mEeykAepXh41ozA"/>
                       </children>
                       <styles xmi:type="notation:ShapeStyle" xmi:id="_xpjyRq9mEeykAepXh41ozA" fontName="Cantarell" fontHeight="1"/>
-                      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xpjyR69mEeykAepXh41ozA" y="40" height="1298"/>
+                      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xpjyR69mEeykAepXh41ozA" y="40" width="735" height="1298"/>
                     </children>
                     <styles xmi:type="notation:SortingStyle" xmi:id="_xpdroq9mEeykAepXh41ozA"/>
                     <styles xmi:type="notation:FilteringStyle" xmi:id="_xpdro69mEeykAepXh41ozA"/>
@@ -3004,7 +3008,7 @@
           <styles xmi:type="notation:ConnectorStyle" xmi:id="_x4tok69mEeykAepXh41ozA" routing="Rectilinear"/>
           <styles xmi:type="notation:FontStyle" xmi:id="_x4tolK9mEeykAepXh41ozA" fontName="Cantarell" fontHeight="10"/>
           <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_x4tola9mEeykAepXh41ozA" points="[0, 3, -171, 209]$[171, 3, 0, 209]"/>
-          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_x4u2sK9mEeykAepXh41ozA" id="(1.0,0.23133235724743778)"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_x4u2sK9mEeykAepXh41ozA" id="(0.6282225237449118,0.23133235724743775)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_x4u2sa9mEeykAepXh41ozA" id="(0.0,0.15013279559315365)"/>
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_x4u2sq9mEeykAepXh41ozA" type="4001" element="_xWiIla9mEeykAepXh41ozA" source="_xpdrpK9mEeykAepXh41ozA" target="_xpeStK9mEeykAepXh41ozA">
@@ -3053,7 +3057,7 @@
           <styles xmi:type="notation:FontStyle" xmi:id="_x4wr5K9mEeykAepXh41ozA" fontName="Cantarell" fontHeight="10"/>
           <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_x4wr5a9mEeykAepXh41ozA" points="[0, -6, -158, 34]$[158, -6, 0, 34]"/>
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_x4x6AK9mEeykAepXh41ozA" id="(1.0,0.5092592592592593)"/>
-          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_x4x6Aa9mEeykAepXh41ozA" id="(0.0,0.23133235724743778)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_x4x6Aa9mEeykAepXh41ozA" id="(0.0,0.23133235724743775)"/>
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="_x4x6Aq9mEeykAepXh41ozA" type="4001" element="_xWkk0K9mEeykAepXh41ozA" source="_xrd2w69mEeykAepXh41ozA" target="_xrdPs69mEeykAepXh41ozA">
           <children xmi:type="notation:Node" xmi:id="_x4x6Bq9mEeykAepXh41ozA" type="6001">
