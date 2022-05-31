@@ -5,7 +5,7 @@ import physmod::math::*
 
 pmodel pmfranka {
 	const PI: real = 3.1415	
-	const ARM_RADIUS: real = 0.05
+	const ARM_RADIUS: real = 0.055
 	const GRIP_RADIUS: real = 0.02
 	const GRIP_LENGTH: real = 0.08
 	const Z_BASE: real = 0
@@ -61,6 +61,32 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
+		local body Sp1a {
+			def {
+				sphere ( radius = ARM_RADIUS)
+			}
+			pose {
+				x = 0.0
+				y = 0.0
+				z = ARM_RADIUS
+				roll = 0.0
+				pitch = 0.0
+				yaw = 0.0
+			}
+		}
+		local body Sp1b {
+			def {
+				sphere ( radius = ARM_RADIUS)
+			}
+			pose {
+				x = 0.0
+				y = 0.0
+				z = -ARM_RADIUS
+				roll = 0.0
+				pitch = 0.0
+				yaw = 0.0
+			}
+		}
 		pose {
 			x = 0.0
 			y = 0.0
@@ -111,8 +137,34 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
+		local body Sp3a {
+			def {
+				sphere ( radius = ARM_RADIUS)
+			}
+			pose {
+				x = 0.0
+				y = 0.0
+				z = ARM_RADIUS
+				roll = 0.0
+				pitch = 0.0
+				yaw = 0.0
+			}
+		}
+		local body Sp3b {
+			def {
+				sphere ( radius = ARM_RADIUS)
+			}
+			pose {
+				x = 0.0
+				y = 0.0
+				z = -ARM_RADIUS
+				roll = 0.0
+				pitch = 0.0
+				yaw = 0.0
+			}
+		}
 		pose {
-			x = 0.0
+			x = LEN4
 			y = 0.0
 			z = 0.649
 			roll = PI/2
@@ -175,12 +227,12 @@ pmodel pmfranka {
 		}
 		local body Cy6 {
 			def {
-				cylinder ( radius = ARM_RADIUS , length = LEN4 )
+				cylinder ( radius = ARM_RADIUS , length = LEN5 )
 			}
 			pose {
 				x = 0.0
 				y = 0.0
-				z = LEN4/2
+				z = LEN5/2
 				roll = 0.0
 				pitch = 0.0
 				yaw = 0.0
@@ -225,7 +277,7 @@ pmodel pmfranka {
 			}
 		}
 		pose {
-			x = LEN4
+			x = LEN5
 			y = 0.0
 			z = LEN1 + LEN2 + LEN3
 			roll = 0.0
@@ -250,7 +302,7 @@ pmodel pmfranka {
 			}
 		}
 		pose {
-			x = LEN4
+			x = LEN5
 			y = 0.0
 			z = LEN1 + LEN2 + LEN3 - LEN6
 			roll = 0.0
