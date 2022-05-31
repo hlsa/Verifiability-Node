@@ -2,6 +2,12 @@ import physmod::joints::Revolute
 import physmod::actuators::*
 import physmod::math::*
 
+sensor ForceSensor {
+	// Very basic force sensor; needs to be replaced with something more sophisticated
+	input input_force: real
+	output output_force: real
+	equation input_force == output_force
+}
 
 pmodel pmfranka {
 	const PI: real = 3.1415	
@@ -35,6 +41,13 @@ pmodel pmfranka {
 				pitch = 0.0
 				yaw = 0.0
 			}
+		}
+		jref JS0 = Revolute {
+			instantiation AXIS = (|0,0,0|)
+			aref MS0 = SpeedControlMotor {
+				relation JS0.tau == MS0.T
+			}
+			flexibly connected to Li1
 		}
 		pose {
 			x = X_BASE
@@ -87,6 +100,13 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
+		jref JS1 = Revolute {
+			instantiation AXIS = (|0,0,0|)
+			aref MS1 = SpeedControlMotor {
+				relation JS1.tau == MS1.T
+			}
+			flexibly connected to Li2
+		}
 		pose {
 			x = 0.0
 			y = 0.0
@@ -111,6 +131,13 @@ pmodel pmfranka {
 				pitch = 0.0
 				yaw = 0.0
 			}
+		}
+		jref JS2 = Revolute {
+			instantiation AXIS = (|0,0,0|)
+			aref MS2 = SpeedControlMotor {
+				relation JS2.tau == MS2.T
+			}
+			flexibly connected to Li3
 		}
 		pose {
 			x = 0.0
@@ -163,6 +190,13 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
+		jref JS3 = Revolute {
+			instantiation AXIS = (|0,0,0|)
+			aref MS3 = SpeedControlMotor {
+				relation JS3.tau == MS3.T
+			}
+			flexibly connected to Li4
+		}
 		pose {
 			x = LEN4
 			y = 0.0
@@ -187,6 +221,13 @@ pmodel pmfranka {
 				pitch = 0.0
 				yaw = 0.0
 			}
+		}
+		jref JS4 = Revolute {
+			instantiation AXIS = (|0,0,0|)
+			aref MS4 = SpeedControlMotor {
+				relation JS4.tau == MS4.T
+			}
+			flexibly connected to Li5
 		}
 		pose {
 			x = 0.0
@@ -213,6 +254,13 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
+		jref JS5 = Revolute {
+			instantiation AXIS = (|0,0,0|)
+			aref MS5 = SpeedControlMotor {
+				relation JS5.tau == MS5.T
+			}
+			flexibly connected to Li6
+		}
 		pose {
 			x = 0.0
 			y = 0.0
@@ -237,6 +285,13 @@ pmodel pmfranka {
 				pitch = 0.0
 				yaw = 0.0
 			}
+		}
+		jref JS6 = Revolute {
+			instantiation AXIS = (|0,0,0|)
+			aref MS6 = SpeedControlMotor {
+				relation JS6.tau == MS6.T
+			}
+			flexibly connected to Li7
 		}
 		pose {
 			x = 0.0
@@ -276,6 +331,13 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
+		jref JS7 = Revolute {
+			instantiation AXIS = (|0,0,0|)
+			aref MS7 = SpeedControlMotor {
+				relation JS7.tau == MS7.T
+			}
+			flexibly connected to LiF
+		}
 		pose {
 			x = LEN5
 			y = 0.0
@@ -309,5 +371,6 @@ pmodel pmfranka {
 			pitch = -PI
 			yaw = 0.0
 		}
+	sref FS1 = ForceSensor
 	}
 }
