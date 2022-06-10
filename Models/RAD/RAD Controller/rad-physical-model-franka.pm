@@ -42,13 +42,14 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
-		jref JS0 = Revolute {
-			instantiation AXIS = (|0,0,0|)
-			aref MS0 = SpeedControlMotor {
-				relation JS0.tau == MS0.T
+		jref J0 = Revolute {
+			instantiation AXIS = (|0,0,1|)
+			aref M0 = SpeedControlMotor {
+				relation J0.tau == M0.T
 			}
 			flexibly connected to Li1
 		}
+		sref FSJ0 = ForceSensor
 		pose {
 			x = X_BASE
 			y = 0.0
@@ -100,13 +101,14 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
-		jref JS1 = Revolute {
-			instantiation AXIS = (|0,0,0|)
+		jref J1 = Revolute {
+			instantiation AXIS = (|0,0,1|)
 			aref MS1 = SpeedControlMotor {
-				relation JS1.tau == MS1.T
+				relation J1.tau == MS1.T
 			}
 			flexibly connected to Li2
 		}
+		sref FSJ1 = ForceSensor
 		pose {
 			x = 0.0
 			y = 0.0
@@ -132,13 +134,14 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
-		jref JS2 = Revolute {
-			instantiation AXIS = (|0,0,0|)
-			aref MS2 = SpeedControlMotor {
-				relation JS2.tau == MS2.T
+		jref J2 = Revolute {
+			instantiation AXIS = (|0,0,1|)
+			aref M2 = SpeedControlMotor {
+				relation J2.tau == M2.T
 			}
 			flexibly connected to Li3
 		}
+		sref FSJ2 = ForceSensor
 		pose {
 			x = 0.0
 			y = 0.0
@@ -190,13 +193,14 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
-		jref JS3 = Revolute {
-			instantiation AXIS = (|0,0,0|)
-			aref MS3 = SpeedControlMotor {
-				relation JS3.tau == MS3.T
+		jref J3 = Revolute {
+			instantiation AXIS = (|0,0,1|)
+			aref M3 = SpeedControlMotor {
+				relation J3.tau == M3.T
 			}
 			flexibly connected to Li4
 		}
+		sref FSJ3 = ForceSensor
 		pose {
 			x = LEN4
 			y = 0.0
@@ -222,13 +226,14 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
-		jref JS4 = Revolute {
-			instantiation AXIS = (|0,0,0|)
-			aref MS4 = SpeedControlMotor {
-				relation JS4.tau == MS4.T
+		jref J4 = Revolute {
+			instantiation AXIS = (|0,0,1|)
+			aref M4 = SpeedControlMotor {
+				relation J4.tau == M4.T
 			}
 			flexibly connected to Li5
 		}
+		sref FSJ4 = ForceSensor
 		pose {
 			x = 0.0
 			y = 0.0
@@ -254,13 +259,14 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
-		jref JS5 = Revolute {
-			instantiation AXIS = (|0,0,0|)
-			aref MS5 = SpeedControlMotor {
-				relation JS5.tau == MS5.T
+		jref J5 = Revolute {
+			instantiation AXIS = (|0,0,1|)
+			aref M5 = SpeedControlMotor {
+				relation J5.tau == M5.T
 			}
 			flexibly connected to Li6
 		}
+		sref FSJ5 = ForceSensor
 		pose {
 			x = 0.0
 			y = 0.0
@@ -286,13 +292,14 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
-		jref JS6 = Revolute {
-			instantiation AXIS = (|0,0,0|)
-			aref MS6 = SpeedControlMotor {
-				relation JS6.tau == MS6.T
+		jref J6 = Revolute {
+			instantiation AXIS = (|0,1,0|)
+			aref M6 = SpeedControlMotor {
+				relation J6.tau == M6.T
 			}
 			flexibly connected to Li7
 		}
+		sref FSJ6 = ForceSensor
 		pose {
 			x = 0.0
 			y = 0.0
@@ -331,13 +338,14 @@ pmodel pmfranka {
 				yaw = 0.0
 			}
 		}
-		jref JS7 = Revolute {
-			instantiation AXIS = (|0,0,0|)
-			aref MS7 = SpeedControlMotor {
-				relation JS7.tau == MS7.T
+		jref J7 = Revolute {
+			instantiation AXIS = (|0,1,0|)
+			aref M7 = SpeedControlMotor {
+				relation J7.tau == M7.T
 			}
 			flexibly connected to LiF
 		}
+		sref FSJ7 = ForceSensor
 		pose {
 			x = LEN5
 			y = 0.0
@@ -371,6 +379,9 @@ pmodel pmfranka {
 			pitch = -PI
 			yaw = 0.0
 		}
-	sref FS1 = ForceSensor
+		sref FSG = ForceSensor
+		aref GR1 = Gripper
 	}
+}
+actuator Gripper {
 }
