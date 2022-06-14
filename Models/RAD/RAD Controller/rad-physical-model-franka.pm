@@ -9,6 +9,13 @@ sensor ForceSensor {
 	equation input_force == output_force
 }
 
+sensor TorqueSensor {
+	// Very basic force sensor; needs to be replaced with something more sophisticated
+	input input_torque: real
+	output output_torque: real
+	equation input_torque == output_torque
+}
+
 pmodel pmfranka {
 	const PI: real = 3.1415	
 	const ARM_RADIUS: real = 0.055
@@ -22,12 +29,15 @@ pmodel pmfranka {
 	const LEN4: real = 0.0825
 	const LEN5: real = 0.0880
 	const LEN6: real = 0.1070
+	// const masses: vector(real, 7) = [|3.4525, 3.4821, 4.0562, 3.4822, 2.1633, 2.3466, 0.31290|]
 	const theta0: real = PI/2
-	const alpha0: real = PI/2
-	
+	const alpha0: real = PI/2	
 	
 	local link Li0 {
 		def {
+			inertial information {
+				mass 3.4525 kg
+			}
 		}
 		local body Cy0 {
 			def {
@@ -61,6 +71,9 @@ pmodel pmfranka {
 	}
 	local link Li1 {
 		def {
+		inertial information {
+				mass 3.4821 kg
+			}
 		}
 		local body Cy1 {
 			def {
@@ -120,6 +133,9 @@ pmodel pmfranka {
 	}
 	local link Li2 {
 		def {
+		inertial information {
+				mass 3.4821 kg
+			}
 		}
 		local body Cy2 {
 			def {
@@ -153,6 +169,9 @@ pmodel pmfranka {
 	}
 	local link Li3 {
 		def {
+		inertial information {
+				mass 4.0562 kg
+			}
 		}
 		local body Cy3 {
 			def {
@@ -212,6 +231,9 @@ pmodel pmfranka {
 	}
 	local link Li4 {
 		def {
+		inertial information {
+				mass 3.4822 kg
+			}
 		}
 		local body Cy4 {
 			def {
@@ -245,6 +267,9 @@ pmodel pmfranka {
 	}
 	local link Li5 {
 		def {
+		inertial information {
+				mass 2.1633 kg
+			}
 		}
 		local body Cy5 {
 			def {
@@ -278,6 +303,9 @@ pmodel pmfranka {
 	}
 	local link Li6 {
 		def {
+		inertial information {
+				mass 2.3466 kg
+			}
 		}
 		local body Cy6 {
 			def {
@@ -311,6 +339,9 @@ pmodel pmfranka {
 	}
 	local link Li7 {
 		def {
+		inertial information {
+				mass 0.3129 kg
+			}
 		}
 		local body Sp7 {
 			def {
@@ -382,6 +413,9 @@ pmodel pmfranka {
 		sref FSG = ForceSensor
 		aref GR1 = Gripper
 	}
+}
+sensor NoiseSensor {
+	output output_noise_level: real
 }
 actuator Gripper {
 }

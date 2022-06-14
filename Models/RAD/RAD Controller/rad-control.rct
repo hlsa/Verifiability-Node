@@ -24,12 +24,15 @@ interface DressingEvents {
 event gripCorrect : boolean
 	event gripperEngaged : boolean
 event correctedMovement
+event secondHandDetected
+	event userDressed
 }
 
 interface SensorOperations {
 	detectGarment ( )
 detectUserPose ( )
 checkFault ( )
+detectSecondArm ( )
 }
 
 interface EmergencyStopEvents {
@@ -50,6 +53,7 @@ enumeration NoiseLevel { High Medium Low } interface MovementEvents {
 
 interface HRIOperations {
 	checkCorrectGrip ( )
+checkUserDressed ( )
 }
 
 controller CDressingControl {
@@ -87,6 +91,8 @@ requires HRIOperations
 	connection CDressingControl on gripCorrect to stm_ref0 on gripCorrect
 	connection CDressingControl on atTarget to stm_ref3 on atTarget
 connection stm_ref0 on correctedMovement to CDressingControl on correctedMovement
+connection CDressingControl on secondHandDetected to stm_ref0 on secondHandDetected
+connection CDressingControl on userDressed to stm_ref0 on userDressed
 }
 
 stm SDressingControl {
@@ -220,22 +226,16 @@ uses DressingEvents requires FrankaArmControl
 		}
 		transition t5 {
 			from j0
-			to ReleaseGrip
+			to f0
 			condition currentJoint == 0
+			action firstArmDressed = true
 		}
 		transition t7 {
 			from FaultCheck
 			to DetectUserPose
 			trigger invalidPoseDetected
 		}
-	state ReleaseGrip {
-			entry releaseGrip ( )
-		}
-		transition t8 {
-			from ReleaseGrip
-			to f0
-		}
-	junction j0
+		junction j0
 		transition t6 {
 			from MovingToJoint
 			to FaultCheck
@@ -292,6 +292,50 @@ var targetPosition : boolean
 	var arrivedAtTarget : boolean = false
 requires HRIOperations var isGripCorrect : boolean = false
 	var isGripperEngaged : boolean = false
+var firstArmDressed : boolean = false
+	state SecondArm {
+		initial i0
+		state DetectSecondHand {
+			entry detectSecondArm ( )
+		}
+		state ReleaseGrip {
+			entry releaseGrip ( )
+		}
+		final f0
+		state MovingToSecondHand {
+		}
+		state CheckingUserDressed {
+			entry checkUserDressed ( )
+		}
+		transition t0 {
+			from i0
+			to DetectSecondHand
+		}
+		transition t1 {
+			from ReleaseGrip
+			to f0
+		}
+		transition t2 {
+			from DetectSecondHand
+			to MovingToSecondHand
+			action movementStart
+		}
+		transition t3 {
+			from MovingToSecondHand
+			to CheckingUserDressed
+			trigger movementEnd
+		}
+		transition t4 {
+			from CheckingUserDressed
+			to ReleaseGrip
+			trigger userDressed
+		}
+	}
+	transition t4 {
+		from DressingLoop
+		to SecondArm
+		condition firstArmDressed
+	}
 }
 
 //function A01(config: vector(real, 7)) : matrix(real, 4, 4) {
@@ -323,6 +367,7 @@ connection Franka on gripCorrect to ctrl_ref0 on gripCorrect ( _async )
 	connection Franka on atTarget to ctrl_ref0 on atTarget ( _async )
 	connection ctrl_ref0 on dressedJoint to Franka on dressedJoint ( _async )
 connection ctrl_ref0 on correctedMovement to Franka on correctedMovement ( _async )
+connection Franka on secondHandDetected to ctrl_ref0 on secondHandDetected ( _async )
 }
 
 stm SEmergencyStopControl {
@@ -441,8 +486,8 @@ stm MovementControl {
 	transition t1 {
 		from NotEngaged
 		to CheckMovement
-		trigger movementStart
-		action skip
+		trigger 
+		movementStart
 	}
 	transition t2 {
 		from CheckMovement
