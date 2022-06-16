@@ -1,0 +1,56 @@
+package movement
+
+import definitions::*
+
+stm MovementControl {
+	uses MovementEvents requires FrankaArmControl
+	uses FrankaArmEvents
+	var arrivedAtTarget : boolean = false
+	var target : Position
+	var current : Position
+	const EPSILON: real = 0.01
+	event allowMovement
+
+	initial i0
+	state NotEngaged {
+	}
+	state CheckMovement {
+	}
+	state MoveTowardsTarget {
+		entry setConfiguration ( )
+	}
+	junction j0
+	transition t0 {
+		from i0
+		to NotEngaged
+	}
+	transition t1 {
+		from NotEngaged
+		to CheckMovement
+		trigger 
+		
+	movementStart?target
+	}
+	transition t2 {
+		from CheckMovement
+		to MoveTowardsTarget
+		trigger allowMovement
+	}
+	transition t3 {
+		from MoveTowardsTarget
+		to j0
+		trigger endEffectorPosition ? current
+	}
+	transition t4 {
+		from j0
+		to NotEngaged
+		condition dist ( target , current ) < EPSILON
+		action movementEnd
+	}
+	transition t5 {
+		from j0
+		to CheckMovement
+		condition dist ( target , current ) >= EPSILON
+	}
+}
+

@@ -1,0 +1,55 @@
+package radcontrol
+
+import definitions::*
+import emergencystop::*
+import movement::*
+import dressingcontrol::*
+
+controller CDressingControl {
+	requires FrankaArmControl
+	requires HRIOperations
+	requires SensorOperations 
+	
+	
+	uses DressingEvents
+	uses FrankaArmEvents
+	uses EmergencyStopEvents 
+	uses EnvironmentalEvents 
+	event dressedJoint : int
+	
+	sref stm_dressing = SDressingControl
+	sref stm_movement = MovementControl
+	sref stm_stop = EmergencyStopControl
+	sref stm_environment = EnvironmentalMonitor
+			
+	connection CDressingControl on snaggingDetected to stm_dressing on snaggingDetected
+	connection CDressingControl on invalidTrajectory to stm_dressing on invalidTrajectory
+	connection CDressingControl on invalidPoseDetected to stm_dressing on invalidPoseDetected
+	connection CDressingControl on userInterrupt to stm_dressing on userInterrupt
+	connection CDressingControl on poseDetected to stm_dressing on poseDetected
+	connection CDressingControl on dressingRequest to stm_dressing on dressingRequest
+	connection CDressingControl on garmentDetected to stm_dressing on garmentDetected
+	connection CDressingControl on armConfig to stm_dressing on armConfig
+
+	connection CDressingControl on emergencyStop to stm_stop on emergencyStop
+	connection CDressingControl on resumeDressing to stm_stop on resumeDressing
+
+	connection stm_environment on environmentalResume to stm_stop on environmentalResume
+	connection stm_environment on environmentalStop to stm_stop on environmentalStop
+	connection CDressingControl on backgroundNoiseLevel to stm_environment on backgroundNoiseLevel
+	connection CDressingControl on otherAgentDetected to stm_environment on otherAgentDetected
+	connection stm_dressing on dressedJoint to CDressingControl on dressedJoint
+	connection stm_stop on allowMovement to stm_movement on allowMovement
+
+	connection stm_movement on movementEnd to stm_dressing on movementEnd
+
+	connection CDressingControl on gripCorrect to stm_dressing on gripCorrect
+	connection stm_dressing on movementStart to stm_movement on movementStart
+	connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged
+	connection CDressingControl on secondHandDetected to stm_dressing on secondHandDetected
+
+	connection CDressingControl on userDressed to stm_dressing on userDressed
+	connection CDressingControl on endEffectorPosition to stm_movement on endEffectorPosition
+	connection stm_dressing on correctedMovement to CDressingControl on correctedMovement
+}
+

@@ -4,19 +4,19 @@
 // assertion R3: SDressingControl is deterministic
 // assertion R4: SDressingControl::GarmentAcquistion is deterministic
 // false
-assertion ES1: SEmergencyStopControl is deadlock-free
+assertion ES1: EmergencyStopControl is deadlock-free
 // false
-assertion ES2: SEmergencyStopControl is divergence-free
+assertion ES2: EmergencyStopControl is divergence-free
 // false
-assertion ES3: SEmergencyStopControl is deterministic
+assertion ES3: EmergencyStopControl is deterministic
 // true
-csp SpecES4 associated to SEmergencyStopControl csp-begin
+csp SpecES4 associated to EmergencyStopControl csp-begin
     channel done4
     DONE4 = done4 -> DONE4
     SpecES4 = SEmergencyStopControl::O__(0) [ SEmergencyStopControl::emergencyStop.in <-> SEmergencyStopControl::emergencyStop.out ] SEmergencyStopControl::emergencyStop.out -> DONE4
 csp-end
 assertion ES4: SpecES4 is deadlock-free
-csp SpecES5 associated to SEmergencyStopControl csp-begin
+csp SpecES5 associated to EmergencyStopControl csp-begin
     EVENSTOPS = SEmergencyStopControl::emergencyStop.out -> ODDSTOPS
     ODDSTOPS = SEmergencyStopControl::resumeDressing.out -> EVENSTOPS
     EVENESTOPS = SEmergencyStopControl::environmentalStop.out -> ODDESTOPS
@@ -31,17 +31,17 @@ csp SpecES5 associated to SEmergencyStopControl csp-begin
 csp-end
 // fails
 assertion ES5: SpecES5 is deadlock-free
-csp SpecAlwaysAllowMovement associated to SEmergencyStopControl csp-begin
+csp SpecAlwaysAllowMovement associated to EmergencyStopControl csp-begin
 	SpecAlwaysAllowMovement = (SEmergencyStopControl::allowMovement.out -> SpecAlwaysAllowMovement) |~| DIV
 csp-end
 assertion ES6a: SpecES5 refines SpecAlwaysAllowMovement in the traces model
 assertion ES6b: SpecES5 refines SpecAlwaysAllowMovement in the failures model 
 assertion ES6c: SpecES5 refines SpecAlwaysAllowMovement 
-csp ESHiddenStops associated to SEmergencyStopControl csp-begin
+csp ESHiddenStops associated to EmergencyStopControl csp-begin
 	ESHiddenStops = (SEmergencyStopControl::O__(0) \ {SEmergencyStopControl::emergencyStop.in, SEmergencyStopControl::resumeDressing.in,
 		                                              SEmergencyStopControl::environmentalStop.in, SEmergencyStopControl::environmentalResume.in})
 csp-end
-csp ESChaoticMovement associated to SEmergencyStopControl csp-begin
+csp ESChaoticMovement associated to EmergencyStopControl csp-begin
 	ESChaoticMovement = CHAOS({SEmergencyStopControl::allowMovement.out})|~|DIV
 csp-end
 assertion ES7: ESChaoticMovement refines ESHiddenStops
@@ -53,6 +53,7 @@ assertion ES10: ESHiddenStops refines ESChaoticMovement
 // === R17: the garment cannot be picked up until a request has been made ===
 
 // === First version of nothing until request has been made ===
+/*
 csp GANothingUntilRequest associated to SDressingControl csp-begin
 	AnyEvents = CHAOS({
 		SDressingControl::dressingRequest.in, SDressingControl::gripperEngaged.in.true, SDressingControl::gripperEngaged.in.false,
@@ -72,11 +73,12 @@ csp GANothingUntilRequest associated to SDressingControl csp-begin
 csp-end
 assertion GA1t: SDressingControl refines GANothingUntilRequest in the traces model
 assertion GA1f: SDressingControl refines GANothingUntilRequest in the failures model
-assertion GA1fd: SDressingControl refines GANothingUntilRequest
+assertion GA1fd: SDressingControl refines GANothingUntilRequest */
 /* We should perform two stage verification that the garment has been gripped correctly before starting.
  * This requires us to check both that a request has been made and for the user to confirm the correctness
  * of garment acquisition.
  */
+ /*
 csp GATwoStageGripVerification associated to SDressingControl csp-begin
 	PreGripEvents = CHAOS({SDressingControl::gripperEngaged.in.false, SDressingControl::gripperEngaged.in.true,
 		SDressingControl::gripCorrect.in.false, SDressingControl::checkCorrectGripCall,SDressingControl::detectGarmentCall,
@@ -143,7 +145,7 @@ assertion GA4fd: SDressingControl refines GACorrectionAfterSnagging2
 
 assertion GA5l: GACorrectionAfterSnagging refines GACorrectionAfterSnagging2
 assertion GA5r: GACorrectionAfterSnagging2 refines GACorrectionAfterSnagging
-
+*/
 
 // Work in progress properties for the rest of the dressing behaviour
 /*

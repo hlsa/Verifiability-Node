@@ -1,0 +1,260 @@
+package dressingcontrol
+
+import definitions::*
+
+stm SDressingControl {
+	initial i0
+uses DressingEvents requires FrankaArmControl 
+	
+	var currentJoint : int = 2
+	state GarmentAcquisition {
+		state LookingForGarment {
+			entry detectGarment ( )
+		}
+		initial i0
+
+		state EngageGarment {
+			entry grip ( )
+		}
+		transition t0 {
+			from i0
+			to LookingForGarment
+		}
+		transition t1 {
+			from LookingForGarment
+			to Moving
+			trigger 
+		
+		
+			garmentDetected ? targetPosition
+			action movementStart ! targetPosition
+		}
+
+		transition t5 {
+			from j0
+			to f0
+		condition isGripCorrect
+			action garmentAcquired = true
+		}
+	state Moving {
+		}
+		final f0
+
+		transition t2 {
+			from Moving
+			to EngageGarment
+			trigger movementEnd
+		}
+	state confirmGripCorrect {
+			entry checkCorrectGrip ( )
+		}
+		junction j0
+		junction j1
+		transition t3 {
+			from confirmGripCorrect
+			to j0
+			trigger 
+		gripCorrect ? isGripCorrect
+		}
+		transition t4 {
+			from EngageGarment
+			to j1
+			trigger 
+		gripperEngaged ? isGripperEngaged
+		}
+		transition t6 {
+			from j1
+			to LookingForGarment
+			condition not isGripperEngaged
+		}
+		transition t7 {
+			from j0
+			to LookingForGarment
+			condition not isGripCorrect
+			action releaseGrip ( )
+		}
+		transition t8 {
+			from j1
+			to confirmGripCorrect
+			condition isGripperEngaged
+		}
+	}
+	state GarmentToUser {
+		initial i0
+
+		final f0
+
+		transition t0 {
+			from i0
+			to DetectStartPose
+		}
+		transition t2 {
+			from DetectStartPose
+			to Moving
+			trigger 
+		
+			
+			poseDetected ? userPose
+			action 
+		targetPosition = jointPosition ( userPose , 2 ) ; movementStart ! targetPosition
+		}
+		state DetectStartPose {
+			entry detectUserPose ( )
+		}
+
+		transition t1 {
+			from Moving
+			to f0
+			trigger movementEnd
+			action garmentWithUser = true
+		}
+		state Moving {
+		}
+	}
+	state DressingLoop {
+	initial i0
+		state DetectUserPose {
+			entry detectUserPose ( )
+		}
+		state MovingToJoint {
+		}
+		final f0
+		transition t0 {
+			from j0
+			to DetectUserPose
+			condition currentJoint > 0
+			action currentJoint = currentJoint - 1
+		}
+		transition t1 {
+			from i0
+			to DetectUserPose
+		}
+		transition t2 {
+			from DetectUserPose
+			to MovingToJoint
+			trigger 
+			
+			
+			
+			poseDetected ? userPose
+			condition currentJoint == 0 \/ currentJoint == 1 \/ currentJoint == 2
+			action 
+		
+		targetPosition = jointPosition ( userPose , currentJoint ) ; movementStart ! targetPosition
+		}
+		transition t5 {
+			from j0
+			to f0
+			condition currentJoint == 0
+			action firstArmDressed = true
+		}
+		transition t7 {
+			from FaultCheck
+			to DetectUserPose
+			trigger invalidPoseDetected
+		}
+		junction j0
+		transition t6 {
+			from MovingToJoint
+			to FaultCheck
+			trigger 
+			movementEnd
+		}
+		state FaultCheck {
+			entry checkFault ( )
+		}
+		state SnaggingCorrection {
+		}
+		transition t3 {
+			from FaultCheck
+			to SnaggingCorrection
+			trigger snaggingDetected
+		}
+		transition t4 {
+			from SnaggingCorrection
+			to MovingToJoint
+			action correctedMovement
+		}
+		transition t9 {
+			from FaultCheck
+			to j0
+			action dressedJoint ! currentJoint
+		}
+	}
+
+	transition t1 {
+		from GarmentAcquisition
+		to GarmentToUser
+	condition garmentAcquired
+	}
+transition t2 {
+		from GarmentToUser
+		to DressingLoop
+	condition garmentWithUser
+	}
+state Start {
+	}
+transition t0 {
+		from i0
+		to Start
+	}
+	transition t3 {
+		from Start
+		to GarmentAcquisition
+		trigger dressingRequest
+	}
+requires SensorOperations event dressedJoint : int
+uses MovementEvents var garmentAcquired : boolean = false
+	var garmentWithUser : boolean = false
+var targetPosition : Position
+	var arrivedAtTarget : boolean = false
+requires HRIOperations var isGripCorrect : boolean = false
+	var isGripperEngaged : boolean = false
+var firstArmDressed : boolean = false
+	state SecondArm {
+		initial i0
+		state DetectSecondHand {
+			entry detectSecondArm ( )
+		}
+		state ReleaseGrip {
+			entry releaseGrip ( )
+		}
+		final f0
+		state MovingToSecondHand {
+		}
+		state CheckingUserDressed {
+			entry checkUserDressed ( )
+		}
+		transition t0 {
+			from i0
+			to DetectSecondHand
+		}
+		transition t1 {
+			from ReleaseGrip
+			to f0
+		}
+		transition t2 {
+			from DetectSecondHand
+			to MovingToSecondHand
+			trigger secondHandDetected ? targetPosition
+			action movementStart ! targetPosition
+		}
+		transition t3 {
+			from MovingToSecondHand
+			to CheckingUserDressed
+			trigger movementEnd
+		}
+		transition t4 {
+			from CheckingUserDressed
+			to ReleaseGrip
+			trigger userDressed
+		}
+	}
+	transition t4 {
+		from DressingLoop
+		to SecondArm
+		condition firstArmDressed
+	}
+var userPose : vector ( Position , 3 )
+	var garmentPosition : Position
+}

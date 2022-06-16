@@ -1,0 +1,99 @@
+diagram emergencystop
+
+import definitions::*
+
+stm EmergencyStopControl {
+	uses EmergencyStopEvents initial i0
+	state Running {
+	}
+	var emergencyStopped : boolean = false
+	var environmentallyStopped : boolean = false
+event allowMovement
+event environmentalStop
+	event environmentalResume
+	transition t0 {
+		from i0
+		to Running
+	}
+	transition t1 {
+		from Running
+		to Running
+		condition not emergencyStopped /\ not environmentallyStopped
+		action allowMovement
+	}
+	transition t2 {
+		from Running
+		to Running
+		trigger emergencyStop
+		condition not emergencyStopped
+		action emergencyStopped = true
+	}
+	transition t3 {
+		from Running
+		to Running
+		trigger environmentalStop
+		condition not environmentallyStopped
+		action environmentallyStopped = true
+	}
+	transition t4 {
+		from Running
+		to Running
+		trigger resumeDressing
+		condition emergencyStopped
+		action emergencyStopped = false
+	}
+	transition t5 {
+		from Running
+		to Running
+		trigger environmentalResume
+		condition environmentallyStopped
+		action environmentallyStopped = false
+	}
+}
+
+stm EnvironmentalMonitor {
+	uses EnvironmentalEvents 
+	var otherAgent : boolean
+	event environmentalStop
+	event environmentalResume
+	initial i0
+	state SensingHazard {
+	}
+	state OtherAgent {
+	}
+	state BackgroundNoise {
+	}
+	transition t0 {
+		from i0
+		to SensingHazard
+	}
+	transition t1 {
+		from SensingHazard
+		to OtherAgent
+		trigger 
+		otherAgentDetected ? otherAgent
+		condition not otherAgent
+		action environmentalResume
+	}
+	transition t2 {
+		from OtherAgent
+		to SensingHazard
+		trigger 
+		otherAgentDetected ? otherAgent
+		condition otherAgent
+		action environmentalResume
+	}
+	transition t3 {
+		from SensingHazard
+		to BackgroundNoise
+		condition level == NoiseLevel :: High
+		action environmentalStop
+	}
+	transition t4 {
+		from BackgroundNoise
+		to SensingHazard
+		condition level != NoiseLevel :: High
+		action environmentalResume
+	}
+var level : NoiseLevel
+}
