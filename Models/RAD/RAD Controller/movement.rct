@@ -8,7 +8,7 @@ stm MovementControl {
 	var arrivedAtTarget : boolean = false
 	var target : Position
 	var current : Position
-	const EPSILON: real = 0.01
+	const EPSILON: real = 1
 	event allowMovement
 
 	initial i0
@@ -40,17 +40,18 @@ stm MovementControl {
 		from MoveTowardsTarget
 		to j0
 		trigger endEffectorPosition ? current
+		action arrivedAtTarget = dist(target, current) >= EPSILON
 	}
 	transition t4 {
 		from j0
 		to NotEngaged
-		condition dist ( target , current ) < EPSILON
+		condition not arrivedAtTarget
 		action movementEnd
 	}
 	transition t5 {
 		from j0
 		to CheckMovement
-		condition dist ( target , current ) >= EPSILON
+		condition arrivedAtTarget
 	}
 }
 

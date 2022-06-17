@@ -96,7 +96,7 @@ uses DressingEvents requires FrankaArmControl
 			
 			poseDetected ? userPose
 			action 
-		targetPosition = jointPosition ( userPose , 2 ) ; movementStart ! targetPosition
+		targetPosition = jointPosition ( userPose , 2 ); movementStart!targetPosition
 		}
 		state DetectStartPose {
 			entry detectUserPose ( )

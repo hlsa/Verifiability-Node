@@ -82,3 +82,7 @@ function pow( x : real, i: nat ) : real {
 function dist ( p1 : Position , p2 : Position ) : real {
 	postcondition forall pa: real, pb: real @ dist ( p1 , p2 ) == sqrt( pow( p1 . x - p2 . x, 2 ) + pow( p1 . y - p2 . y, 2 ) + pow( p1 . z - p2 . z, 2 ) )
 }
+
+function gte (x: real, y: real): boolean {
+	postcondition forall a: real, b: real @ gte(a, b) == (a >= b)
+}
