@@ -6,8 +6,8 @@ stm MovementControl {
 	uses MovementEvents requires FrankaArmControl
 	uses FrankaArmEvents
 	var arrivedAtTarget : boolean = false
-	var target : Position
-	var current : Position
+	var target : vector(real, 3)
+	var current : vector(real, 3)
 	const EPSILON: real = 1
 	event allowMovement
 

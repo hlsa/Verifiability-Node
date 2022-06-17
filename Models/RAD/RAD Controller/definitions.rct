@@ -14,10 +14,10 @@ interface DressingEvents {
 	event invalidPoseDetected
 	event userInterrupt
 
-	event poseDetected : vector ( Position , 3 )
+	event poseDetected : vector ( vector(real, 3) , 3 )
 	event dressingRequest
 
-	event garmentDetected : Position
+	event garmentDetected : vector(real, 3)
 
 	event armConfig
 
@@ -25,7 +25,7 @@ interface DressingEvents {
 	event gripperEngaged : boolean
 event correctedMovement
 
-	event secondHandDetected : Position
+	event secondHandDetected : vector(real, 3)
 	event userDressed
 
 }
@@ -52,7 +52,7 @@ interface EnvironmentalEvents {
 enumeration NoiseLevel { High Medium Low }
 
 interface MovementEvents {
-	event movementStart : Position
+	event movementStart : vector(real, 3)
 	event movementEnd
 
 }
@@ -62,12 +62,12 @@ interface HRIOperations {
 checkUserDressed ( )
 }
 
-record Position { x : real y : real z : real } interface FrankaArmEvents {
-	event endEffectorPosition : Position
+interface FrankaArmEvents {
+	event endEffectorPosition : vector(real, 3)
 }
 
-function jointPosition(xs: vector(Position, 3), i: int): Position {
-	postcondition forall xxs: vector(Position, 3), ii: int | ii >= 0 /\ ii < 3 @ jointPosition(xxs, ii) == xxs[ii]
+function jointPosition(xs: vector(vector(real, 3), 3), i: int): vector(real, 3) {
+	postcondition forall xxs: vector(vector(real, 3), 3), ii: int | ii >= 0 /\ ii < 3 @ jointPosition(xxs, ii) == xxs[ii]
 }
 
 function sqrt( a : real) : real {
@@ -79,8 +79,8 @@ function pow( x : real, i: nat ) : real {
 }
 
 
-function dist ( p1 : Position , p2 : Position ) : real {
-	postcondition forall pa: real, pb: real @ dist ( p1 , p2 ) == sqrt( pow( p1 . x - p2 . x, 2 ) + pow( p1 . y - p2 . y, 2 ) + pow( p1 . z - p2 . z, 2 ) )
+function dist ( p1 : vector(real, 3) , p2 : vector(real, 3) ) : real {
+	postcondition forall pa: real, pb: real @ dist ( p1 , p2 ) == sqrt( pow( p1[0] - p2[0], 2 ) + pow( p1[1] - p2[1], 2 ) + pow( p1[2] - p2[2], 2 ) )
 }
 
 function gte (x: real, y: real): boolean {

@@ -206,7 +206,7 @@ transition t0 {
 requires SensorOperations event dressedJoint : int
 uses MovementEvents var garmentAcquired : boolean = false
 	var garmentWithUser : boolean = false
-var targetPosition : Position
+var targetPosition : vector(real, 3)
 	var arrivedAtTarget : boolean = false
 requires HRIOperations var isGripCorrect : boolean = false
 	var isGripperEngaged : boolean = false
@@ -255,6 +255,6 @@ var firstArmDressed : boolean = false
 		to SecondArm
 		condition firstArmDressed
 	}
-var userPose : vector ( Position , 3 )
-	var garmentPosition : Position
+var userPose : vector ( vector(real, 3) , 3 )
+	var garmentPosition : vector(real, 3)
 }

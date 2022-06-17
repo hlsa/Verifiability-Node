@@ -35,7 +35,7 @@
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']"/>
         <target xmi:type="robochart:RCPackage" href="emergencystop.rct#/"/>
       </ownedRepresentationDescriptors>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_tANcMOypEeynApZEDteXHQ" name="dressingcontrol.rct" repPath="#_tAM1IOypEeynApZEDteXHQ" changeId="90e1540d-d150-40c5-89d2-25eef06f63b9">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_tANcMOypEeynApZEDteXHQ" name="dressingcontrol.rct" repPath="#_tAM1IOypEeynApZEDteXHQ" changeId="c7ccd7b5-3098-4e21-ba2d-141ae17e3cf5">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']"/>
         <target xmi:type="robochart:RCPackage" href="dressingcontrol.rct#/"/>
       </ownedRepresentationDescriptors>
@@ -11239,7 +11239,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@nodeMappings[name='BorderedEventID']"/>
       </ownedBorderedNodes>
-      <ownedBorderedNodes xmi:type="diagram:DNode" uid="_tAd65eypEeynApZEDteXHQ" name="poseDetected: vector(Position,3)" width="3" height="3">
+      <ownedBorderedNodes xmi:type="diagram:DNode" uid="_tAd65eypEeynApZEDteXHQ" name="poseDetected: vector(vector(real,3),3)" width="3" height="3">
         <target xmi:type="robochart:Event" href="definitions.rct#//@interfaces.1/@events.4"/>
         <semanticElements xmi:type="robochart:Event" href="definitions.rct#//@interfaces.1/@events.4"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -11261,7 +11261,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@nodeMappings[name='BorderedEventID']"/>
       </ownedBorderedNodes>
-      <ownedBorderedNodes xmi:type="diagram:DNode" uid="_tAeh9eypEeynApZEDteXHQ" name="garmentDetected: Position" width="3" height="3">
+      <ownedBorderedNodes xmi:type="diagram:DNode" uid="_tAeh9eypEeynApZEDteXHQ" name="garmentDetected: vector(real,3)" width="3" height="3">
         <target xmi:type="robochart:Event" href="definitions.rct#//@interfaces.1/@events.6"/>
         <semanticElements xmi:type="robochart:Event" href="definitions.rct#//@interfaces.1/@events.6"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -11316,7 +11316,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@nodeMappings[name='BorderedEventID']"/>
       </ownedBorderedNodes>
-      <ownedBorderedNodes xmi:type="diagram:DNode" uid="_tAgXJeypEeynApZEDteXHQ" name="secondHandDetected: Position" width="3" height="3">
+      <ownedBorderedNodes xmi:type="diagram:DNode" uid="_tAgXJeypEeynApZEDteXHQ" name="secondHandDetected: vector(real,3)" width="3" height="3">
         <target xmi:type="robochart:Event" href="definitions.rct#//@interfaces.1/@events.11"/>
         <semanticElements xmi:type="robochart:Event" href="definitions.rct#//@interfaces.1/@events.11"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -11338,7 +11338,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@nodeMappings[name='BorderedEventID']"/>
       </ownedBorderedNodes>
-      <ownedBorderedNodes xmi:type="diagram:DNode" uid="_tAg-OOypEeynApZEDteXHQ" name="movementStart: Position" width="3" height="3">
+      <ownedBorderedNodes xmi:type="diagram:DNode" uid="_tAg-OOypEeynApZEDteXHQ" name="movementStart: vector(real,3)" width="3" height="3">
         <target xmi:type="robochart:Event" href="definitions.rct#//@interfaces.5/@events.0"/>
         <semanticElements xmi:type="robochart:Event" href="definitions.rct#//@interfaces.5/@events.0"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -11423,7 +11423,7 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='InterfaceID']/@subNodeMappings[name='VariableID']"/>
         </ownedElements>
-        <ownedElements xmi:type="diagram:DNodeListElement" uid="_tAizYeypEeynApZEDteXHQ" name="targetPosition: Position">
+        <ownedElements xmi:type="diagram:DNodeListElement" uid="_tAizYeypEeynApZEDteXHQ" name="targetPosition: vector(real,3)">
           <target xmi:type="robochart:VariableList" href="dressingcontrol.rct#//@machines.0/@variableList.3"/>
           <semanticElements xmi:type="robochart:VariableList" href="dressingcontrol.rct#//@machines.0/@variableList.3"/>
           <ownedStyle xmi:type="diagram:Square" uid="_tAizYuypEeynApZEDteXHQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/variable.png" labelAlignment="LEFT" labelPosition="node">
@@ -11463,7 +11463,7 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='InterfaceID']/@subNodeMappings[name='VariableID']"/>
         </ownedElements>
-        <ownedElements xmi:type="diagram:DNodeListElement" uid="_tAiza-ypEeynApZEDteXHQ" name="userPose: vector(Position,3)">
+        <ownedElements xmi:type="diagram:DNodeListElement" uid="_tAiza-ypEeynApZEDteXHQ" name="userPose: vector(vector(real,3),3)">
           <target xmi:type="robochart:VariableList" href="dressingcontrol.rct#//@machines.0/@variableList.8"/>
           <semanticElements xmi:type="robochart:VariableList" href="dressingcontrol.rct#//@machines.0/@variableList.8"/>
           <ownedStyle xmi:type="diagram:Square" uid="_tAizbOypEeynApZEDteXHQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/variable.png" labelAlignment="LEFT" labelPosition="node">
@@ -11471,7 +11471,7 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='InterfaceID']/@subNodeMappings[name='VariableID']"/>
         </ownedElements>
-        <ownedElements xmi:type="diagram:DNodeListElement" uid="_tAizbeypEeynApZEDteXHQ" name="garmentPosition: Position">
+        <ownedElements xmi:type="diagram:DNodeListElement" uid="_tAizbeypEeynApZEDteXHQ" name="garmentPosition: vector(real,3)">
           <target xmi:type="robochart:VariableList" href="dressingcontrol.rct#//@machines.0/@variableList.9"/>
           <semanticElements xmi:type="robochart:VariableList" href="dressingcontrol.rct#//@machines.0/@variableList.9"/>
           <ownedStyle xmi:type="diagram:Square" uid="_tAizbuypEeynApZEDteXHQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/variable.png" labelAlignment="LEFT" labelPosition="node">
