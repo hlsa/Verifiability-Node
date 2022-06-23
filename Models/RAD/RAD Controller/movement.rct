@@ -4,53 +4,119 @@ import definitions::*
 
 stm MovementControl {
 	uses MovementEvents requires FrankaArmControl
-	uses FrankaArmEvents
+	requires HRIOperations
 	var arrivedAtTarget : boolean = false
 	var target : vector(real, 3)
 	var current : vector(real, 3)
-	const EPSILON: real = 1
+	const EPSILON: nat = 1
 	event allowMovement
 
 	initial i0
 	state NotEngaged {
 	}
-	state CheckMovement {
+
+	state FreeMovement {
+		initial i0
+		state CheckMovement {
+		}
+		state MoveTowardsTarget {
+			entry stepTowards ( target , 1 )
+		}
+		junction j0
+		transition t0 {
+			from i0
+			to CheckMovement
+		}
+		transition t1 {
+			from CheckMovement
+			to MoveTowardsTarget
+			trigger allowMovement
+		}
+		transition t3 {
+			from j0
+			to CheckMovement
+			condition not arrivedAtTarget
+		}
+		transition t4 {
+			from j0
+			to f0
+			condition arrivedAtTarget
+		}
+		final f0
+	transition t2 {
+			from MoveTowardsTarget
+			to j0
+			action arrivedAtTarget = dist ( current , target ) <= EPSILON
+		}
 	}
-	state MoveTowardsTarget {
-		entry setConfiguration ( )
+
+	state ForceApplication {
+		initial i0
+		state CheckForce {
+		}
+		state MoveTowardsTarget {
+			entry pushTowards ( target , 1 )
+		}
+		junction j0
+
+		transition t1 {
+			from CheckForce
+			to MoveTowardsTarget
+			trigger allowMovement
+		}
+		transition t3 {
+			from j0
+			to CheckForce
+			condition not arrivedAtTarget
+		}
+		transition t4 {
+			from i0
+			to CheckForce
+		}
+	final f0
+		transition t5 {
+			from j0
+			to f0
+			condition arrivedAtTarget
+		}
+		transition t0 {
+			from MoveTowardsTarget
+			to j0
+			action arrivedAtTarget = dist ( current , target ) <= EPSILON
+		}
 	}
-	junction j0
+	uses FrankaArmEvents uses ForceEvents 
+	
 	transition t0 {
 		from i0
 		to NotEngaged
 	}
 	transition t1 {
 		from NotEngaged
-		to CheckMovement
+		to FreeMovement
 		trigger 
 		
-	movementStart?target
+	
+	
+		movementStart ? target
+		action arrivedAtTarget = false
+	}
+	transition t6 {
+		from NotEngaged
+		to ForceApplication
+		trigger 
+	
+		forceStart ? target
+		action arrivedAtTarget = false
 	}
 	transition t2 {
-		from CheckMovement
-		to MoveTowardsTarget
-		trigger allowMovement
+		from FreeMovement
+		to NotEngaged
+		condition arrivedAtTarget
 	}
 	transition t3 {
-		from MoveTowardsTarget
-		to j0
-		trigger endEffectorPosition ? current
-		action arrivedAtTarget = dist(target, current) >= EPSILON
-	}
-	transition t4 {
-		from j0
+		from ForceApplication
 		to NotEngaged
-		condition not arrivedAtTarget
-		action movementEnd
-	}
-	transition t5 {
-		from j0
-		to CheckMovement
 		condition arrivedAtTarget
 	}
 }

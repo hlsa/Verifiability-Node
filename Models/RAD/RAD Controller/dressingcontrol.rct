@@ -4,7 +4,10 @@ import definitions::*
 
 stm SDressingControl {
 	initial i0
-uses DressingEvents requires FrankaArmControl 
+	
+	requires FrankaArmControl
+	uses DressingEvents
+	requires HRIOperations
 	
 	var currentJoint : int = 2
 	state GarmentAcquisition {
@@ -14,7 +17,7 @@ uses DressingEvents requires FrankaArmControl
 		initial i0
 
 		state EngageGarment {
-			entry grip ( )
+			entry grip()
 		}
 		transition t0 {
 			from i0
@@ -26,8 +29,9 @@ uses DressingEvents requires FrankaArmControl
 			trigger 
 		
 		
-			garmentDetected ? targetPosition
-			action movementStart ! targetPosition
+			
+			garmentDetected ? garmentPosition
+			action movementStart ! garmentPosition
 		}
 
 		transition t5 {
@@ -60,7 +64,7 @@ uses DressingEvents requires FrankaArmControl
 			from EngageGarment
 			to j1
 			trigger 
-		gripperEngaged ? isGripperEngaged
+		gripCorrect ? isGripperEngaged
 		}
 		transition t6 {
 			from j1
@@ -70,8 +74,8 @@ uses DressingEvents requires FrankaArmControl
 		transition t7 {
 			from j0
 			to LookingForGarment
-			condition not isGripCorrect
-			action releaseGrip ( )
+			condition 
+			not isGripCorrect
 		}
 		transition t8 {
 			from j1
@@ -91,12 +95,8 @@ uses DressingEvents requires FrankaArmControl
 		transition t2 {
 			from DetectStartPose
 			to Moving
-			trigger 
-		
-			
-			poseDetected ? userPose
-			action 
-		targetPosition = jointPosition ( userPose , 2 ); movementStart!targetPosition
+			trigger poseDetected ? userPose
+			action targetPosition = jointPosition ( userPose , 2 ) ; movementStart ! targetPosition
 		}
 		state DetectStartPose {
 			entry detectUserPose ( )
@@ -132,13 +132,10 @@ uses DressingEvents requires FrankaArmControl
 		transition t2 {
 			from DetectUserPose
 			to MovingToJoint
-			trigger 
-			
-			
-			
-			poseDetected ? userPose
+			trigger poseDetected ? userPose
 			condition currentJoint == 0 \/ currentJoint == 1 \/ currentJoint == 2
 			action 
+		
 		
 		targetPosition = jointPosition ( userPose , currentJoint ) ; movementStart ! targetPosition
 		}
@@ -201,14 +198,15 @@ transition t0 {
 	transition t3 {
 		from Start
 		to GarmentAcquisition
-		trigger dressingRequest
+		trigger 
+	dressingRequest
 	}
 requires SensorOperations event dressedJoint : int
 uses MovementEvents var garmentAcquired : boolean = false
 	var garmentWithUser : boolean = false
 var targetPosition : vector(real, 3)
 	var arrivedAtTarget : boolean = false
-requires HRIOperations var isGripCorrect : boolean = false
+	 var isGripCorrect : boolean = false
 	var isGripperEngaged : boolean = false
 var firstArmDressed : boolean = false
 	state SecondArm {
@@ -247,7 +245,8 @@ var firstArmDressed : boolean = false
 		transition t4 {
 			from CheckingUserDressed
 			to ReleaseGrip
-			trigger userDressed
+			trigger 
+		userDressed
 		}
 	}
 	transition t4 {
@@ -257,4 +256,5 @@ var firstArmDressed : boolean = false
 	}
 var userPose : vector ( vector(real, 3) , 3 )
 	var garmentPosition : vector(real, 3)
-}
+uses ForceEvents }
+

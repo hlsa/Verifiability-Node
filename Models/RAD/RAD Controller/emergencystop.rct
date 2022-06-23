@@ -18,7 +18,7 @@ event environmentalStop
 	transition t1 {
 		from Running
 		to Running
-		condition not emergencyStopped /\ not environmentallyStopped
+		condition not emergencyStopped /\ not environmentallyStopped /\ not collisionStopped
 		action allowMovement
 	}
 	transition t2 {
@@ -48,6 +48,14 @@ event environmentalStop
 		trigger environmentalResume
 		condition environmentallyStopped
 		action environmentallyStopped = false
+	}
+var collisionStopped : boolean = false
+	transition t6 {
+		from Running
+		to Running
+		trigger collisionStop
+		condition not collisionStopped
+		action collisionStopped = true
 	}
 }
 

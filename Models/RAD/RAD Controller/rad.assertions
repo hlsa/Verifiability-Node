@@ -13,36 +13,44 @@ assertion ES3: EmergencyStopControl is deterministic
 csp SpecES4 associated to EmergencyStopControl csp-begin
     channel done4
     DONE4 = done4 -> DONE4
-    SpecES4 = SEmergencyStopControl::O__(0) [ SEmergencyStopControl::emergencyStop.in <-> SEmergencyStopControl::emergencyStop.out ] SEmergencyStopControl::emergencyStop.out -> DONE4
+    SpecES4 = EmergencyStopControl::O__(0) [ EmergencyStopControl::emergencyStop.in <-> EmergencyStopControl::emergencyStop.out ] EmergencyStopControl::emergencyStop.out -> DONE4
 csp-end
 assertion ES4: SpecES4 is deadlock-free
 csp SpecES5 associated to EmergencyStopControl csp-begin
-    EVENSTOPS = SEmergencyStopControl::emergencyStop.out -> ODDSTOPS
-    ODDSTOPS = SEmergencyStopControl::resumeDressing.out -> EVENSTOPS
-    EVENESTOPS = SEmergencyStopControl::environmentalStop.out -> ODDESTOPS
-    ODDESTOPS = SEmergencyStopControl::environmentalResume.out -> EVENESTOPS
-    SpecES5 = EVENESTOPS [SEmergencyStopControl::environmentalStop.out <-> SEmergencyStopControl::environmentalStop.in,
-    	                  SEmergencyStopControl::environmentalResume.out <-> SEmergencyStopControl::environmentalResume.in] (
-    	                  	EVENSTOPS
-    	                  	[ SEmergencyStopControl::emergencyStop.out <-> SEmergencyStopControl::emergencyStop.in,
-    	                  	  SEmergencyStopControl::resumeDressing.out <-> SEmergencyStopControl::resumeDressing.in ]
-    	                  	SEmergencyStopControl::O__(0)
-    	                  )
+    EVENSTOPS = EmergencyStopControl::emergencyStop.out -> ODDSTOPS
+    ODDSTOPS = EmergencyStopControl::resumeDressing.out -> EVENSTOPS
+    EVENCSTOPS = EmergencyStopControl::collisionStop.out -> ODDCSTOPS
+    ODDCSTOPS = EmergencyStopControl::collisionResume.out -> EVENCSTOPS
+    EVENESTOPS = EmergencyStopControl::environmentalStop.out -> ODDESTOPS
+    ODDESTOPS = EmergencyStopControl::environmentalResume.out -> EVENESTOPS
+	SpecES5 = (
+	           	EVENCSTOPS
+	            [ EmergencyStopControl::collisionStop.out <-> EmergencyStopControl::collisionStop.in,
+	          	  EmergencyStopControl::collisionResume.out <-> EmergencyStopControl::collisionResume.in ]
+	            (EVENESTOPS
+	            [ EmergencyStopControl::environmentalStop.out <-> EmergencyStopControl::environmentalStop.in,
+	    	      EmergencyStopControl::environmentalResume.out <-> EmergencyStopControl::environmentalResume.in]
+	          	(EVENSTOPS
+	          	[ EmergencyStopControl::emergencyStop.out <-> EmergencyStopControl::emergencyStop.in,
+	          	  EmergencyStopControl::resumeDressing.out <-> EmergencyStopControl::resumeDressing.in ]
+	          	EmergencyStopControl::O__(0)))
+    	      )
 csp-end
 // fails
 assertion ES5: SpecES5 is deadlock-free
 csp SpecAlwaysAllowMovement associated to EmergencyStopControl csp-begin
-	SpecAlwaysAllowMovement = (SEmergencyStopControl::allowMovement.out -> SpecAlwaysAllowMovement) |~| DIV
+	SpecAlwaysAllowMovement = (EmergencyStopControl::allowMovement.out -> SpecAlwaysAllowMovement) |~| DIV
 csp-end
 assertion ES6a: SpecES5 refines SpecAlwaysAllowMovement in the traces model
 assertion ES6b: SpecES5 refines SpecAlwaysAllowMovement in the failures model 
 assertion ES6c: SpecES5 refines SpecAlwaysAllowMovement 
 csp ESHiddenStops associated to EmergencyStopControl csp-begin
-	ESHiddenStops = (SEmergencyStopControl::O__(0) \ {SEmergencyStopControl::emergencyStop.in, SEmergencyStopControl::resumeDressing.in,
-		                                              SEmergencyStopControl::environmentalStop.in, SEmergencyStopControl::environmentalResume.in})
+	ESHiddenStops = (EmergencyStopControl::O__(0) \ {EmergencyStopControl::emergencyStop.in, EmergencyStopControl::resumeDressing.in,
+													 EmergencyStopControl::collisionStop.in, EmergencyStopControl::collisionStop.in,
+		                                             EmergencyStopControl::environmentalStop.in, EmergencyStopControl::environmentalResume.in})
 csp-end
 csp ESChaoticMovement associated to EmergencyStopControl csp-begin
-	ESChaoticMovement = CHAOS({SEmergencyStopControl::allowMovement.out})|~|DIV
+	ESChaoticMovement = CHAOS({EmergencyStopControl::allowMovement.out})|~|DIV
 csp-end
 assertion ES7: ESChaoticMovement refines ESHiddenStops
 assertion ES8: ESHiddenStops refines ESChaoticMovement in the traces model

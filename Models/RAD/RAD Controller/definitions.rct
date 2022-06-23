@@ -1,8 +1,8 @@
 package definitions
 
 interface FrankaArmControl {
-setConfiguration (  )
-
+	stepTowards(target: vector(real, 3), speed: real)
+	pushTowards(target: vector(real, 3), force: real)
 	grip ( )
 	releaseGrip ( )
 }
@@ -42,6 +42,9 @@ interface EmergencyStopEvents {
 	event emergencyStop
 
 	event resumeDressing
+	
+	event collisionStop
+	event collisionResume
 }
 
 interface EnvironmentalEvents {
@@ -57,6 +60,11 @@ interface MovementEvents {
 
 }
 
+interface ForceEvents {
+	event forceStart : vector(real, 3)
+	event forceEnd
+}
+
 interface HRIOperations {
 	checkCorrectGrip ( )
 checkUserDressed ( )
@@ -64,6 +72,7 @@ checkUserDressed ( )
 
 interface FrankaArmEvents {
 	event endEffectorPosition : vector(real, 3)
+	event forceEndEffector: vector(real, 3)
 }
 
 function jointPosition(xs: vector(vector(real, 3), 3), i: int): vector(real, 3) {
