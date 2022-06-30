@@ -132,12 +132,14 @@ stm SDressingControl {
 		transition t2 {
 			from DetectUserPose
 			to MovingToJoint
-			trigger poseDetected ? userPose
+			trigger 
+			poseDetected ? userPose
 			condition currentJoint == 0 \/ currentJoint == 1 \/ currentJoint == 2
 			action 
 		
 		
-		targetPosition = jointPosition ( userPose , currentJoint ) ; movementStart ! targetPosition
+		
+		targetPosition = jointPosition ( userPose , currentJoint ) ; forceStart ! targetPosition
 		}
 		transition t5 {
 			from j0
@@ -155,7 +157,8 @@ stm SDressingControl {
 			from MovingToJoint
 			to FaultCheck
 			trigger 
-			movementEnd
+			
+		forceEnd
 		}
 		state FaultCheck {
 			entry checkFault ( )

@@ -20,7 +20,7 @@ stm MovementControl {
 		state CheckMovement {
 		}
 		state MoveTowardsTarget {
-			entry stepTowards ( target , 1 )
+			entry stepTowards ( target - current , 1 )
 		}
 		junction j0
 		transition t0 {
@@ -55,7 +55,7 @@ stm MovementControl {
 		state CheckForce {
 		}
 		state MoveTowardsTarget {
-			entry pushTowards ( target , 1 )
+			entry pushTowards ( target - current , 1 )
 		}
 		junction j0
 

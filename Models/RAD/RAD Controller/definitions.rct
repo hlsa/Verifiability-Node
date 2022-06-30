@@ -75,6 +75,13 @@ interface FrankaArmEvents {
 	event forceEndEffector: vector(real, 3)
 }
 
+interface PIDState {
+	var p : vector ( real , 3 )
+	var d : vector ( real , 3 )
+	var i : vector ( real , 3 )
+	var e : vector ( real , 3 )
+}
+
 function jointPosition(xs: vector(vector(real, 3), 3), i: int): vector(real, 3) {
 	postcondition forall xxs: vector(vector(real, 3), 3), ii: int | ii >= 0 /\ ii < 3 @ jointPosition(xxs, ii) == xxs[ii]
 }
