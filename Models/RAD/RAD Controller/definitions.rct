@@ -78,33 +78,35 @@ interface FrankaArmEvents {
 }
 
 function jointPosition(xs: vector(vector(real, 3), 3), i: int): vector(real, 3) {
-	postcondition forall xxs: vector(vector(real, 3), 3), ii: int | ii >= 0 /\ ii < 3 @ jointPosition(xxs, ii) == xxs[ii]
+	postcondition result == xs[i]
 }
 
-function sqrt( a : real) : real {
-	postcondition forall x : real | x > 0 @ sqrt ( x ) * sqrt ( x ) == x
+function sqrt( x : real) : real {
+	precondition x >= 0
+	postcondition result * result == x
 }
 
-function pow( x : real, i: nat ) : real {
-	postcondition (forall x0 : real, i0: nat | i0 >= 0 @ pow (x0, i0 + 1) == pow(x0, i0)) /\ (forall x1 : real @ pow(x, 0) == 1)
+function pow( x : real, i: int ) : real {
+	precondition i >= 0
+	postcondition result == (if i > 0 then x * pow(x, i - 1) else 1 end)
 }
 
-function norm (p: vector(real, 3)): real {
-	postcondition forall v: vector(real, 3)@ norm(v) == sqrt(pow(v[0], 2) + pow(v[1], 2) + pow(v[2], 2))
+function norm (v: vector(real, 3)): real {
+	postcondition result == sqrt(pow(v[0], 2) + pow(v[1], 2) + pow(v[2], 2))
 }
 
 function scalarMul(s: real, v: vector(real, 3)): vector(real, 3) {
-	postcondition forall ss: real, vv: vector(real, 3) @ scalarMul(ss, vv) == [|ss, ss, ss|] * vv
+	postcondition result == [|s, s, s|] * v
 }
 
 function targetForces(current : vector(real, 3), target: vector(real, 3), targetTotalForce: real): vector(real, 3) {
-	postcondition forall c: vector(real, 3), t: vector(real, 3), ttf: real @ targetForces(c, t, ttf) == if norm(t - c) > 0 then (t - c) * (ttf / norm(t - c)) else [|0,0,0|] end
+	postcondition result == if norm(target - current) > 0 then (target - current) * (targetTotalForce / norm(target - current)) else [|0,0,0|] end
 }
 
-function dist ( p1 : vector(real, 3) , p2 : vector(real, 3) ) : real {
-	postcondition forall v1: vector(real, 3), v2: vector(real, 3) @ dist ( v1 , v2 ) == norm(v1 - v2)
+function dist ( v1 : vector(real, 3) , v2 : vector(real, 3) ) : real {
+	postcondition result == norm(v1 - v2)
 }
 
-function gte (x: real, y: real): boolean {
-	postcondition forall a: real, b: real @ gte(a, b) == (a >= b)
+function gte (x: int, y: int): boolean {
+	postcondition result == (x >= y)
 }

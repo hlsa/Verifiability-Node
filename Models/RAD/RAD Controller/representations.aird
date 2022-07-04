@@ -44,11 +44,11 @@
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']"/>
         <target xmi:type="robochart:RCPackage" href="radcontrol.rct#/"/>
       </ownedRepresentationDescriptors>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_D4sEQOy0EeyMj6FPmV_DaA" name="definitions.rct" repPath="#_D4q2IOy0EeyMj6FPmV_DaA" changeId="07c2dfbb-7bde-403d-86a0-541e42888502">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_D4sEQOy0EeyMj6FPmV_DaA" name="definitions.rct" repPath="#_D4q2IOy0EeyMj6FPmV_DaA" changeId="6c0e9c72-00c7-4cfa-9453-86cf76fafea9">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']"/>
         <target xmi:type="robochart:RCPackage" href="definitions.rct#/"/>
       </ownedRepresentationDescriptors>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_UUTg4O1eEeyMj6FPmV_DaA" name="movement.rct" repPath="#_UUS50O1eEeyMj6FPmV_DaA" changeId="6f6edc4f-85a1-4ab3-8a55-8dd2eeb9f36e">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_UUTg4O1eEeyMj6FPmV_DaA" name="movement.rct" repPath="#_UUS50O1eEeyMj6FPmV_DaA" changeId="adb509ec-45f1-4104-b135-2c84e3c6ded2">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']"/>
         <target xmi:type="robochart:RCPackage" href="movement.rct#/"/>
       </ownedRepresentationDescriptors>
@@ -15602,6 +15602,10 @@
               <styles xmi:type="notation:FontStyle" xmi:id="_5xNVQe4kEey6H--oL7iblQ" fontName="Cantarell" fontHeight="10"/>
               <layoutConstraint xmi:type="notation:Location" xmi:id="_5xNVQu4kEey6H--oL7iblQ"/>
             </children>
+            <children xmi:type="notation:Node" xmi:id="_hBAkAPu3EeyUXP_ECo7m5Q" type="3010" element="_hAhb4_u3EeyUXP_ECo7m5Q">
+              <styles xmi:type="notation:FontStyle" xmi:id="_hBAkAfu3EeyUXP_ECo7m5Q" fontName="Cantarell" fontHeight="10"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_hBAkAvu3EeyUXP_ECo7m5Q"/>
+            </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_5xK5Au4kEey6H--oL7iblQ"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_5xK5A-4kEey6H--oL7iblQ"/>
           </children>
@@ -15614,6 +15618,10 @@
             <children xmi:type="notation:Node" xmi:id="_5xNVQ-4kEey6H--oL7iblQ" type="3010" element="_5w3XAe4kEey6H--oL7iblQ">
               <styles xmi:type="notation:FontStyle" xmi:id="_5xNVRO4kEey6H--oL7iblQ" fontName="Cantarell" fontHeight="10"/>
               <layoutConstraint xmi:type="notation:Location" xmi:id="_5xNVRe4kEey6H--oL7iblQ"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_lgB3kPu4EeyUXP_ECo7m5Q" type="3010" element="_lfjWf_u4EeyUXP_ECo7m5Q">
+              <styles xmi:type="notation:FontStyle" xmi:id="_lgB3kfu4EeyUXP_ECo7m5Q" fontName="Cantarell" fontHeight="10"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_lgB3kvu4EeyUXP_ECo7m5Q"/>
             </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_5xLgFO4kEey6H--oL7iblQ"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_5xLgFe4kEey6H--oL7iblQ"/>
@@ -15675,7 +15683,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_uDjOE_uHEey4HOfwFQGcvg"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_uDinAfuHEey4HOfwFQGcvg" fontName="Cantarell" fontHeight="10"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_uDinAvuHEey4HOfwFQGcvg"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_uDinAvuHEey4HOfwFQGcvg" x="750" y="430"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_wMHAkPuIEey4HOfwFQGcvg" type="2003" element="_wLYA0_uIEey4HOfwFQGcvg">
           <children xmi:type="notation:Node" xmi:id="_wMHAk_uIEey4HOfwFQGcvg" type="5007"/>
@@ -15688,7 +15696,7 @@
             <styles xmi:type="notation:FilteringStyle" xmi:id="_wMHAlvuIEey4HOfwFQGcvg"/>
           </children>
           <styles xmi:type="notation:ShapeStyle" xmi:id="_wMHAkfuIEey4HOfwFQGcvg" fontName="Cantarell" fontHeight="10"/>
-          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wMHAkvuIEey4HOfwFQGcvg"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wMHAkvuIEey4HOfwFQGcvg" x="1025" y="235"/>
         </children>
         <children xmi:type="notation:Node" xmi:id="_v9eqgPuPEeyUXP_ECo7m5Q" type="2003" element="_v9RPL_uPEeyUXP_ECo7m5Q">
           <children xmi:type="notation:Node" xmi:id="_v9iU4PuPEeyUXP_ECo7m5Q" type="5007"/>
@@ -16088,9 +16096,9 @@
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_D4-YJ-y0EeyMj6FPmV_DaA" name="forall xxs: vector(vector(real,3),3), ii: int | ii>=0/\ii&lt;3 @ jointPosition(xxs, ii)==xxs[ii]">
-        <target xmi:type="robochart:Forall" href="definitions.rct#//@functions.0/@postconditions.0"/>
-        <semanticElements xmi:type="robochart:Forall" href="definitions.rct#//@functions.0/@postconditions.0"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_D4-YJ-y0EeyMj6FPmV_DaA" name="result==xs[i]">
+        <target xmi:type="robochart:Equals" href="definitions.rct#//@functions.0/@postconditions.0"/>
+        <semanticElements xmi:type="robochart:Equals" href="definitions.rct#//@functions.0/@postconditions.0"/>
         <ownedStyle xmi:type="diagram:Square" uid="_D4-_MOy0EeyMj6FPmV_DaA" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/post.png" labelAlignment="LEFT" labelPosition="node">
           <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']/@style"/>
         </ownedStyle>
@@ -16134,48 +16142,64 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@nodeMappings[name='PackageID']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_5w2I4e4kEey6H--oL7iblQ" name="sqrt(a: real): real">
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_5w2I4e4kEey6H--oL7iblQ" name="sqrt(x: real): real">
       <target xmi:type="robochart:Function" href="definitions.rct#//@functions.1"/>
       <semanticElements xmi:type="robochart:Function" href="definitions.rct#//@functions.1"/>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_5w2I4u4kEey6H--oL7iblQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/function.png" borderSize="1" borderSizeComputationExpression="1" foregroundColor="255,255,255">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_5w2v9-4kEey6H--oL7iblQ" name="forall x: real | x>0 @ sqrt(x)*sqrt(x)==x">
-        <target xmi:type="robochart:Forall" href="definitions.rct#//@functions.1/@postconditions.0"/>
-        <semanticElements xmi:type="robochart:Forall" href="definitions.rct#//@functions.1/@postconditions.0"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_5w2v9-4kEey6H--oL7iblQ" name="result*result==x">
+        <target xmi:type="robochart:Equals" href="definitions.rct#//@functions.1/@postconditions.0"/>
+        <semanticElements xmi:type="robochart:Equals" href="definitions.rct#//@functions.1/@postconditions.0"/>
         <ownedStyle xmi:type="diagram:Square" uid="_5w3XAO4kEey6H--oL7iblQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/post.png" labelAlignment="LEFT" labelPosition="node">
           <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']"/>
       </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_hAhb4_u3EeyUXP_ECo7m5Q" name="x>=0">
+        <target xmi:type="robochart:GreaterOrEqual" href="definitions.rct#//@functions.1/@preconditions.0"/>
+        <semanticElements xmi:type="robochart:GreaterOrEqual" href="definitions.rct#//@functions.1/@preconditions.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_hAiC4Pu3EeyUXP_ECo7m5Q" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/pre.png" labelAlignment="LEFT" labelPosition="node">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Precondition']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Precondition']"/>
+      </ownedElements>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_5w2I5O4kEey6H--oL7iblQ" name="pow(x: real, i: nat): real">
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_5w2I5O4kEey6H--oL7iblQ" name="pow(x: real, i: int): real">
       <target xmi:type="robochart:Function" href="definitions.rct#//@functions.2"/>
       <semanticElements xmi:type="robochart:Function" href="definitions.rct#//@functions.2"/>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_5w2I5e4kEey6H--oL7iblQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/function.png" borderSize="1" borderSizeComputationExpression="1" foregroundColor="255,255,255">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_5w3XAe4kEey6H--oL7iblQ" name="(forall x0: real, i0: nat | i0>=0 @ pow(x0, i0+1)==pow(x0, i0))/\(forall x1: real @ pow(x, 0)==1)">
-        <target xmi:type="robochart:And" href="definitions.rct#//@functions.2/@postconditions.0"/>
-        <semanticElements xmi:type="robochart:And" href="definitions.rct#//@functions.2/@postconditions.0"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_5w3XAe4kEey6H--oL7iblQ" name="result==(if i>0 then x*pow(x, i-1) else 1 end)">
+        <target xmi:type="robochart:Equals" href="definitions.rct#//@functions.2/@postconditions.0"/>
+        <semanticElements xmi:type="robochart:Equals" href="definitions.rct#//@functions.2/@postconditions.0"/>
         <ownedStyle xmi:type="diagram:Square" uid="_5w3XAu4kEey6H--oL7iblQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/post.png" labelAlignment="LEFT" labelPosition="node">
           <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']"/>
       </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_lfjWf_u4EeyUXP_ECo7m5Q" name="i>=0">
+        <target xmi:type="robochart:GreaterOrEqual" href="definitions.rct#//@functions.2/@preconditions.0"/>
+        <semanticElements xmi:type="robochart:GreaterOrEqual" href="definitions.rct#//@functions.2/@preconditions.0"/>
+        <ownedStyle xmi:type="diagram:Square" uid="_lfjWgPu4EeyUXP_ECo7m5Q" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/pre.png" labelAlignment="LEFT" labelPosition="node">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Precondition']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Precondition']"/>
+      </ownedElements>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_5w2v8e4kEey6H--oL7iblQ" name="norm(p: vector(real,3)): real">
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_5w2v8e4kEey6H--oL7iblQ" name="norm(v: vector(real,3)): real">
       <target xmi:type="robochart:Function" href="definitions.rct#//@functions.3"/>
       <semanticElements xmi:type="robochart:Function" href="definitions.rct#//@functions.3"/>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_5w2v8u4kEey6H--oL7iblQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/function.png" borderSize="1" borderSizeComputationExpression="1" foregroundColor="255,255,255">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_5w3-EO4kEey6H--oL7iblQ" name="forall v: vector(real,3) @ norm(v)==sqrt(pow(v[0], 2)+pow(v[1], 2)+pow(v[2], 2))">
-        <target xmi:type="robochart:Forall" href="definitions.rct#//@functions.3/@postconditions.0"/>
-        <semanticElements xmi:type="robochart:Forall" href="definitions.rct#//@functions.3/@postconditions.0"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_5w3-EO4kEey6H--oL7iblQ" name="result==sqrt(pow(v[0], 2)+pow(v[1], 2)+pow(v[2], 2))">
+        <target xmi:type="robochart:Equals" href="definitions.rct#//@functions.3/@postconditions.0"/>
+        <semanticElements xmi:type="robochart:Equals" href="definitions.rct#//@functions.3/@postconditions.0"/>
         <ownedStyle xmi:type="diagram:Square" uid="_5w3-Ee4kEey6H--oL7iblQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/post.png" labelAlignment="LEFT" labelPosition="node">
           <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']/@style"/>
         </ownedStyle>
@@ -16189,9 +16213,9 @@
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_5w3-Eu4kEey6H--oL7iblQ" name="forall ss: real, vv: vector(real,3) @ scalarMul(ss, vv)==null*vv">
-        <target xmi:type="robochart:Forall" href="definitions.rct#//@functions.4/@postconditions.0"/>
-        <semanticElements xmi:type="robochart:Forall" href="definitions.rct#//@functions.4/@postconditions.0"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_5w3-Eu4kEey6H--oL7iblQ" name="result==null*v">
+        <target xmi:type="robochart:Equals" href="definitions.rct#//@functions.4/@postconditions.0"/>
+        <semanticElements xmi:type="robochart:Equals" href="definitions.rct#//@functions.4/@postconditions.0"/>
         <ownedStyle xmi:type="diagram:Square" uid="_5w3-E-4kEey6H--oL7iblQ" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/post.png" labelAlignment="LEFT" labelPosition="node">
           <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']/@style"/>
         </ownedStyle>
@@ -16225,45 +16249,51 @@
     <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_uCihgPuHEey4HOfwFQGcvg" name="targetForces(current: vector(real,3), target: vector(real,3), targetTotalForce: real): vector(real,3)">
       <target xmi:type="robochart:Function" href="definitions.rct#//@functions.5"/>
       <semanticElements xmi:type="robochart:Function" href="definitions.rct#//@functions.5"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_uCihgfuHEey4HOfwFQGcvg" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/function.png" borderSize="1" borderSizeComputationExpression="1" foregroundColor="255,255,255">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_uCihg_uHEey4HOfwFQGcvg" name="forall c: vector(real,3), t: vector(real,3), ttf: real @ targetForces(c, t, ttf)==if norm(t-c)>0 then (t-c)*(ttf/norm(t-c)) else null end">
-        <target xmi:type="robochart:Forall" href="definitions.rct#//@functions.5/@postconditions.0"/>
-        <semanticElements xmi:type="robochart:Forall" href="definitions.rct#//@functions.5/@postconditions.0"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_uCihg_uHEey4HOfwFQGcvg" name="result==if norm(target-current)>0 then (target-current)*(targetTotalForce/norm(target-current)) else null end">
+        <target xmi:type="robochart:Equals" href="definitions.rct#//@functions.5/@postconditions.0"/>
+        <semanticElements xmi:type="robochart:Equals" href="definitions.rct#//@functions.5/@postconditions.0"/>
         <ownedStyle xmi:type="diagram:Square" uid="_uCjIgPuHEey4HOfwFQGcvg" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/post.png" labelAlignment="LEFT" labelPosition="node">
           <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']"/>
       </ownedElements>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_wLYA0_uIEey4HOfwFQGcvg" name="dist(p1: vector(real,3), p2: vector(real,3)): real">
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_wLYA0_uIEey4HOfwFQGcvg" name="dist(v1: vector(real,3), v2: vector(real,3)): real">
       <target xmi:type="robochart:Function" href="definitions.rct#//@functions.6"/>
       <semanticElements xmi:type="robochart:Function" href="definitions.rct#//@functions.6"/>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_wLYA1PuIEey4HOfwFQGcvg" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/function.png" borderSize="1" borderSizeComputationExpression="1" foregroundColor="255,255,255">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_wLYn0fuIEey4HOfwFQGcvg" name="forall v1: vector(real,3), v2: vector(real,3) @ dist(v1, v2)==norm(v1-v2)">
-        <target xmi:type="robochart:Forall" href="definitions.rct#//@functions.6/@postconditions.0"/>
-        <semanticElements xmi:type="robochart:Forall" href="definitions.rct#//@functions.6/@postconditions.0"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_wLYn0fuIEey4HOfwFQGcvg" name="result==norm(v1-v2)">
+        <target xmi:type="robochart:Equals" href="definitions.rct#//@functions.6/@postconditions.0"/>
+        <semanticElements xmi:type="robochart:Equals" href="definitions.rct#//@functions.6/@postconditions.0"/>
         <ownedStyle xmi:type="diagram:Square" uid="_wLYn0vuIEey4HOfwFQGcvg" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/post.png" labelAlignment="LEFT" labelPosition="node">
           <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']"/>
       </ownedElements>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_v9RPL_uPEeyUXP_ECo7m5Q" name="gte(x: real, y: real): boolean">
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_v9RPL_uPEeyUXP_ECo7m5Q" name="gte(x: int, y: int): boolean">
       <target xmi:type="robochart:Function" href="definitions.rct#//@functions.7"/>
       <semanticElements xmi:type="robochart:Function" href="definitions.rct#//@functions.7"/>
       <ownedStyle xmi:type="diagram:FlatContainerStyle" uid="_v9SdQPuPEeyUXP_ECo7m5Q" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/function.png" borderSize="1" borderSizeComputationExpression="1" foregroundColor="255,255,255">
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_v9TEUPuPEeyUXP_ECo7m5Q" name="forall a: real, b: real @ gte(a, b)==(a>=b)">
-        <target xmi:type="robochart:Forall" href="definitions.rct#//@functions.7/@postconditions.0"/>
-        <semanticElements xmi:type="robochart:Forall" href="definitions.rct#//@functions.7/@postconditions.0"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_v9TEUPuPEeyUXP_ECo7m5Q" name="result==(x>=y)">
+        <target xmi:type="robochart:Equals" href="definitions.rct#//@functions.7/@postconditions.0"/>
+        <semanticElements xmi:type="robochart:Equals" href="definitions.rct#//@functions.7/@postconditions.0"/>
         <ownedStyle xmi:type="diagram:Square" uid="_v9TEUfuPEeyUXP_ECo7m5Q" labelSize="10" iconPath="/circus.robocalc.robochart.graphical/icons/post.png" labelAlignment="LEFT" labelPosition="node">
           <description xmi:type="style:SquareDescription" href="platform:/plugin/circus.robocalc.robochart.graphical/description/robochart.odesign#//@ownedViewpoints[name='RoboChartID']/@ownedRepresentations[name='SpecificationID']/@defaultLayer/@containerMappings[name='FunctionID']/@subNodeMappings[name='Postcondition']/@style"/>
         </ownedStyle>
@@ -17030,7 +17060,7 @@
         </edges>
         <edges xmi:type="notation:Edge" xmi:id="__dd44PlmEeyybNq7vLrt1g" type="4001" element="__bEFRPlmEeyybNq7vLrt1g" source="_l9KHYPlmEeyybNq7vLrt1g" target="_KPbAgPLNEeydzLKHRJL-AQ">
           <children xmi:type="notation:Node" xmi:id="__def8PlmEeyybNq7vLrt1g" type="6001">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="__def8flmEeyybNq7vLrt1g" x="-10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="__def8flmEeyybNq7vLrt1g" y="-57"/>
           </children>
           <children xmi:type="notation:Node" xmi:id="__def8vlmEeyybNq7vLrt1g" type="6002">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="__def8_lmEeyybNq7vLrt1g" x="32" y="10"/>
