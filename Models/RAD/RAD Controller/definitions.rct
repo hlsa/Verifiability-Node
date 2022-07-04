@@ -106,7 +106,3 @@ function targetForces(current : vector(real, 3), target: vector(real, 3), target
 function dist ( v1 : vector(real, 3) , v2 : vector(real, 3) ) : real {
 	postcondition result == norm(v1 - v2)
 }
-
-function gte (x: int, y: int): boolean {
-	postcondition result == (x >= y)
-}

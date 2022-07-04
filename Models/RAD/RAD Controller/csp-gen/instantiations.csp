@@ -1,0 +1,196 @@
+-- generate definitions_jointPosition not
+definitions_jointPosition((x,y,z),0) = x
+definitions_jointPosition((x,y,z),1) = y
+definitions_jointPosition((x,y,z),2) = z
+
+-- generate definitions_scalarMul not
+definitions_scalarMul(a,(x,y,z)) = (a*x, a*y, a*z)
+
+-- generate dist not
+dist(p1,p2) = if p1 == p2 then 0 else 1
+
+-- generate definitions_pow not
+definitions_pow(x,0) = 1
+definitions_pow(x,1) = x
+definitions_pow(x,2) = x*x
+
+-- generate real not
+nametype core_real = {0, 1}
+
+-- VECTOR TYPES AND OPERATIONS
+nametype vector_real_3 = (core_real, core_real, core_real)				
+vector_real_3_add((a1, a2, a3), (b1, b2, b3), T) = (Plus(a1,b1,T), Plus(a2,b2,T), Plus(a3,b3,T))
+vector_real_3_minus((a1, a2, a3), (b1, b2, b3), T) = (Minus(a1,b1,T), Minus(a2,b2,T), Minus(a3,b3,T))
+vector_real_3_mult((a1, a2, a3), (b1, b2, b3), T) = Plus(Plus(Mult(a1,b1,T), Mult(a2,b2,T),T), Mult(a3,b3,T),T)
+vector_real_3_neg((a1, a2, a3), T) = (Neg(a1,T), Neg(a2,T), Neg(a3,T))
+vector_real_3_transpose((a1, a2, a3)) = (a1).(a2).(a3)
+
+vector_real_3_get((x__, _, _),1) = x__
+vector_real_3_get((_, x__, _),2) = x__
+vector_real_3_get((_, _, x__),3) = x__
+
+vector_real_3_set((x1__, x2__, x3__),value,1) = (value, x2__, x3__)
+vector_real_3_set((x1__, x2__, x3__),value,2) = (x1__, value, x3__)
+vector_real_3_set((x1__, x2__, x3__),value,3) = (x1__, x2__, value)
+
+nametype vector_vector_real_3_3 = (vector_real_3, vector_real_3, vector_real_3)				
+vector_vector_real_3_3_add((a1, a2, a3), (b1, b2, b3), T) = (Plus(a1,b1,T), Plus(a2,b2,T), Plus(a3,b3,T))
+vector_vector_real_3_3_minus((a1, a2, a3), (b1, b2, b3), T) = (Minus(a1,b1,T), Minus(a2,b2,T), Minus(a3,b3,T))
+vector_vector_real_3_3_mult((a1, a2, a3), (b1, b2, b3), T) = Plus(Plus(Mult(a1,b1,T), Mult(a2,b2,T),T), Mult(a3,b3,T),T)
+vector_vector_real_3_3_neg((a1, a2, a3), T) = (Neg(a1,T), Neg(a2,T), Neg(a3,T))
+vector_vector_real_3_3_transpose((a1, a2, a3)) = (a1).(a2).(a3)
+
+vector_vector_real_3_3_get((x__, _, _),1) = x__
+vector_vector_real_3_3_get((_, x__, _),2) = x__
+vector_vector_real_3_3_get((_, _, x__),3) = x__
+
+vector_vector_real_3_3_set((x1__, x2__, x3__),value,1) = (value, x2__, x3__)
+vector_vector_real_3_3_set((x1__, x2__, x3__),value,2) = (x1__, value, x3__)
+vector_vector_real_3_3_set((x1__, x2__, x3__),value,3) = (x1__, x2__, value)
+
+
+
+-- CLOCKS
+
+-- generate definitions_force_pi_update
+definitions_force_pi_update(current,target) = 0
+
+-- generate string
+nametype core_string = LSeq(Char,2)
+
+-- generate const_ArmControlPID_Kp
+const_ArmControlPID_Kp = 0
+
+-- generate definitions_norm
+definitions_norm(v) = 0
+
+-- generate definitions_targetForces
+definitions_targetForces(current,target,targetTotalForce) = (0, 0, 0)
+
+-- generate const_radcontrol_CDressingControl_stm_pid_Kp
+const_radcontrol_CDressingControl_stm_pid_Kp = 0
+
+-- generate definitions_gte
+definitions_gte(x,y) = true
+
+-- generate -- OPERATION BOUNDS
+
+-- MODULE CONSTANTS
+
+-- CONTROLLER CONSTANTS
+
+-- STATEMACHINE CONSTANTS
+
+-- OPERATION CONSTANTS
+
+-- BASIC TYPES
+
+-- generate const_radcontrol_CDressingControl_stm_ref0_Kd
+const_radcontrol_CDressingControl_stm_ref0_Kd = 0
+
+-- generate const_ArmControlPID_Kd
+const_ArmControlPID_Kd = 0
+
+-- generate const_radcontrol_CDressingControl_stm_ref0_Kp
+const_radcontrol_CDressingControl_stm_ref0_Kp = 0
+
+-- generate Plus
+Plus(e1,e2,T) = if member(e1+e2,T) then e1+e2 else e1
+
+-- generate definitions_dist
+definitions_dist(v1,v2) = 0
+
+-- generate const_radcontrol_CDressingControl_stm_ref0_Ki
+const_radcontrol_CDressingControl_stm_ref0_Ki = 0
+
+-- generate const_ArmControlPID_Ki
+const_ArmControlPID_Ki = 0
+
+-- generate definitions_sqrt
+definitions_sqrt(x) = 0
+
+-- generate --
+
+-- MODULE CONSTANTS
+
+-- CONTROLLER CONSTANTS
+
+-- STATEMACHINE CONSTANTS
+
+-- OPERATION CONSTANTS
+
+-- BASIC TYPES
+
+-- generate nat
+nametype core_nat = union({0..2},{calc_type_min(Union(
+			{{1},{0..2},{1},{0..2},{2},{2},{2},{2},{2},{2},{2},{2}}))..calc_type_max(Union({{1},{0..2},{1},{0..2},{2},{2},{2},{2},{2},{2},{2},{2}}))})
+
+-- generate const_PID_Kd
+const_PID_Kd = 0
+
+-- generate core_clock_type
+nametype core_clock_type = {0..10}
+
+-- BASIC FUNCTIONS
+
+-- generate definitions_definitions
+definitions_definitions() = 0
+
+-- generate const_PID_Ki
+const_PID_Ki = 0
+
+-- generate const_PID_step
+const_PID_step = 0
+
+-- generate int
+nametype core_int = union({ -2..2},{calc_type_min(Union(
+			{{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{ -2..2},{ -2..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{step|step <- { -2..2}},{2},{2},{currentJoint|currentJoint <- { -2..2}},{step|step <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2},{2},{2}}))..calc_type_max(Union({{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{ -2..2},{ -2..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{step|step <- { -2..2}},{2},{2},{currentJoint|currentJoint <- { -2..2}},{step|step <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2},{2},{2}}))})
+
+-- generate const_ArmControlPID_step
+const_ArmControlPID_step = 0
+
+-- OPERATION CONSTANTS
+
+-- BASIC TYPES
+
+-- generate Div
+Div(e1,e2,T) = if member(e1/e2,T) then e1/e2 else e1
+
+-- generate Neg
+Neg(e1,T) = if member(-e1,T) then -e1 else e1
+
+-- generate const_radcontrol_CDressingControl_stm_ref0_step
+const_radcontrol_CDressingControl_stm_ref0_step = 0
+
+-- OPERATION CONSTANTS
+
+-- BASIC TYPES
+
+-- generate boolean
+nametype core_boolean = Bool
+
+-- generate const_radcontrol_CDressingControl_stm_pid_Ki
+const_radcontrol_CDressingControl_stm_pid_Ki = 0
+
+-- generate const_radcontrol_CDressingControl_stm_pid_step
+const_radcontrol_CDressingControl_stm_pid_step = 0
+
+-- OPERATION CONSTANTS
+
+-- BASIC TYPES
+
+-- generate Mult
+Mult(e1,e2,T) = if member(e1*e2,T) then e1*e2 else e1
+
+-- generate Modulus
+Modulus(e1,e2,T) = if member(e1%e2,T) then e1%e2 else e1
+
+-- generate const_PID_Kp
+const_PID_Kp = 0
+
+-- generate const_radcontrol_CDressingControl_stm_pid_Kd
+const_radcontrol_CDressingControl_stm_pid_Kd = 0
+
+-- generate Minus
+Minus(e1,e2,T) = if member(e1-e2,T) then e1-e2 else e1
+
