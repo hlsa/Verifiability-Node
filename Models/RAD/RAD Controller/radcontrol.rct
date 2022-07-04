@@ -4,6 +4,7 @@ import definitions::*
 import emergencystop::*
 import movement::*
 import dressingcontrol::*
+import PID::*
 
 
 controller CDressingControl {
@@ -63,5 +64,9 @@ connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged
 	connection stm_movement on forceEnd to stm_dressing on forceEnd
 	connection CDressingControl on collisionStop to stm_stop on collisionStop
 	connection CDressingControl on collisionResume to stm_stop on collisionResume
+sref stm_pid = PID
+connection stm_movement on target to stm_pid on target
+	connection stm_movement on current to stm_pid on current
+	connection stm_pid on output to stm_movement on output
 }
 

@@ -5,6 +5,8 @@ interface FrankaArmControl {
 	pushTowards(target: vector(real, 3), force: real)
 	grip ( )
 	releaseGrip ( )
+setEEForces ( v : vector ( real , 3 ) )
+	setEEPos ( v : vector ( real , 3 ) )
 }
 
 interface DressingEvents {
@@ -75,13 +77,6 @@ interface FrankaArmEvents {
 	event forceEndEffector: vector(real, 3)
 }
 
-interface PIDState {
-	var p : vector ( real , 3 )
-	var d : vector ( real , 3 )
-	var i : vector ( real , 3 )
-	var e : vector ( real , 3 )
-}
-
 function jointPosition(xs: vector(vector(real, 3), 3), i: int): vector(real, 3) {
 	postcondition forall xxs: vector(vector(real, 3), 3), ii: int | ii >= 0 /\ ii < 3 @ jointPosition(xxs, ii) == xxs[ii]
 }
@@ -94,9 +89,20 @@ function pow( x : real, i: nat ) : real {
 	postcondition (forall x0 : real, i0: nat | i0 >= 0 @ pow (x0, i0 + 1) == pow(x0, i0)) /\ (forall x1 : real @ pow(x, 0) == 1)
 }
 
+function norm (p: vector(real, 3)): real {
+	postcondition forall v: vector(real, 3)@ norm(v) == sqrt(pow(v[0], 2) + pow(v[1], 2) + pow(v[2], 2))
+}
+
+function scalarMul(s: real, v: vector(real, 3)): vector(real, 3) {
+	postcondition forall ss: real, vv: vector(real, 3) @ scalarMul(ss, vv) == [|ss, ss, ss|] * vv
+}
+
+function targetForces(current : vector(real, 3), target: vector(real, 3), targetTotalForce: real): vector(real, 3) {
+	postcondition forall c: vector(real, 3), t: vector(real, 3), ttf: real @ targetForces(c, t, ttf) == if norm(t - c) > 0 then (t - c) * (ttf / norm(t - c)) else [|0,0,0|] end
+}
 
 function dist ( p1 : vector(real, 3) , p2 : vector(real, 3) ) : real {
-	postcondition forall pa: real, pb: real @ dist ( p1 , p2 ) == sqrt( pow( p1[0] - p2[0], 2 ) + pow( p1[1] - p2[1], 2 ) + pow( p1[2] - p2[2], 2 ) )
+	postcondition forall v1: vector(real, 3), v2: vector(real, 3) @ dist ( v1 , v2 ) == norm(v1 - v2)
 }
 
 function gte (x: real, y: real): boolean {

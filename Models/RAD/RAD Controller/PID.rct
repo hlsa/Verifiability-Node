@@ -1,0 +1,80 @@
+import definitions::*
+
+interface PIDState {
+	var p : vector ( real , 3 )
+	var d : vector ( real , 3 )
+	var i : vector ( real , 3 )
+	var e : vector ( real , 3 )
+	var e_old : vector ( real , 3 )
+	var t : vector ( real , 3 )
+	var t_old : vector ( real , 3 )
+var o : vector ( real , 3 )
+}
+
+interface PIDParams {
+	const Kp : real = 1
+	const Ki : real = 1
+	const Kd : real = 0
+	const 
+
+step : int = 0
+}
+
+interface PIDEvents {
+	event target : vector ( real , 3 )
+	event current : vector ( real , 3 )
+	event output : vector ( real , 3 )
+}
+
+stm PID {
+	uses PIDState uses PIDParams uses PIDEvents initial i0
+	state GetTarget {
+	}
+	state Update {
+	entry e = p - t ; i = i + scalarMul(step, e) ; d = scalarMul(1/step, e - e_old) ; o = scalarMul(Kp, e) + scalarMul(Ki, i) + scalarMul(Kd, d) ; e_old = e ; output ! o ; t_old = t
+	}
+	state GetPosition {
+	}
+	state Reset {
+		entry skip ; skip
+	}
+	transition t0 {
+		from i0
+		to GetTarget
+	}
+	transition t1 {
+		from GetTarget
+		to GetPosition
+		trigger 
+		
+		target ? t
+		condition t == t_old
+	}
+	transition t2 {
+		from GetPosition
+		to Update
+	trigger 
+	current ? p
+	}
+	transition t3 {
+		from Update
+		to GetTarget
+		action wait ( step )
+	}
+	transition t4 {
+		from GetTarget
+		to Reset
+		trigger 
+		
+		target ? t
+		condition t != t_old
+	}
+	transition t5 {
+		from Reset
+		to Update
+		trigger 
+	
+	current ? p
+	}
+}
+
