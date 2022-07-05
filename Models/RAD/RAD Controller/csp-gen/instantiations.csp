@@ -1,3 +1,13 @@
+-- generate const_radcontrol_CDressingControl_stm_pid_Ki not
+const_radcontrol_CDressingControl_stm_pid_Ki = 1
+
+-- generate const_radcontrol_CDressingControl_stm_pid_step not
+const_radcontrol_CDressingControl_stm_pid_step = 1
+
+-- OPERATION CONSTANTS
+
+-- BASIC TYPES
+
 -- generate definitions_jointPosition not
 definitions_jointPosition((x,y,z),0) = x
 definitions_jointPosition((x,y,z),1) = y
@@ -5,6 +15,9 @@ definitions_jointPosition((x,y,z),2) = z
 
 -- generate definitions_scalarMul not
 definitions_scalarMul(a,(x,y,z)) = (a*x, a*y, a*z)
+
+-- generate const_radcontrol_CDressingControl_stm_pid_Kp not
+const_radcontrol_CDressingControl_stm_pid_Kp = 1
 
 -- generate dist not
 dist(p1,p2) = if p1 == p2 then 0 else 1
@@ -52,62 +65,12 @@ vector_vector_real_3_3_set((x1__, x2__, x3__),value,3) = (x1__, x2__, value)
 
 -- CLOCKS
 
--- generate definitions_force_pi_update
-definitions_force_pi_update(current,target) = 0
+-- generate definitions_dist not
+definitions_dist(v1,v2) = if v1 == v2 then 0 else 1
 
--- generate string
-nametype core_string = LSeq(Char,2)
-
--- generate const_ArmControlPID_Kp
-const_ArmControlPID_Kp = 0
-
--- generate definitions_norm
-definitions_norm(v) = 0
-
--- generate definitions_targetForces
-definitions_targetForces(current,target,targetTotalForce) = (0, 0, 0)
-
--- generate const_radcontrol_CDressingControl_stm_pid_Kp
-const_radcontrol_CDressingControl_stm_pid_Kp = 0
-
--- generate definitions_gte
-definitions_gte(x,y) = true
-
--- generate -- OPERATION BOUNDS
-
--- MODULE CONSTANTS
-
--- CONTROLLER CONSTANTS
-
--- STATEMACHINE CONSTANTS
-
--- OPERATION CONSTANTS
-
--- BASIC TYPES
-
--- generate const_radcontrol_CDressingControl_stm_ref0_Kd
-const_radcontrol_CDressingControl_stm_ref0_Kd = 0
-
--- generate const_ArmControlPID_Kd
-const_ArmControlPID_Kd = 0
-
--- generate const_radcontrol_CDressingControl_stm_ref0_Kp
-const_radcontrol_CDressingControl_stm_ref0_Kp = 0
-
--- generate Plus
-Plus(e1,e2,T) = if member(e1+e2,T) then e1+e2 else e1
-
--- generate definitions_dist
-definitions_dist(v1,v2) = 0
-
--- generate const_radcontrol_CDressingControl_stm_ref0_Ki
-const_radcontrol_CDressingControl_stm_ref0_Ki = 0
-
--- generate const_ArmControlPID_Ki
-const_ArmControlPID_Ki = 0
-
--- generate definitions_sqrt
-definitions_sqrt(x) = 0
+-- generate definitions_sqrt not
+definitions_sqrt(0) = 0
+definitions_sqrt(1) = 1
 
 -- generate --
 
@@ -125,29 +88,31 @@ definitions_sqrt(x) = 0
 nametype core_nat = union({0..2},{calc_type_min(Union(
 			{{1},{0..2},{1},{0..2},{2},{2},{2},{2},{2},{2},{2},{2}}))..calc_type_max(Union({{1},{0..2},{1},{0..2},{2},{2},{2},{2},{2},{2},{2},{2}}))})
 
--- generate const_PID_Kd
-const_PID_Kd = 0
-
 -- generate core_clock_type
 nametype core_clock_type = {0..10}
 
 -- BASIC FUNCTIONS
 
--- generate definitions_definitions
-definitions_definitions() = 0
+-- generate string
+nametype core_string = LSeq(Char,2)
 
--- generate const_PID_Ki
-const_PID_Ki = 0
+-- generate definitions_norm
+definitions_norm(v) = 0
 
--- generate const_PID_step
-const_PID_step = 0
+-- generate definitions_targetForces
+definitions_targetForces(current,target,targetTotalForce) = (0, 0, 0)
 
 -- generate int
 nametype core_int = union({ -2..2},{calc_type_min(Union(
-			{{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{ -2..2},{ -2..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{step|step <- { -2..2}},{2},{2},{currentJoint|currentJoint <- { -2..2}},{step|step <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2},{2},{2}}))..calc_type_max(Union({{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{ -2..2},{ -2..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{step|step <- { -2..2}},{2},{2},{currentJoint|currentJoint <- { -2..2}},{step|step <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2},{2},{2}}))})
+			{{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{ -2..2},{ -2..2},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2},{2},{2},{2},{currentJoint|currentJoint <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{step|step <- { -2..2}},{2},{currentJoint|currentJoint <- { -2..2}},{2},{step|step <- { -2..2}}}))..calc_type_max(Union({{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{ -2..2},{ -2..2},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2},{2},{2},{2},{currentJoint|currentJoint <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{step|step <- { -2..2}},{2},{currentJoint|currentJoint <- { -2..2}},{2},{step|step <- { -2..2}}}))})
 
--- generate const_ArmControlPID_step
-const_ArmControlPID_step = 0
+-- generate -- OPERATION BOUNDS
+
+-- MODULE CONSTANTS
+
+-- CONTROLLER CONSTANTS
+
+-- STATEMACHINE CONSTANTS
 
 -- OPERATION CONSTANTS
 
@@ -159,25 +124,8 @@ Div(e1,e2,T) = if member(e1/e2,T) then e1/e2 else e1
 -- generate Neg
 Neg(e1,T) = if member(-e1,T) then -e1 else e1
 
--- generate const_radcontrol_CDressingControl_stm_ref0_step
-const_radcontrol_CDressingControl_stm_ref0_step = 0
-
--- OPERATION CONSTANTS
-
--- BASIC TYPES
-
 -- generate boolean
 nametype core_boolean = Bool
-
--- generate const_radcontrol_CDressingControl_stm_pid_Ki
-const_radcontrol_CDressingControl_stm_pid_Ki = 0
-
--- generate const_radcontrol_CDressingControl_stm_pid_step
-const_radcontrol_CDressingControl_stm_pid_step = 0
-
--- OPERATION CONSTANTS
-
--- BASIC TYPES
 
 -- generate Mult
 Mult(e1,e2,T) = if member(e1*e2,T) then e1*e2 else e1
@@ -185,11 +133,8 @@ Mult(e1,e2,T) = if member(e1*e2,T) then e1*e2 else e1
 -- generate Modulus
 Modulus(e1,e2,T) = if member(e1%e2,T) then e1%e2 else e1
 
--- generate const_PID_Kp
-const_PID_Kp = 0
-
--- generate const_radcontrol_CDressingControl_stm_pid_Kd
-const_radcontrol_CDressingControl_stm_pid_Kd = 0
+-- generate Plus
+Plus(e1,e2,T) = if member(e1+e2,T) then e1+e2 else e1
 
 -- generate Minus
 Minus(e1,e2,T) = if member(e1-e2,T) then e1-e2 else e1

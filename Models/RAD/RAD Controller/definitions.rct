@@ -1,5 +1,7 @@
 package definitions
 
+// import math::*
+
 interface FrankaArmControl {
 	stepTowards(target: vector(real, 3), speed: real)
 	pushTowards(target: vector(real, 3), force: real)
@@ -96,7 +98,7 @@ function norm (v: vector(real, 3)): real {
 }
 
 function scalarMul(s: real, v: vector(real, 3)): vector(real, 3) {
-	postcondition result == [|s, s, s|] * v
+	postcondition result == [|s, 0, 0; 0, s, 0; 0, 0, s|] * v
 }
 
 function targetForces(current : vector(real, 3), target: vector(real, 3), targetTotalForce: real): vector(real, 3) {
@@ -106,3 +108,16 @@ function targetForces(current : vector(real, 3), target: vector(real, 3), target
 function dist ( v1 : vector(real, 3) , v2 : vector(real, 3) ) : real {
 	postcondition result == norm(v1 - v2)
 }
+
+// Arm Kinematics
+/*
+interface DH {
+	const DH1 : matrix(real, 4, 4) = [|0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0|]
+	const DH2 : matrix(real, 4, 4) = [|0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0|]	
+	const DH3 : matrix(real, 4, 4) = [|0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0|]	
+	const DH4 : matrix(real, 4, 4) = [|0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0|]	
+	const DH5 : matrix(real, 4, 4) = [|0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0|]	
+	const DH6 : matrix(real, 4, 4) = [|0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0|]	
+	const DH7 : matrix(real, 4, 4) = [|0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0|]	
+}
+ */
