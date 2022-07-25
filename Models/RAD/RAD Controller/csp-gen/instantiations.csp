@@ -12,6 +12,8 @@ const_radcontrol_CDressingControl_stm_pid_step = 1
 definitions_jointPosition((x,y,z),0) = x
 definitions_jointPosition((x,y,z),1) = y
 definitions_jointPosition((x,y,z),2) = z
+definitions_jointPosition((x,y,z),-1) = (0, 0, 0)
+definitions_jointPosition((x,y,z),-2) = (0, 0, 0)
 
 -- generate definitions_scalarMul not
 definitions_scalarMul(a,(x,y,z)) = (a*x, a*y, a*z)
@@ -104,7 +106,7 @@ definitions_targetForces(current,target,targetTotalForce) = (0, 0, 0)
 
 -- generate int
 nametype core_int = union({ -2..2},{calc_type_min(Union(
-			{{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{ -2..2},{ -2..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{step|step <- { -2..2}},{2},{2},{currentJoint|currentJoint <- { -2..2}},{step|step <- { -2..2}},{2},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2}}))..calc_type_max(Union({{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{ -2..2},{ -2..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{step|step <- { -2..2}},{2},{2},{currentJoint|currentJoint <- { -2..2}},{step|step <- { -2..2}},{2},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2}}))})
+			{{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{2},{ -2..2},{1},{0..2},{0},{ -2..2},{ -2..2},{ -2..2},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{2},{step|step <- { -2..2}},{step|step <- { -2..2}},{2},{2},{2},{2},{currentJoint|currentJoint <- { -2..2}},{2},{currentJoint|currentJoint <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2}}))..calc_type_max(Union({{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{2},{ -2..2},{1},{0..2},{0},{ -2..2},{ -2..2},{ -2..2},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{2},{step|step <- { -2..2}},{step|step <- { -2..2}},{2},{2},{2},{2},{currentJoint|currentJoint <- { -2..2}},{2},{currentJoint|currentJoint <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2}}))})
 
 -- generate -- OPERATION BOUNDS
 

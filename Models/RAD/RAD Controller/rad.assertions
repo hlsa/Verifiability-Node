@@ -1,8 +1,8 @@
 // === Emergency Stop Control ===
-// assertion R1: SDressingControl::GarmentAcquisition is reachable in CDressingControl
-// assertion R2: SDressingControl is deadlock-free
-// assertion R3: SDressingControl is deterministic
-// assertion R4: SDressingControl::GarmentAcquistion is deterministic
+assertion R1: dressingcontrol::SDressingControl::GarmentAcquisition is reachable in radcontrol::CDressingControl
+assertion R2: dressingcontrol::SDressingControl is deadlock-free
+assertion R3: dressingcontrol::SDressingControl is deterministic
+//assertion R4: dressingcontrol::SDressingControl::GarmentAcquistion is deterministic
 // false
 assertion ES1: EmergencyStopControl is deadlock-free
 // false
@@ -61,27 +61,88 @@ assertion ES10: ESHiddenStops refines ESChaoticMovement
 // === R17: the garment cannot be picked up until a request has been made ===
 
 // === First version of nothing until request has been made ===
-/*
-csp GANothingUntilRequest associated to SDressingControl csp-begin
+csp GANothingUntilRequest associated to dressingcontrol::SDressingControl csp-begin
 	AnyEvents = CHAOS({
-		SDressingControl::dressingRequest.in, SDressingControl::gripperEngaged.in.true, SDressingControl::gripperEngaged.in.false,
-		SDressingControl::gripCorrect.in.true, SDressingControl::gripCorrect.in.false,
-		SDressingControl::checkCorrectGripCall,
-		SDressingControl::garmentDetected.in, SDressingControl::detectGarmentCall, SDressingControl::invalidPoseDetected.in,
-		SDressingControl::releaseGripCall, SDressingControl::gripCall, SDressingControl::setConfigurationCall,
-		SDressingControl::detectUserPoseCall, SDressingControl::poseDetected.in,
-		SDressingControl::dressedJoint.out.0, SDressingControl::dressedJoint.out.1, SDressingControl::dressedJoint.out.2,
-		SDressingControl::movementStart.out, SDressingControl::movementEnd.in, SDressingControl::snaggingDetected.in,
-		SDressingControl::checkFaultCall, SDressingControl::correctedMovement.out
+		dressingcontrol::SDressingControl::dressingRequest.in,
+		dressingcontrol::SDressingControl::gripperEngaged.in.true,
+		dressingcontrol::SDressingControl::gripperEngaged.in.false,
+		dressingcontrol::SDressingControl::gripCorrect.in.true,
+		dressingcontrol::SDressingControl::gripCorrect.in.false,
+		dressingcontrol::SDressingControl::checkCorrectGripCall,
+		dressingcontrol::SDressingControl::garmentDetected.in.(0,0,0),
+		dressingcontrol::SDressingControl::garmentDetected.in.(0,0,0),
+		dressingcontrol::SDressingControl::garmentDetected.in.(0,0,1),
+		dressingcontrol::SDressingControl::garmentDetected.in.(0,1,0),
+		dressingcontrol::SDressingControl::garmentDetected.in.(0,1,1),
+		dressingcontrol::SDressingControl::garmentDetected.in.(1,0,0),
+		dressingcontrol::SDressingControl::garmentDetected.in.(1,0,1),
+		dressingcontrol::SDressingControl::garmentDetected.in.(1,1,0),
+		dressingcontrol::SDressingControl::garmentDetected.in.(1,1,1),
+		dressingcontrol::SDressingControl::detectGarmentCall,
+		dressingcontrol::SDressingControl::invalidPoseDetected.in,
+		dressingcontrol::SDressingControl::releaseGripCall,
+		dressingcontrol::SDressingControl::gripCall,
+		dressingcontrol::SDressingControl::setEEForcesCall.(0,0,0),
+		dressingcontrol::SDressingControl::setEEForcesCall.(0,0,0),
+		dressingcontrol::SDressingControl::setEEForcesCall.(0,0,0),
+		dressingcontrol::SDressingControl::setEEForcesCall.(0,0,1),
+		dressingcontrol::SDressingControl::setEEForcesCall.(0,1,0),
+		dressingcontrol::SDressingControl::setEEForcesCall.(0,1,1),
+		dressingcontrol::SDressingControl::setEEForcesCall.(1,0,0),
+		dressingcontrol::SDressingControl::setEEForcesCall.(1,0,1),
+		dressingcontrol::SDressingControl::setEEForcesCall.(1,1,0),
+		dressingcontrol::SDressingControl::setEEForcesCall.(1,1,1),
+		dressingcontrol::SDressingControl::setEEPosCall.(0,0,0),
+		dressingcontrol::SDressingControl::setEEPosCall.(0,0,0),
+		dressingcontrol::SDressingControl::setEEPosCall.(0,0,0),
+		dressingcontrol::SDressingControl::setEEPosCall.(0,0,1),
+		dressingcontrol::SDressingControl::setEEPosCall.(0,1,0),
+		dressingcontrol::SDressingControl::setEEPosCall.(0,1,1),
+		dressingcontrol::SDressingControl::setEEPosCall.(1,0,0),
+		dressingcontrol::SDressingControl::setEEPosCall.(1,0,1),
+		dressingcontrol::SDressingControl::setEEPosCall.(1,1,0),
+		dressingcontrol::SDressingControl::setEEPosCall.(1,1,1),
+		dressingcontrol::SDressingControl::detectUserPoseCall,
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (0,0,0)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (0,0,1)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (0,1,0)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (0,1,1)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (1,0,0)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (1,0,1)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (1,1,0)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (1,1,1)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,1), (0,0,0)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,1), (0,0,1)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,1), (0,1,0)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,1), (0,1,1)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,1), (1,0,0)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,1), (1,0,1)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,1), (1,1,0)),
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,1), (1,1,1)),
+		dressingcontrol::SDressingControl::dressedJoint.out.0,
+		dressingcontrol::SDressingControl::dressedJoint.out.1,
+		dressingcontrol::SDressingControl::dressedJoint.out.2,
+		dressingcontrol::SDressingControl::movementStart.out.(0,0,0),
+		dressingcontrol::SDressingControl::movementStart.out.(0,0,1),
+		dressingcontrol::SDressingControl::movementStart.out.(0,1,0),
+		dressingcontrol::SDressingControl::movementStart.out.(0,1,1),
+		dressingcontrol::SDressingControl::movementStart.out.(1,0,0),
+		dressingcontrol::SDressingControl::movementStart.out.(1,0,1),
+		dressingcontrol::SDressingControl::movementStart.out.(1,1,0),
+		dressingcontrol::SDressingControl::movementStart.out.(1,1,1),
+		dressingcontrol::SDressingControl::movementEnd.in,
+		dressingcontrol::SDressingControl::snaggingDetected.in,
+		dressingcontrol::SDressingControl::checkFaultCall,
+		dressingcontrol::SDressingControl::correctedMovement.out
 	})
 	GANothingUntilRequest = (
-		(SDressingControl::dressingRequest.in -> SKIP);
+		(dressingcontrol::SDressingControl::dressingRequest.in -> SKIP);
 		AnyEvents
 	)
 csp-end
-assertion GA1t: SDressingControl refines GANothingUntilRequest in the traces model
-assertion GA1f: SDressingControl refines GANothingUntilRequest in the failures model
-assertion GA1fd: SDressingControl refines GANothingUntilRequest */
+assertion GA1t: dressingcontrol::SDressingControl refines GANothingUntilRequest in the traces model
+assertion GA1f: dressingcontrol::SDressingControl refines GANothingUntilRequest in the failures model
+assertion GA1fd: dressingcontrol::SDressingControl refines GANothingUntilRequest
 /* We should perform two stage verification that the garment has been gripped correctly before starting.
  * This requires us to check both that a request has been made and for the user to confirm the correctness
  * of garment acquisition.
