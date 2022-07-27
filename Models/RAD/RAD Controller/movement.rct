@@ -53,7 +53,7 @@ stm MovementControl {
 		transition t0 {
 			from PushTowardsTarget
 			to j0
-			action arrivedAtTarget = dist ( vtarget , vcurrent ) < EPSILON
+			action arrivedAtTarget = dist ( vtarget , vcurrent ) < EPSILON ; movementOccurred
 		}
 		state PushTowardsTarget {
 			entry setEEPos ( pidoutput )
@@ -99,7 +99,7 @@ stm MovementControl {
 		transition t0 {
 			from PushTowardsTarget
 			to j0
-			action arrivedAtTarget = dist ( vtarget , vcurrent ) < EPSILON
+			action arrivedAtTarget = dist ( vtarget , vcurrent ) < EPSILON ; movementOccurred
 		}
 	state SendCurrent {
 			entry target ! ftarget ; forceEndEffector ? fcurrent ; current ! fcurrent
@@ -160,5 +160,6 @@ uses PIDEvents var pidoutput : vector ( real , 3 )
 	var ftarget : vector ( real , 3 )
 	const TARGET_TOTAL_FORCE : real = 1
 	var fcurrent : vector ( real , 3 )
+event movementOccurred
 }
 

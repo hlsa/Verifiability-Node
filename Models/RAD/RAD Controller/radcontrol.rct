@@ -68,5 +68,8 @@ sref stm_pid = PID
 connection stm_movement on target to stm_pid on target
 	connection stm_movement on current to stm_pid on current
 	connection stm_pid on output to stm_movement on output
+event movementOccured
+	event movementOccurred
+	connection stm_movement on movementOccurred to stm_stop on movementOccurred
 }
 
