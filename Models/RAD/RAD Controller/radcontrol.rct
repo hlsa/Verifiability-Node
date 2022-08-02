@@ -17,6 +17,8 @@ controller CDressingControl {
 	uses FrankaArmEvents
 	uses EmergencyStopEvents 
 	uses EnvironmentalEvents 
+	uses PIDState
+	uses PIDParams
 	event dressedJoint : int
 	
 	sref stm_dressing = SDressingControl
@@ -64,12 +66,9 @@ connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged
 	connection stm_movement on forceEnd to stm_dressing on forceEnd
 	connection CDressingControl on collisionStop to stm_stop on collisionStop
 	connection CDressingControl on collisionResume to stm_stop on collisionResume
-sref stm_pid = PID
-connection stm_movement on target to stm_pid on target
-	connection stm_movement on current to stm_pid on current
-	connection stm_pid on output to stm_movement on output
-event movementOccured
-	event movementOccurred
+	opref op_ref0 = PIDInitialize
+	opref op_ref1 = PIDUpdate
+
 	connection stm_movement on movementOccurred to stm_stop on movementOccurred
 }
 

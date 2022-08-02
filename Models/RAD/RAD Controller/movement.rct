@@ -6,21 +6,27 @@ import PID::*
 stm MovementControl {
 	uses MovementEvents requires FrankaArmControl
 	requires HRIOperations
+	requires PIDOps
 	var arrivedAtTarget : boolean = false
 	var vtarget : vector ( real , 3 )
 	var vcurrent : vector ( real , 3 )
 	const EPSILON: nat = 1
 	event allowMovement
+	requires PIDState
 
 	initial i0
 	state NotEngaged {
 	}
 
 	state FreeMovement {
+		entry PIDInitialize(vtarget)
+		
 		initial i0
 
-		state SendCurrent {
-			entry target ! vtarget ; endEffectorPosition ? vcurrent ; current ! vcurrent
+		state Move {
+			entry endEffectorPosition ? vcurrent
+			during PIDUpdate(vcurrent) ; setEEPos(o)
+			exit endEffectorPosition ? vcurrent
 		}
 
 		state CheckMovement {
@@ -28,11 +34,6 @@ stm MovementControl {
 
 		junction j0
 
-		transition t2 {
-			from SendCurrent
-			to PushTowardsTarget
-			trigger output ? pidoutput
-		}
 		transition t5 {
 			from j0
 			to f0
@@ -40,7 +41,7 @@ stm MovementControl {
 		}
 		transition t1 {
 			from CheckMovement
-			to SendCurrent
+			to Move
 			trigger allowMovement
 		}
 		transition t3 {
@@ -51,13 +52,9 @@ stm MovementControl {
 		final f0
 
 		transition t0 {
-			from PushTowardsTarget
+			from Move
 			to j0
 			action arrivedAtTarget = dist ( vtarget , vcurrent ) < EPSILON ; movementOccurred
-		}
-		state PushTowardsTarget {
-			entry setEEPos ( pidoutput )
-			exit endEffectorPosition ? vcurrent
 		}
 		transition t4 {
 			from i0
@@ -69,16 +66,11 @@ stm MovementControl {
 		initial i0
 		state CheckForce {
 		}
-		state PushTowardsTarget {
-			entry setEEForces ( pidoutput )
-
-			exit endEffectorPosition ? vcurrent
-		}
 		junction j0
 
 		transition t1 {
 			from CheckForce
-			to SendCurrent
+			to Move
 			trigger allowMovement
 		}
 		transition t3 {
@@ -97,21 +89,16 @@ stm MovementControl {
 			condition arrivedAtTarget
 		}
 		transition t0 {
-			from PushTowardsTarget
+			from Move
 			to j0
 			action arrivedAtTarget = dist ( vtarget , vcurrent ) < EPSILON ; movementOccurred
 		}
-	state SendCurrent {
-			entry target ! ftarget ; forceEndEffector ? fcurrent ; current ! fcurrent
+		state Move {
+			entry forceEndEffector ? fcurrent
+			during PIDUpdate(fcurrent) ; setEEPos(o)
+			exit endEffectorPosition ? vcurrent		
 		}
-		transition t2 {
-			from SendCurrent
-			to PushTowardsTarget
-			trigger 
-		
-		output ? pidoutput
-		}
-	entry ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE )
+	entry ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ); PIDInitialize(ftarget)
 	}
 	uses FrankaArmEvents uses ForceEvents 
 	
@@ -155,9 +142,7 @@ stm MovementControl {
 		condition arrivedAtTarget
 		action forceEnd
 	}
-uses PIDEvents var pidoutput : vector ( real , 3 )
-
-	var ftarget : vector ( real , 3 )
+requires PIDParams var ftarget : vector ( real , 3 )
 	const TARGET_TOTAL_FORCE : real = 1
 	var fcurrent : vector ( real , 3 )
 event movementOccurred

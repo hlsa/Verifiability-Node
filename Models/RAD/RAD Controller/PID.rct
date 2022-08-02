@@ -8,7 +8,7 @@ interface PIDState {
 	var e_old : vector ( real , 3 )
 	var t : vector ( real , 3 )
 	var t_old : vector ( real , 3 )
-var o : vector ( real , 3 )
+    var o : vector ( real , 3 )
 }
 
 interface PIDParams {
@@ -20,61 +20,40 @@ interface PIDParams {
 step : int = 0
 }
 
-interface PIDEvents {
-	event target : vector ( real , 3 )
-	event current : vector ( real , 3 )
-	event output : vector ( real , 3 )
+interface PIDOps {
+	PIDInitialize ( target: vector(real, 3) )
+	PIDUpdate ( current: vector(real, 3) )
 }
 
-stm PID {
-	uses PIDState uses PIDParams uses PIDEvents initial i0
-	state GetTarget {
-	}
-	state Update {
-	entry e = p - t ; i = i + scalarMul(step, e) ; d = scalarMul(1/step, e - e_old) ; o = scalarMul(Kp, e) + scalarMul(Ki, i) + scalarMul(Kd, d) ; e_old = e ; output ! o ; t_old = t
-	}
-	state GetPosition {
-	}
-	state Reset {
-		entry skip ; skip
+operation PIDInitialize ( target: vector(real, 3) ) {
+	requires PIDState requires PIDParams initial i0
+	final f0
+	state Init {
+		entry p = (|0,0,0|); d = (|0,0,0|); e = (|0,0,0|); e_old = (|0,0,0|); t = target; t_old = (|0,0,0|); o = (|0,0,0|)
 	}
 	transition t0 {
 		from i0
-		to GetTarget
+		to Init
 	}
 	transition t1 {
-		from GetTarget
-		to GetPosition
-		trigger 
-		
-		target ? t
-		condition t == t_old
+		from Init
+		to f0
 	}
-	transition t2 {
-		from GetPosition
-		to Update
-	trigger 
-	current ? p
+}
+
+operation PIDUpdate ( current: vector(real, 3) ) {
+	requires PIDState requires PIDParams initial i0
+	final f0
+	state Init {
+		entry p = current; e = p - t ; i = i + scalarMul(step, e) ; d = scalarMul(1/step, e - e_old) ; o = scalarMul(Kp, e) + scalarMul(Ki, i) + scalarMul(Kd, d)
 	}
-	transition t3 {
-		from Update
-		to GetTarget
-		action wait ( step )
+	transition t0 {
+		from i0
+		to Init
 	}
-	transition t4 {
-		from GetTarget
-		to Reset
-		trigger 
-		
-		target ? t
-		condition t != t_old
-	}
-	transition t5 {
-		from Reset
-		to Update
-		trigger 
-	
-	current ? p
+	transition t1 {
+		from Init
+		to f0
 	}
 }
 
