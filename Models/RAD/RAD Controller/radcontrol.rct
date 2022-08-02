@@ -26,49 +26,50 @@ controller CDressingControl {
 	sref stm_stop = EmergencyStopControl
 	sref stm_environment = EnvironmentalMonitor
 
-	connection CDressingControl on snaggingDetected to stm_dressing on snaggingDetected
-	connection CDressingControl on invalidTrajectory to stm_dressing on invalidTrajectory
-	connection CDressingControl on invalidPoseDetected to stm_dressing on invalidPoseDetected
-	connection CDressingControl on userInterrupt to stm_dressing on userInterrupt
+	connection CDressingControl on snaggingDetected to stm_dressing on snaggingDetected ( _async )
+	connection CDressingControl on invalidTrajectory to stm_dressing on invalidTrajectory ( _async )
+	connection CDressingControl on invalidPoseDetected to stm_dressing on invalidPoseDetected ( _async )
+	connection CDressingControl on userInterrupt to stm_dressing on userInterrupt ( _async )
 
-	connection CDressingControl on poseDetected to stm_dressing on poseDetected
-	connection CDressingControl on dressingRequest to stm_dressing on dressingRequest
-	connection CDressingControl on garmentDetected to stm_dressing on garmentDetected
+	connection CDressingControl on poseDetected to stm_dressing on poseDetected ( _async )
+	connection CDressingControl on dressingRequest to stm_dressing on dressingRequest ( _async )
+	connection CDressingControl on garmentDetected to stm_dressing on garmentDetected ( _async )
 
-	connection CDressingControl on emergencyStop to stm_stop on emergencyStop
-	connection CDressingControl on resumeDressing to stm_stop on resumeDressing
+	connection CDressingControl on emergencyStop to stm_stop on emergencyStop ( _async )
+	connection CDressingControl on resumeDressing to stm_stop on resumeDressing ( _async )
 
-	connection stm_environment on environmentalResume to stm_stop on environmentalResume
-	connection stm_environment on environmentalStop to stm_stop on environmentalStop
-	connection CDressingControl on backgroundNoiseLevel to stm_environment on backgroundNoiseLevel
-	connection CDressingControl on otherAgentDetected to stm_environment on otherAgentDetected
-	connection stm_dressing on dressedJoint to CDressingControl on dressedJoint
-	connection stm_stop on allowMovement to stm_movement on allowMovement
+	connection stm_environment on environmentalResume to stm_stop on environmentalResume ( _async )
+	connection stm_environment on environmentalStop to stm_stop on environmentalStop ( _async )
+	connection CDressingControl on backgroundNoiseLevel to stm_environment on backgroundNoiseLevel ( _async )
+	connection CDressingControl on otherAgentDetected to stm_environment on otherAgentDetected ( _async )
+	connection stm_dressing on dressedJoint to CDressingControl on dressedJoint ( _async )
+	connection stm_stop on allowMovement to stm_movement on allowMovement ( _async )
 
-	connection stm_movement on movementEnd to stm_dressing on movementEnd
+	connection stm_movement on movementEnd to stm_dressing on movementEnd ( _async )
 
-	connection CDressingControl on armConfig to stm_dressing on armConfig
-	connection stm_dressing on movementStart to stm_movement on movementStart
-	connection CDressingControl on gripCorrect to stm_dressing on gripCorrect
+	connection CDressingControl on armConfig to stm_dressing on armConfig ( _async )
+	connection stm_dressing on movementStart to stm_movement on movementStart ( _async )
+	connection CDressingControl on gripCorrect to stm_dressing on gripCorrect ( _async )
 
-	connection CDressingControl on secondHandDetected to stm_dressing on secondHandDetected
-	connection CDressingControl on endEffectorPosition to stm_movement on endEffectorPosition
+	connection CDressingControl on secondHandDetected to stm_dressing on secondHandDetected ( _async )
+	connection CDressingControl on endEffectorPosition to stm_movement on endEffectorPosition ( _async )
 
-	connection CDressingControl on userDressed to stm_dressing on userDressed
+	connection CDressingControl on userDressed to stm_dressing on userDressed ( _async )
 
-connection stm_dressing on correctedMovement to CDressingControl on correctedMovement
-connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged
+connection stm_dressing on correctedMovement to CDressingControl on correctedMovement ( _async )
+connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged ( _async )
 
-	connection CDressingControl on forceEndEffector to stm_movement on forceEndEffector
+	connection CDressingControl on forceEndEffector to stm_movement on forceEndEffector ( _async )
 
-	connection stm_dressing on forceStart to stm_movement on forceStart
+	connection stm_dressing on forceStart to stm_movement on forceStart ( _async )
 
-	connection stm_movement on forceEnd to stm_dressing on forceEnd
-	connection CDressingControl on collisionStop to stm_stop on collisionStop
-	connection CDressingControl on collisionResume to stm_stop on collisionResume
+	connection stm_movement on forceEnd to stm_dressing on forceEnd ( _async )
+	connection CDressingControl on collisionStop to stm_stop on collisionStop ( _async )
+	connection CDressingControl on collisionResume to stm_stop on collisionResume ( _async )
 	opref op_ref0 = PIDInitialize
 	opref op_ref1 = PIDUpdate
 
 	connection stm_movement on movementOccurred to stm_stop on movementOccurred
+( _async )
 }
 
