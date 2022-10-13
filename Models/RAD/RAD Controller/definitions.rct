@@ -9,6 +9,8 @@ interface FrankaArmControl {
 	releaseGrip ( )
 setEEForces ( v : vector ( real , 3 ) )
 	setEEPos ( v : vector ( real , 3 ) )
+reorientGarment ( )
+checkMovement ( )
 }
 
 interface DressingEvents {
@@ -32,6 +34,7 @@ event correctedMovement
 	event secondHandDetected : vector(real, 3)
 	event userDressed
 
+event handlingCorrect : boolean
 }
 
 interface SensorOperations {
@@ -70,7 +73,7 @@ interface ForceEvents {
 }
 
 interface HRIOperations {
-	checkCorrectGrip ( )
+	checkCorrectHandling ( )
 checkUserDressed ( )
 }
 
@@ -80,7 +83,7 @@ interface FrankaArmEvents {
 }
 
 function jointPosition(xs: vector(vector(real, 3), 3), i: int): vector(real, 3) {
-	postcondition result == xs[i]
+	postcondition result == xs[i+1]
 }
 
 function sqrt( x : real) : real {
@@ -94,7 +97,7 @@ function pow( x : real, i: int ) : real {
 }
 
 function norm (v: vector(real, 3)): real {
-	postcondition result == sqrt(pow(v[0], 2) + pow(v[1], 2) + pow(v[2], 2))
+	postcondition result == sqrt(pow(v[1], 2) + pow(v[2], 2) + pow(v[3], 2))
 }
 
 function scalarMul(s: real, v: vector(real, 3)): vector(real, 3) {

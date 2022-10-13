@@ -45,7 +45,7 @@ operation PIDUpdate ( current: vector(real, 3) ) {
 	requires PIDState requires PIDParams initial i0
 	final f0
 	state Init {
-		entry p = current; e = p - t ; i = i + scalarMul(step, e) ; d = scalarMul(1/step, e - e_old) ; o = scalarMul(Kp, e) + scalarMul(Ki, i) + scalarMul(Kd, d)
+		entry p = current ; e = p - t ; i = i + scalarMul ( step , e ) ; d = d + scalarMul ( 1 / step , e - e_old ) ; o = scalarMul ( Kp , e ) + scalarMul ( Kd , d ) + scalarMul ( Ki , i )
 	}
 	transition t0 {
 		from i0

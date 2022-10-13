@@ -14,6 +14,11 @@ connection Franka on snaggingDetected to ctrl_radcontrol on snaggingDetected ( _
 		uses DressingEvents provides FrankaArmControl uses EmergencyStopEvents provides SensorOperations uses EnvironmentalEvents provides HRIOperations 
 		event dressedJoint : int
 		uses FrankaArmEvents
+	event stepMoved
+		event movementInitiated
+		event allowedMovement
+		event noticedMovementOcurred
+	event movementWasAllowed
 	}
 
 	cref ctrl_radcontrol = CDressingControl
@@ -32,5 +37,11 @@ connection Franka on forceEndEffector to ctrl_radcontrol on forceEndEffector ( _
 	connection Franka on collisionResume to ctrl_radcontrol on collisionResume ( _async )
 	connection Franka on endEffectorPosition to ctrl_radcontrol on endEffectorPosition ( _async )
 	connection Franka on userDressed to ctrl_radcontrol on userDressed ( _async )
+connection Franka on handlingCorrect to ctrl_radcontrol on handlingCorrect ( _async )
+connection ctrl_radcontrol on stepMoved to Franka on stepMoved ( _async )
+	connection ctrl_radcontrol on movementWasAllowed to Franka on movementWasAllowed ( _async )
+	connection ctrl_radcontrol on allowedMovement to Franka on allowedMovement ( _async )
+	connection ctrl_radcontrol on noticedMovementOccurred to Franka on noticedMovementOcurred ( _async )
+connection ctrl_radcontrol on movementInitiated to Franka on movementInitiated ( _async )
 }
 

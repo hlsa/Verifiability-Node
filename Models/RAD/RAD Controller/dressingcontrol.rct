@@ -30,6 +30,7 @@ stm SDressingControl {
 		
 		
 			
+			
 			garmentDetected ? garmentPosition
 			action movementStart ! garmentPosition
 		}
@@ -37,7 +38,7 @@ stm SDressingControl {
 		transition t5 {
 			from j0
 			to f0
-		condition isGripCorrect
+		condition isHandlingCorrect
 			action garmentAcquired = true
 		}
 	state Moving {
@@ -50,37 +51,47 @@ stm SDressingControl {
 			trigger movementEnd
 		}
 	state confirmGripCorrect {
-			entry checkCorrectGrip ( )
+			entry checkCorrectHandling ( )
 		}
 		junction j0
-		junction j1
+		state ReorientGarment {
+			entry reorientGarment ( )
+		}
 		transition t3 {
 			from confirmGripCorrect
 			to j0
 			trigger 
-		gripCorrect ? isGripCorrect
+		
+		handlingCorrect ? isHandlingCorrect
 		}
 		transition t4 {
 			from EngageGarment
 			to j1
 			trigger 
+		
 		gripCorrect ? isGripperEngaged
-		}
-		transition t6 {
-			from j1
-			to LookingForGarment
-			condition not isGripperEngaged
 		}
 		transition t7 {
 			from j0
-			to LookingForGarment
+			to ReorientGarment
 			condition 
-			not isGripCorrect
+			
+		not isHandlingCorrect
+		}
+		transition t6 {
+			from ReorientGarment
+			to confirmGripCorrect
 		}
 		transition t8 {
 			from j1
 			to confirmGripCorrect
 			condition isGripperEngaged
+		}
+		junction j1
+		transition t9 {
+			from j1
+			to LookingForGarment
+			condition not isGripperEngaged
 		}
 	}
 	state GarmentToUser {
@@ -95,8 +106,10 @@ stm SDressingControl {
 		transition t2 {
 			from DetectStartPose
 			to Moving
-			trigger poseDetected ? userPose
-			action targetPosition = jointPosition ( userPose , 2 ) ; movementStart ! targetPosition
+			trigger 
+			poseDetected ? userPose
+			action 
+		targetPosition = jointPosition ( userPose , 2 )
 		}
 		state DetectStartPose {
 			entry detectUserPose ( )
@@ -109,6 +122,7 @@ stm SDressingControl {
 			action garmentWithUser = true
 		}
 		state Moving {
+		entry movementStart ! targetPosition
 		}
 	}
 	state DressingLoop {
@@ -117,6 +131,7 @@ stm SDressingControl {
 			entry detectUserPose ( )
 		}
 		state MovingToJoint {
+		entry forceStart ! targetPosition
 		}
 		final f0
 		transition t0 {
@@ -133,13 +148,11 @@ stm SDressingControl {
 			from DetectUserPose
 			to MovingToJoint
 			trigger 
+			
+			
 			poseDetected ? userPose
 			condition currentJoint == 0 \/ currentJoint == 1 \/ currentJoint == 2
-			action 
-		
-		
-		
-		targetPosition = jointPosition ( userPose , currentJoint ) ; forceStart ! targetPosition
+			action targetPosition = jointPosition ( userPose , currentJoint )
 		}
 		transition t5 {
 			from j0
@@ -209,7 +222,7 @@ uses MovementEvents var garmentAcquired : boolean = false
 	var garmentWithUser : boolean = false
 var targetPosition : vector(real, 3)
 	var arrivedAtTarget : boolean = false
-	 var isGripCorrect : boolean = false
+	 var isHandlingCorrect : boolean = false
 	var isGripperEngaged : boolean = false
 var firstArmDressed : boolean = false
 	state SecondArm {
@@ -237,7 +250,8 @@ var firstArmDressed : boolean = false
 		transition t2 {
 			from DetectSecondHand
 			to MovingToSecondHand
-			trigger secondHandDetected ? targetPosition
+			trigger 
+			secondHandDetected ? targetPosition
 			action movementStart ! targetPosition
 		}
 		transition t3 {

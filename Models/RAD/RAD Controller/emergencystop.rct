@@ -4,7 +4,7 @@ import definitions::*
 
 stm EmergencyStopControl {
 	uses EmergencyStopEvents initial i0
-	state Controlling {
+	state Allowing {
 	}
 	var emergencyStopped : boolean = false
 	var environmentallyStopped : boolean = false
@@ -13,58 +13,126 @@ event environmentalStop
 	event environmentalResume
 	transition t0 {
 		from i0
-		to Controlling
+		to Allowing
 	}
 	transition t2 {
-		from Controlling
-		to Controlling
+		from Allowing
+		to Allowing
 		trigger emergencyStop
 		condition not emergencyStopped
 		action emergencyStopped = true
 	}
 	transition t3 {
-		from Controlling
-		to Controlling
-		trigger environmentalStop
-		condition not environmentallyStopped
+		from Allowing
+		to Allowing
+		trigger 
+		environmentalStop
+		condition 
+		not environmentallyStopped
 		action environmentallyStopped = true
 	}
 	transition t4 {
-		from Controlling
-		to Controlling
-		trigger resumeDressing
+		from Allowing
+		to Allowing
+		trigger 
+		resumeDressing
 		condition emergencyStopped
 		action emergencyStopped = false
 	}
 	transition t5 {
-		from Controlling
-		to Controlling
+		from Allowing
+		to Allowing
 		trigger environmentalResume
 		condition environmentallyStopped
 		action environmentallyStopped = false
 	}
 var collisionStopped : boolean = false
 	transition t6 {
-		from Controlling
-		to Controlling
-		trigger collisionStop
-		condition not collisionStopped
+		from Allowing
+		to Allowing
+		trigger 
+		collisionStop
+		condition 
+		not collisionStopped
 		action collisionStopped = true
 	}
 var awaiting : boolean = false
 	event movementOccurred
+
 	transition t1 {
-		from Controlling
-		to Controlling
-		condition not awaiting /\ not ( environmentallyStopped \/ collisionStopped \/ emergencyStopped )
-		action allowMovement ; awaiting = true
+		from Allowing
+		to Awaiting
+		trigger checkMovementAllowed
+		condition not emergencyStopped /\ not environmentallyStopped /\ not collisionStopped
+		action allowMovement
 	}
 	transition t7 {
-		from Controlling
-		to Controlling
+		from Awaiting
+		to Allowing
 		trigger movementOccurred
-		condition awaiting
-		action awaiting = false
+	}
+event allowedMovement
+	event noticedMovementOccurred
+event isAwaiting : boolean
+	event queryES
+	event checkMovementAllowed
+state Awaiting {
+	}
+	transition t8 {
+		from Awaiting
+		to Awaiting
+		trigger environmentalResume
+		condition environmentallyStopped
+		action environmentallyStopped = false
+	}
+	transition t9 {
+		from Awaiting
+		to Awaiting
+		trigger emergencyStop
+		condition not emergencyStopped
+		action emergencyStopped = true
+	}
+	transition t10 {
+		from Awaiting
+		to Awaiting
+		trigger environmentalStop
+		condition not environmentallyStopped
+		action environmentallyStopped = true
+	}
+	transition t11 {
+		from Awaiting
+		to Awaiting
+		trigger resumeDressing
+		condition emergencyStopped
+		action emergencyStopped = false
+	}
+	transition t12 {
+		from Awaiting
+		to Awaiting
+		trigger resumeDressing
+		condition emergencyStopped
+		action emergencyStopped = false
+	}
+	transition t13 {
+		from Allowing
+		to Allowing
+		trigger collisionResume
+		condition collisionStopped
+		action collisionStopped = false
+	}
+	transition t14 {
+		from Awaiting
+		to Awaiting
+		trigger collisionStop
+		condition not collisionStopped
+		action collisionStopped = true
+	}
+	transition t15 {
+		from Awaiting
+		to Awaiting
+		trigger collisionResume
+		condition collisionStopped
+		action collisionStopped = false
 	}
 }
 

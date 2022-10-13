@@ -19,44 +19,40 @@ stm MovementControl {
 	}
 
 	state FreeMovement {
-		entry PIDInitialize(vtarget)
+		entry PIDInitialize ( vtarget )
 		
 		initial i0
 
 		state Move {
-			entry endEffectorPosition ? vcurrent
-			during PIDUpdate(vcurrent) ; setEEPos(o)
-			exit endEffectorPosition ? vcurrent
+			entry endEffectorPosition ? vcurrent ; PIDUpdate ( vcurrent ) ; setEEPos ( o )
 		}
 
 		state CheckMovement {
+			entry checkMovementAllowed
 		}
-
-		junction j0
-
-		transition t5 {
-			from j0
-			to f0
-			condition arrivedAtTarget
+		state s0 {
+			entry stepMoved ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
 		}
 		transition t1 {
 			from CheckMovement
 			to Move
-			trigger allowMovement
+			trigger 
+		
+			allowMovement
+			action movementWasAllowed
 		}
-		transition t3 {
-			from j0
+		transition t6 {
+			from Move
+			to s0
+			trigger endEffectorPosition ? vcurrent
+			action movementOccurred
+		}
+		transition t0 {
+			from s0
 			to CheckMovement
 			condition not arrivedAtTarget
 		}
-		final f0
-
-		transition t0 {
-			from Move
-			to j0
-			action arrivedAtTarget = dist ( vtarget , vcurrent ) < EPSILON ; movementOccurred
-		}
-		transition t4 {
+		transition t2 {
 			from i0
 			to CheckMovement
 		}
@@ -65,16 +61,26 @@ stm MovementControl {
 	state ForceApplication {
 		initial i0
 		state CheckForce {
+		entry checkMovementAllowed
 		}
-		junction j0
+		state Move {
+			entry forceEndEffector ? fcurrent ; PIDUpdate ( fcurrent ) ; setEEPos ( o )
+		}
+	entry ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ); PIDInitialize(ftarget)
+	state s0 {
+		entry stepMoved ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
+		}
 
 		transition t1 {
 			from CheckForce
 			to Move
-			trigger allowMovement
+			trigger 
+		
+			allowMovement
+			action forceWasAllowed
 		}
 		transition t3 {
-			from j0
+			from s0
 			to CheckForce
 			condition not arrivedAtTarget
 		}
@@ -82,23 +88,12 @@ stm MovementControl {
 			from i0
 			to CheckForce
 		}
-	final f0
-		transition t5 {
-			from j0
-			to f0
-			condition arrivedAtTarget
-		}
-		transition t0 {
+		transition t2 {
 			from Move
-			to j0
-			action arrivedAtTarget = dist ( vtarget , vcurrent ) < EPSILON ; movementOccurred
+			to s0
+			trigger endEffectorPosition ? vcurrent
+			action movementOccurred
 		}
-		state Move {
-			entry forceEndEffector ? fcurrent
-			during PIDUpdate(fcurrent) ; setEEPos(o)
-			exit endEffectorPosition ? vcurrent		
-		}
-	entry ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ); PIDInitialize(ftarget)
 	}
 	uses FrankaArmEvents uses ForceEvents 
 	
@@ -116,8 +111,9 @@ stm MovementControl {
 		
 		
 		
+		
 		movementStart ? vtarget
-		action arrivedAtTarget = false
+		action arrivedAtTarget = false ; movementInitiated
 	}
 	transition t6 {
 		from NotEngaged
@@ -127,8 +123,11 @@ stm MovementControl {
 		
 		
 		
+		
+		
 		forceStart ? vtarget
-		action arrivedAtTarget = false
+		action 
+	arrivedAtTarget = false ; forceInitiated
 	}
 	transition t2 {
 		from FreeMovement
@@ -146,5 +145,11 @@ requires PIDParams var ftarget : vector ( real , 3 )
 	const TARGET_TOTAL_FORCE : real = 1
 	var fcurrent : vector ( real , 3 )
 event movementOccurred
+event stepMoved
+	event movementInitiated
+	event movementWasAllowed
+event forceWasAllowed
+	event forceInitiated
+	event checkMovementAllowed
 }
 
