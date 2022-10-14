@@ -10,6 +10,8 @@ specification group RAD
     message set MOtherStops = { W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
     message set MMovement = {T->>W: op setEEPos(any), T->>W: op setEEForces(any)}
     message set MMovementOrResume = {T->>W: op setEEPos(any), T->>W: op setEEForces(any), W->>T: event resumeDressing}
+    message set MMonitoring = { W->>T: event otherAgentDetected(any), W->>T: event backgroundNoiseLevel(any), W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
+    // message set MHighNoise = {W->>T: event backgroundNoiseLevel(RobotAssistedDressing::NoiseLevel::High)}
      
     sequence DressingRequest
         actors T and W
@@ -53,11 +55,21 @@ specification group RAD
     	actors T and W
     	loop
 	    	any except set MStop until: W->>T: event emergencyStop(hot)
+	    	any in set MMonitoring until:
+	    	opt
+	    		alt: T->>W: event movementWasAllowed
+	    		else: T->>W: event forceWasAllowed
+	    		end
+	    	end
+	    	any in set MMonitoring until:
+	    	opt
+	    		alt: T->>W: op setEEPos(any)
+	    		else: T->>W: op setEEForces(any)
+	    		end
+	    	end
 	    	any except set MMovement until: W->>T: event resumeDressing
 	    end
-    
-    //sequence TwoStageGrip
-    //	actors T and W
+    	
     	
    	        
    	    	     

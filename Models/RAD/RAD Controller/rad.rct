@@ -19,6 +19,8 @@ connection Franka on snaggingDetected to ctrl_radcontrol on snaggingDetected ( _
 		event allowedMovement
 		event noticedMovementOcurred
 	event movementWasAllowed
+	event forceInitiated
+		event forceWasAllowed
 	}
 
 	cref ctrl_radcontrol = CDressingControl
@@ -43,5 +45,7 @@ connection ctrl_radcontrol on stepMoved to Franka on stepMoved ( _async )
 	connection ctrl_radcontrol on allowedMovement to Franka on allowedMovement ( _async )
 	connection ctrl_radcontrol on noticedMovementOccurred to Franka on noticedMovementOcurred ( _async )
 connection ctrl_radcontrol on movementInitiated to Franka on movementInitiated ( _async )
+connection ctrl_radcontrol on forceInitiated to Franka on forceInitiated ( _async )
+	connection ctrl_radcontrol on forceWasAllowed to Franka on forceWasAllowed ( _async )
 }
 

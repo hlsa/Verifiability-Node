@@ -24,20 +24,21 @@ stm MovementControl {
 		initial i0
 
 		state Move {
-			entry endEffectorPosition ? vcurrent ; PIDUpdate ( vcurrent ) ; setEEPos ( o )
+			entry setEEPos ( o )
 		}
 
-		state CheckMovement {
-			entry checkMovementAllowed
+		state SensePosition {
+			entry endEffectorPosition ? vcurrent ; PIDUpdate ( vcurrent )
 		}
 		state s0 {
-			entry stepMoved ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
+			entry wait ( step ) ; stepMoved ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
 		}
 		transition t1 {
-			from CheckMovement
+			from SensePosition
 			to Move
 			trigger 
 		
+			
 			allowMovement
 			action movementWasAllowed
 		}
@@ -49,26 +50,31 @@ stm MovementControl {
 		}
 		transition t0 {
 			from s0
-			to CheckMovement
+			to SensePosition
 			condition not arrivedAtTarget
 		}
 		transition t2 {
 			from i0
-			to CheckMovement
+			to SensePosition
+		}
+	transition t3 {
+			from SensePosition
+			to SensePosition
+			trigger resetMovement
 		}
 	}
 
 	state ForceApplication {
 		initial i0
 		state CheckForce {
-		entry checkMovementAllowed
+			entry forceEndEffector ? fcurrent ; PIDUpdate ( fcurrent )
 		}
 		state Move {
-			entry forceEndEffector ? fcurrent ; PIDUpdate ( fcurrent ) ; setEEPos ( o )
+			entry setEEForces ( o )
 		}
 	entry ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ); PIDInitialize(ftarget)
 	state s0 {
-		entry stepMoved ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
+			entry wait ( step ) ; stepMoved ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
 		}
 
 		transition t1 {
@@ -76,6 +82,7 @@ stm MovementControl {
 			to Move
 			trigger 
 		
+			
 			allowMovement
 			action forceWasAllowed
 		}
@@ -93,6 +100,11 @@ stm MovementControl {
 			to s0
 			trigger endEffectorPosition ? vcurrent
 			action movementOccurred
+		}
+	transition t0 {
+			from CheckForce
+			to CheckForce
+			trigger resetMovement
 		}
 	}
 	uses FrankaArmEvents uses ForceEvents 
@@ -150,6 +162,7 @@ event stepMoved
 	event movementWasAllowed
 event forceWasAllowed
 	event forceInitiated
-	event checkMovementAllowed
+
+	event resetMovement
 }
 

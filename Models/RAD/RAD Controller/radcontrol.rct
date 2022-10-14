@@ -43,7 +43,7 @@ controller CDressingControl {
 	connection CDressingControl on backgroundNoiseLevel to stm_environment on backgroundNoiseLevel ( _async )
 	connection CDressingControl on otherAgentDetected to stm_environment on otherAgentDetected ( _async )
 	connection stm_dressing on dressedJoint to CDressingControl on dressedJoint ( _async )
-	connection stm_stop on allowMovement to stm_movement on allowMovement connection stm_movement on movementEnd to stm_dressing on movementEnd ( _async )
+	connection stm_stop on allowMovement to stm_movement on allowMovement ( _async ) connection stm_movement on movementEnd to stm_dressing on movementEnd ( _async )
 
 	connection CDressingControl on armConfig to stm_dressing on armConfig ( _async )
 	connection stm_dressing on movementStart to stm_movement on movementStart ( _async )
@@ -70,23 +70,25 @@ connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged 
 	event allowedMovement
 	event noticedMovementOccurred
 	event isAwaiting : boolean
-	event queryES
+
 	event forceWasAllowed
 	event forceInitiated
 	opref op_ref0 = PIDInitialize
 	opref op_ref1 = PIDUpdate
 
-	connection stm_movement on movementOccurred to stm_stop on movementOccurred
+	connection stm_movement on movementOccurred to stm_stop on movementOccurred ( _async )
 connection CDressingControl on handlingCorrect to stm_dressing on handlingCorrect ( _async )
 connection stm_movement on movementInitiated to CDressingControl on movementInitiated ( _async )
 	connection stm_movement on stepMoved to CDressingControl on stepMoved ( _async )
-	connection stm_movement on movementWasAllowed to CDressingControl on movementWasAllowed
+	connection stm_movement on movementWasAllowed to CDressingControl on movementWasAllowed ( _async )
 	connection stm_stop on allowedMovement to CDressingControl on allowedMovement ( _async )
 	connection stm_stop on noticedMovementOccurred to CDressingControl on noticedMovementOccurred ( _async )
 connection stm_stop on isAwaiting to CDressingControl on isAwaiting ( _async )
-	connection CDressingControl on queryES to stm_stop on queryES ( _async )
-	connection stm_movement on forceWasAllowed to CDressingControl on forceWasAllowed
+
+	connection stm_movement on forceWasAllowed to CDressingControl on forceWasAllowed ( _async )
 	connection stm_movement on forceInitiated to CDressingControl on forceInitiated ( _async )
-connection stm_movement on checkMovementAllowed to stm_stop on checkMovementAllowed
+
+	connection stm_stop on resetMovement to stm_movement on resetMovement
+( _async )
 }
 

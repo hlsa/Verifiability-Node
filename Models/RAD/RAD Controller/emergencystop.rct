@@ -18,43 +18,58 @@ event environmentalStop
 	transition t2 {
 		from Allowing
 		to Allowing
-		trigger emergencyStop
-		condition not emergencyStopped
-		action emergencyStopped = true
+		trigger 
+		
+		emergencyStop
+		condition 
+		
+		not emergencyStopped
+		action 
+	emergencyStopped = true
 	}
 	transition t3 {
 		from Allowing
 		to Allowing
 		trigger 
+		
 		environmentalStop
 		condition 
+		
 		not environmentallyStopped
-		action environmentallyStopped = true
+		action resetMovement ; environmentallyStopped = true
 	}
 	transition t4 {
 		from Allowing
 		to Allowing
 		trigger 
+		
 		resumeDressing
 		condition emergencyStopped
-		action emergencyStopped = false
+		action resetMovement ; emergencyStopped = false
 	}
 	transition t5 {
 		from Allowing
 		to Allowing
-		trigger environmentalResume
+		trigger 
+		
+		environmentalResume
 		condition environmentallyStopped
-		action environmentallyStopped = false
+		action resetMovement ; environmentallyStopped = false
 	}
 var collisionStopped : boolean = false
 	transition t6 {
 		from Allowing
 		to Allowing
 		trigger 
+		
+		
 		collisionStop
 		condition 
+		
+		
 		not collisionStopped
-		action collisionStopped = true
+		action 
+	collisionStopped = true
 	}
 var awaiting : boolean = false
 	event movementOccurred
@@ -62,47 +77,53 @@ var awaiting : boolean = false
 	transition t1 {
 		from Allowing
 		to Awaiting
-		trigger checkMovementAllowed
 		condition not emergencyStopped /\ not environmentallyStopped /\ not collisionStopped
 		action allowMovement
 	}
 	transition t7 {
 		from Awaiting
 		to Allowing
-		trigger movementOccurred
+		trigger 
+	movementOccurred
 	}
 event allowedMovement
 	event noticedMovementOccurred
 event isAwaiting : boolean
-	event queryES
-	event checkMovementAllowed
+
+	event resetMovement
 state Awaiting {
 	}
 	transition t8 {
 		from Awaiting
 		to Awaiting
-		trigger environmentalResume
+		trigger 
+		environmentalResume
 		condition environmentallyStopped
 		action environmentallyStopped = false
 	}
 	transition t9 {
 		from Awaiting
 		to Awaiting
-		trigger emergencyStop
-		condition not emergencyStopped
+		trigger 
+		emergencyStop
+		condition 
+		not emergencyStopped
 		action emergencyStopped = true
 	}
 	transition t10 {
 		from Awaiting
 		to Awaiting
-		trigger environmentalStop
-		condition not environmentallyStopped
+		trigger 
+		environmentalStop
+		condition 
+		not environmentallyStopped
 		action environmentallyStopped = true
 	}
 	transition t11 {
 		from Awaiting
 		to Awaiting
-		trigger resumeDressing
+		trigger 
+		resumeDressing
 		condition emergencyStopped
 		action emergencyStopped = false
 	}
@@ -116,9 +137,11 @@ state Awaiting {
 	transition t13 {
 		from Allowing
 		to Allowing
-		trigger collisionResume
+		trigger 
+		
+		collisionResume
 		condition collisionStopped
-		action collisionStopped = false
+		action resetMovement ; collisionStopped = false
 	}
 	transition t14 {
 		from Awaiting
@@ -130,7 +153,8 @@ state Awaiting {
 	transition t15 {
 		from Awaiting
 		to Awaiting
-		trigger collisionResume
+		trigger 
+		collisionResume
 		condition collisionStopped
 		action collisionStopped = false
 	}
