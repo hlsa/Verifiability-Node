@@ -11,7 +11,10 @@ specification group RAD
     message set MMovement = {T->>W: op setEEPos(any), T->>W: op setEEForces(any)}
     message set MMovementOrResume = {T->>W: op setEEPos(any), T->>W: op setEEForces(any), W->>T: event resumeDressing}
     message set MMonitoring = { W->>T: event otherAgentDetected(any), W->>T: event backgroundNoiseLevel(any), W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
+    message set MCollisionStop = { W->>T: event collisionStop, W->>T: event collisionResume }
     // message set MHighNoise = {W->>T: event backgroundNoiseLevel(RobotAssistedDressing::NoiseLevel::High)}
+    // message set MHighNoise = {W->>T: event backgroundNoiseLevel(RobotAssistedDressing::definitions::NoiseLevel::High)}
+    // message set MHighNoise = {W->>T: event backgroundNoiseLevel(definitions::NoiseLevel::High)}
      
     sequence DressingRequest
         actors T and W
@@ -19,18 +22,18 @@ specification group RAD
         any until: deadlock on T
         
     sequence DressesInOrder
-    	actors T and W
-    	any except set MJoints until: T->>W: event dressedJoint(2)
-    	any except set MJoints until: T->>W: event dressedJoint(1)
-    	any except set MJoints until: T->>W: event dressedJoint(0)
-    	any until: deadlock on T
+        actors T and W
+        any except set MJoints until: T->>W: event dressedJoint(2)
+        any except set MJoints until: T->>W: event dressedJoint(1)
+        any except set MJoints until: T->>W: event dressedJoint(0)
+        any until: deadlock on T
    	    
     sequence DressesOutOfOrder
-    	actors T and W
-    	any except set MJoints until: T->>W: event dressedJoint(1)
-    	any except set MJoints until: T->>W: event dressedJoint(2)
-    	any except set MJoints until: T->>W: event dressedJoint(0)
-    	any until: deadlock on T
+        actors T and W
+        any except set MJoints until: T->>W: event dressedJoint(1)
+        any except set MJoints until: T->>W: event dressedJoint(2)
+        any except set MJoints until: T->>W: event dressedJoint(0)
+        any until: deadlock on T
     
     // Currently the sequencing allows at most one movement to occur after 
     // an emergency stop if the emergency stop request occurs in between 
@@ -38,40 +41,77 @@ specification group RAD
     // I don't know how we could do better without using some kind of interrupt or
     // priorities
     sequence RespondToStop
-    	actors T and W
-    	loop
-	    	any except set MStop until: W->>T: event emergencyStop(hot)
-	    	opt
-	    		any except set MMovement until:
-	    		xalt: T->>W: op setEEPos(any)
-	    		else: T->>W: op setEEForces(any)
-	    		end
-	    	end
-	    	any except set MMovement until: W->>T: event resumeDressing
-	    end
-	    
+        actors T and W
+        loop
+            any except set MStop until: W->>T: event emergencyStop(hot)
+            opt
+                any except set MMovement until:
+                xalt: T->>W: op setEEPos(any)
+                else: T->>W: op setEEForces(any)
+                end
+            end
+            any except set MMovement until: W->>T: event resumeDressing
+        end
 	
     sequence RespondToStopImmediately
-    	actors T and W
-    	loop
-	    	any except set MStop until: W->>T: event emergencyStop(hot)
-	    	any in set MMonitoring until:
-	    	opt
-	    		alt: T->>W: event movementWasAllowed
-	    		else: T->>W: event forceWasAllowed
-	    		end
-	    	end
-	    	any in set MMonitoring until:
-	    	opt
-	    		alt: T->>W: op setEEPos(any)
-	    		else: T->>W: op setEEForces(any)
-	    		end
-	    	end
-	    	any except set MMovement until: W->>T: event resumeDressing
-	    end
+        actors T and W
+        loop
+            any except set MStop until: W->>T: event emergencyStop(hot)
+            any in set MMonitoring until:
+            opt
+                alt: T->>W: event movementWasAllowed
+                else: T->>W: event forceWasAllowed
+                end
+            end
+            any in set MMonitoring until:
+            opt
+                alt: T->>W: op setEEPos(any)
+                else: T->>W: op setEEForces(any)
+                end
+            end
+            any except set MMovement until: W->>T: event resumeDressing
+        end
     	
-    	
-   	        
+    sequence RespondToCollision
+        actors T and W
+        loop
+            any except set MStop until: W->>T: event collisionResume(hot)
+            any in set MMonitoring until:
+            opt
+                alt: T->>W: event movementWasAllowed
+                else: T->>W: event forceWasAllowed
+                end
+            end
+            any in set MMonitoring until:
+            opt
+                alt: T->>W: op setEEPos(any)
+                else: T->>W: op setEEForces(any)
+                end
+            end
+            any except set MMovement until: W->>T: event collisionResume
+        end
+	    
+// , MC->>W: event forceApplied
+specification group RADInternal
+    target = components of controller radcontrol::CDressingControl
+    actors = { component radcontrol::CDressingControl::stm_dressing as DC, component radcontrol::CDressingControl::stm_movement as MC, component radcontrol::CDressingControl::stm_stop     as ES, world as W }
+    message set MRelevant = {DC->>MC: event movementStart(any), ES->>MC: event allowMovement, MC->>W: event stepMoved, MC->>ES: event movementOccurred }
+
+    sequence DressingSequence
+        actors DC and MC and ES and W
+        loop
+            any except MRelevant until: DC->>MC: event movementStart
+            loop
+                any except MRelevant until: ES->>MC: event allowMovement
+                any except MRelevant until
+                alt: MC->>W: event stepMoved
+                else: MC->>W: event forceApplied
+                end
+                any except MRelevant until: MC->>ES: event movementOccurred
+            end
+            any except MRelevant until:
+            MC->>DC: event movementEnd
+        end	        
    	    	     
 assertion D1: RAD::DressingRequest holds in the traces model
 // Currently vacuously true since we do not get this far
@@ -79,3 +119,5 @@ assertion D2: RAD::DressesInOrder holds in the traces model
 assertion D3: RAD::DressesOutOfOrder does not hold in the traces model
 assertion D4: RAD::RespondToStop holds in the traces model
 assertion D5: RAD::RespondToStopImmediately holds in the traces model
+assertion D6: RAD::RespondToCollision holds in the traces model
+
