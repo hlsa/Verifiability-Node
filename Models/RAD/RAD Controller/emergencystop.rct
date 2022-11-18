@@ -24,8 +24,7 @@ event environmentalStop
 		condition 
 		
 		not emergencyStopped
-		action 
-	emergencyStopped = true
+		action emergencyStopped = true
 	}
 	transition t3 {
 		from Allowing
@@ -68,10 +67,8 @@ var collisionStopped : boolean = false
 		
 		
 		not collisionStopped
-		action 
-	collisionStopped = true
+		action collisionStopped = true
 	}
-var awaiting : boolean = false
 	event movementOccurred
 
 	transition t1 {
@@ -88,7 +85,6 @@ var awaiting : boolean = false
 	}
 event allowedMovement
 	event noticedMovementOccurred
-event isAwaiting : boolean
 
 	event resetMovement
 state Awaiting {

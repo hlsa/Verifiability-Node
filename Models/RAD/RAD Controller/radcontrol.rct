@@ -69,26 +69,33 @@ connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged 
 	event movementWasAllowed
 	event allowedMovement
 	event noticedMovementOccurred
-	event isAwaiting : boolean
 
 	event forceWasAllowed
 	event forceInitiated
+	event forceApplied
 	opref op_ref0 = PIDInitialize
 	opref op_ref1 = PIDUpdate
 
 	connection stm_movement on movementOccurred to stm_stop on movementOccurred ( _async )
-connection CDressingControl on handlingCorrect to stm_dressing on handlingCorrect ( _async )
-connection stm_movement on movementInitiated to CDressingControl on movementInitiated ( _async )
+
+	connection stm_movement on movementInitiated to CDressingControl on movementInitiated ( _async )
 	connection stm_movement on stepMoved to CDressingControl on stepMoved ( _async )
 	connection stm_movement on movementWasAllowed to CDressingControl on movementWasAllowed ( _async )
 	connection stm_stop on allowedMovement to CDressingControl on allowedMovement ( _async )
 	connection stm_stop on noticedMovementOccurred to CDressingControl on noticedMovementOccurred ( _async )
-connection stm_stop on isAwaiting to CDressingControl on isAwaiting ( _async )
 
 	connection stm_movement on forceWasAllowed to CDressingControl on forceWasAllowed ( _async )
 	connection stm_movement on forceInitiated to CDressingControl on forceInitiated ( _async )
 
 	connection stm_stop on resetMovement to stm_movement on resetMovement
 ( _async )
+connection stm_movement on forceApplied to CDressingControl on forceApplied ( _async )
+
+	connection CDressingControl on userMoved to stm_dressing on userMoved ( _async )
+connection CDressingControl on handlingCorrect to stm_dressing on handlingCorrect ( _async )
+connection stm_dressing on garmentAtHand to CDressingControl on garmentAtHand ( _async )
+	connection stm_dressing on arrivedAtGarment to CDressingControl on arrivedAtGarment ( _async )
+	connection stm_dressing on garmentGripped to CDressingControl on garmentGripped ( _async )
+	connection stm_dressing on orientedGarment to CDressingControl on orientedGarment ( _async )
 }
 

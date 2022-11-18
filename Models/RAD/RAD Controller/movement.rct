@@ -74,7 +74,7 @@ stm MovementControl {
 		}
 	entry ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ); PIDInitialize(ftarget)
 	state s0 {
-			entry wait ( step ) ; stepMoved ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
+			entry wait ( step ) ; forceApplied ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
 		}
 
 		transition t1 {
@@ -164,5 +164,6 @@ event forceWasAllowed
 	event forceInitiated
 
 	event resetMovement
+event forceApplied
 }
 

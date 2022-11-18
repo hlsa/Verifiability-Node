@@ -21,6 +21,7 @@ connection Franka on snaggingDetected to ctrl_radcontrol on snaggingDetected ( _
 	event movementWasAllowed
 	event forceInitiated
 		event forceWasAllowed
+
 	}
 
 	cref ctrl_radcontrol = CDressingControl
@@ -39,7 +40,7 @@ connection Franka on forceEndEffector to ctrl_radcontrol on forceEndEffector ( _
 	connection Franka on collisionResume to ctrl_radcontrol on collisionResume ( _async )
 	connection Franka on endEffectorPosition to ctrl_radcontrol on endEffectorPosition ( _async )
 	connection Franka on userDressed to ctrl_radcontrol on userDressed ( _async )
-connection Franka on handlingCorrect to ctrl_radcontrol on handlingCorrect ( _async )
+connection Franka on userMoved to ctrl_radcontrol on userMoved ( _async )
 connection ctrl_radcontrol on stepMoved to Franka on stepMoved ( _async )
 	connection ctrl_radcontrol on movementWasAllowed to Franka on movementWasAllowed ( _async )
 	connection ctrl_radcontrol on allowedMovement to Franka on allowedMovement ( _async )
@@ -47,5 +48,11 @@ connection ctrl_radcontrol on stepMoved to Franka on stepMoved ( _async )
 connection ctrl_radcontrol on movementInitiated to Franka on movementInitiated ( _async )
 connection ctrl_radcontrol on forceInitiated to Franka on forceInitiated ( _async )
 	connection ctrl_radcontrol on forceWasAllowed to Franka on forceWasAllowed ( _async )
+
+	connection Franka on handlingCorrect to ctrl_radcontrol on handlingCorrect ( _async )
+connection ctrl_radcontrol on garmentAtHand to Franka on garmentAtHand ( _async )
+	connection ctrl_radcontrol on arrivedAtGarment to Franka on arrivedAtGarment ( _async )
+	connection ctrl_radcontrol on garmentGripped to Franka on garmentGripped ( _async )
+	connection ctrl_radcontrol on orientedGarment to Franka on orientedGarment ( _async )
 }
 

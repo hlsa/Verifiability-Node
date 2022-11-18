@@ -33,8 +33,13 @@ event correctedMovement
 
 	event secondHandDetected : vector(real, 3)
 	event userDressed
+	event userMoved
 
 event handlingCorrect : boolean
+event garmentAtHand
+	event arrivedAtGarment
+	event garmentGripped
+	event orientedGarment
 }
 
 interface SensorOperations {

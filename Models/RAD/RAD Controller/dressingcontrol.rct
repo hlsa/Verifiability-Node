@@ -37,9 +37,9 @@ stm SDressingControl {
 
 		transition t5 {
 			from j0
-			to f0
+			to Gripped
 		condition isHandlingCorrect
-			action garmentAcquired = true
+			action orientedGarment
 		}
 	state Moving {
 		}
@@ -48,15 +48,15 @@ stm SDressingControl {
 		transition t2 {
 			from Moving
 			to EngageGarment
-			trigger movementEnd
+			trigger 
+		movementEnd
 		}
 	state confirmGripCorrect {
 			entry checkCorrectHandling ( )
 		}
 		junction j0
-		state ReorientGarment {
-			entry reorientGarment ( )
-		}
+
+		junction j1
 		transition t3 {
 			from confirmGripCorrect
 			to j0
@@ -73,25 +73,31 @@ stm SDressingControl {
 		}
 		transition t7 {
 			from j0
-			to ReorientGarment
+			to confirmGripCorrect
 			condition 
 			
+		
 		not isHandlingCorrect
-		}
-		transition t6 {
-			from ReorientGarment
-			to confirmGripCorrect
+			action reorientGarment ( )
 		}
 		transition t8 {
 			from j1
 			to confirmGripCorrect
 			condition isGripperEngaged
+			action garmentGripped
 		}
-		junction j1
+		state Gripped {
+		}
 		transition t9 {
 			from j1
 			to LookingForGarment
 			condition not isGripperEngaged
+		}
+	entry garmentAcquired = false
+	transition t6 {
+			from Gripped
+			to f0
+			action garmentAcquired = true
 		}
 	}
 	state GarmentToUser {
@@ -118,8 +124,9 @@ stm SDressingControl {
 		transition t1 {
 			from Moving
 			to f0
-			trigger movementEnd
-			action garmentWithUser = true
+			trigger 
+			movementEnd
+			action garmentAtHand ; garmentWithUser = true
 		}
 		state Moving {
 		entry movementStart ! targetPosition

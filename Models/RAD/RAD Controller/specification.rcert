@@ -1,117 +1,201 @@
-specification group RAD
-    target = module RobotAssistedDressing
+specification group RAD {
+	target = module RobotAssistedDressing
      
-    actors = { target as T, world as W } 
+    sequence MovementToGarment {
+    	actors T and W
+        any until
+            T->>W: op detectGarment()
+            any in set MStops until
+        	   W->>T: event garmentDetected(any) end
+        	end
+        any in MMovementOrGrip until
+            T->>W: event gripCorrect(true) 
+       	    T->>W: event garmentGripped()
+       	end
+       	any until
+       		deadlock (on T)
+       	end
+    }
     
-    message set MStops = { W->>T: event emergencyStop, W->>T: event resumeDressing, W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
-    message set MU = universe
-    message set MJoints = { T->>W: event dressedJoint(0), T->>W: event dressedJoint(1), T->>W: event dressedJoint(2) }
-    message set MStop = { W->>T: event emergencyStop, W->>T: event resumeDressing }
-    message set MOtherStops = { W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
-    message set MMovement = {T->>W: op setEEPos(any), T->>W: op setEEForces(any)}
-    message set MMovementOrResume = {T->>W: op setEEPos(any), T->>W: op setEEForces(any), W->>T: event resumeDressing}
-    message set MMonitoring = { W->>T: event otherAgentDetected(any), W->>T: event backgroundNoiseLevel(any), W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
-    message set MCollisionStop = { W->>T: event collisionStop, W->>T: event collisionResume }
-    // message set MHighNoise = {W->>T: event backgroundNoiseLevel(RobotAssistedDressing::NoiseLevel::High)}
-    // message set MHighNoise = {W->>T: event backgroundNoiseLevel(RobotAssistedDressing::definitions::NoiseLevel::High)}
-    // message set MHighNoise = {W->>T: event backgroundNoiseLevel(definitions::NoiseLevel::High)}
-     
-    sequence DressingRequest
-        actors T and W
-        any in set MStops until: W->>T: event dressingRequest
-        any until: deadlock on T
+    sequence CorrectHandling {
+    	actors T and W
+    	any in MU until
+            W->>T: event gripCorrect(true)
+                T->>W: op checkCorrectHandling()
+            loop
+                W->>T: event handlingCorrect(false) (hot)
+                T->>W: op reorientGarment()
+                T->>W: op checkCorrectHandling()
+            end
+            T->>W: event handlingCorrect(true)
+            any until
+                deadlock (on T)
+            end
+    	end
+    }
+
+    sequence DressingRequest {
+    	actors T and W
+        any in MStops until
+	        W->>T: event dressingRequest
+	        any until
+	        	deadlock (on T)
+	        end
+        end
+    }
+           
+    sequence DressesInOrder {
+    	actors T and W
+        any except MJoints until
+        	T->>W: event dressedJoint(2) end
+        any except MJoints until
+        	T->>W: event dressedJoint(1) end
+        any except MJoints until
+        	T->>W: event dressedJoint(0) end
+        any until
+        	deadlock (on T)
+       	end
+    }
         
-    sequence DressesInOrder
-        actors T and W
-        any except set MJoints until: T->>W: event dressedJoint(2)
-        any except set MJoints until: T->>W: event dressedJoint(1)
-        any except set MJoints until: T->>W: event dressedJoint(0)
-        any until: deadlock on T
    	    
-    sequence DressesOutOfOrder
-        actors T and W
-        any except set MJoints until: T->>W: event dressedJoint(1)
-        any except set MJoints until: T->>W: event dressedJoint(2)
-        any except set MJoints until: T->>W: event dressedJoint(0)
-        any until: deadlock on T
+    sequence DressesOutOfOrder {
+    	actors T and W
+        any except MJoints until
+        	T->>W: event dressedJoint(1) end
+        any except MJoints until
+        	T->>W: event dressedJoint(2) end
+        any except MJoints until
+        	T->>W: event dressedJoint(0) end
+        any until
+        	deadlock (on T)
+        end
+    }
+        
     
     // Currently the sequencing allows at most one movement to occur after 
     // an emergency stop if the emergency stop request occurs in between 
     // checking whether movement was allowed and making the movement
     // I don't know how we could do better without using some kind of interrupt or
     // priorities
-    sequence RespondToStop
+    sequence RespondToStop {
         actors T and W
         loop
-            any except set MStop until: W->>T: event emergencyStop(hot)
+            any except MStop until
+                W->>T: event emergencyStop(hot)
+            end
             opt
-                any except set MMovement until:
-                xalt: T->>W: op setEEPos(any)
-                else: T->>W: op setEEForces(any)
+                any except MMovement until
+                    alt
+                        T->>W: op setEEPos(any) else
+                        T->>W: op setEEForces(any) end
                 end
             end
-            any except set MMovement until: W->>T: event resumeDressing
+            any except MMovement until
+                W->>T: event resumeDressing end
         end
+    }
 	
-    sequence RespondToStopImmediately
-        actors T and W
-        loop
-            any except set MStop until: W->>T: event emergencyStop(hot)
-            any in set MMonitoring until:
+	sequence RespondToStopQuickly {
+		actors T and W
+		loop
+            any except set MStop until
+                W->>T: event emergencyStop(hot)
+            end
             opt
-                alt: T->>W: event movementWasAllowed
-                else: T->>W: event forceWasAllowed
+                any except set MMovement until
+                    alt
+                        T->>W: op setEEPos(any) else
+                        T->>W: op setEEForces(any) end
                 end
             end
-            any in set MMonitoring until:
-            opt
-                alt: T->>W: op setEEPos(any)
-                else: T->>W: op setEEForces(any)
-                end
+            any except set MMovement until
+                W->>T: event resumeDressing end
+            any until
+                deadlock (on T)
             end
-            any except set MMovement until: W->>T: event resumeDressing
         end
-    	
-    sequence RespondToCollision
-        actors T and W
+	}
+		
+	
+    sequence RespondToStopImmediately {
+    	actors T and W
         loop
-            any except set MStop until: W->>T: event collisionResume(hot)
-            any in set MMonitoring until:
-            opt
-                alt: T->>W: event movementWasAllowed
-                else: T->>W: event forceWasAllowed
-                end
+            any except MStop until
+            	W->>T: event emergencyStop(hot)
             end
-            any in set MMonitoring until:
-            opt
-                alt: T->>W: op setEEPos(any)
-                else: T->>W: op setEEForces(any)
-                end
-            end
-            any except set MMovement until: W->>T: event collisionResume
+            any in MStopMonitoring until
+	            opt
+	                alt
+	                	T->>W: event movementWasAllowed else
+	                	T->>W: event forceWasAllowed end
+	            end
+	        end
+            any in MStopMonitoring until
+	            opt
+	                alt
+	                	T->>W: op setEEPos(any) else
+	                	T->>W: op setEEForces(any) end
+	            end
+	        end
+            any except MMovement until
+            	W->>T: event resumeDressing end
         end
-	    
-// , MC->>W: event forceApplied
-specification group RADInternal
-    target = components of controller radcontrol::CDressingControl
-    actors = { component radcontrol::CDressingControl::stm_dressing as DC, component radcontrol::CDressingControl::stm_movement as MC, component radcontrol::CDressingControl::stm_stop     as ES, world as W }
-    message set MRelevant = {DC->>MC: event movementStart(any), ES->>MC: event allowMovement, MC->>W: event stepMoved, MC->>ES: event movementOccurred }
-
-    sequence DressingSequence
-        actors DC and MC and ES and W
+    }
+        
+    sequence RespondToCollision {
+    	actors T and W
         loop
-            any except MRelevant until: DC->>MC: event movementStart
-            loop
-                any except MRelevant until: ES->>MC: event allowMovement
-                any except MRelevant until
-                alt: MC->>W: event stepMoved
-                else: MC->>W: event forceApplied
+            any except MCollision until
+            	W->>T: event collisionStop(hot)
+           	end
+           	opt
+                any except MMovement until
+                    alt
+                        T->>W: op setEEPos(any) else
+                        T->>W: op setEEForces(any) end
                 end
-                any except MRelevant until: MC->>ES: event movementOccurred
             end
-            any except MRelevant until:
-            MC->>DC: event movementEnd
-        end	        
+            any except MMovement until
+            	W->>T: event collisionResume end
+        end
+    }
+        
+    message set MStops = { W->>T: event emergencyStop, W->>T: event resumeDressing, W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
+    message set MU = universe
+    message set MJoints = { T->>W: event dressedJoint(0), T->>W: event dressedJoint(1), T->>W: event dressedJoint(2) }
+    message set MStop = { W->>T: event emergencyStop, W->>T: event resumeDressing }
+    message set MCollision = { W->>T: event collisionStop, W->>T: event collisionResume }
+    message set MOtherStops = { W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
+    message set MMovement = {T->>W: op setEEPos(any), T->>W: op setEEForces(any)}
+    message set MMovementOrGrip = {T->>W: op setEEPos(any), T->>W: op setEEForces(any), T->>W: op grip(), W->>T: event gripCorrect(false), T->>W: event movementInitiated, W->>T: event resumeDressing, W->>T: event emergencyStop, W->>T: event otherAgentDetected(any), W->>T: event backgroundNoiseLevel(any), W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected, W->>T: event endEffectorPosition(any), W->>T: event movementWasAllowed(any) }
+    message set MMovementToGarment = {T->>W: op setEEPos(any), T->>W: op setEEForces(any), T->>W: event arrivedAtGarment(), T->>W: event gripCorrect(true) }
+    message set MMovementOrResume = {T->>W: op setEEPos(any), T->>W: op setEEForces(any), W->>T: event resumeDressing}
+    message set MStopMonitoring = { W->>T: event otherAgentDetected(any), W->>T: event backgroundNoiseLevel(any), W->>T: event collisionStop, W->>T: event collisionResume, W->>T: event otherAgentDetected }
+    message set MCollisionMonitoring = { W->>T: event otherAgentDetected(any), W->>T: event backgroundNoiseLevel(any), W->>T: event otherAgentDetected }
+    message set MCollisionStop = { W->>T: event collisionStop, W->>T: event collisionResume } actors = { target as T } actors = { world as W } }
+    
+//	    
+//// , MC->>W: event forceApplied
+//specification group RADInternal
+//    target = components of controller radcontrol::CDressingControl
+//    actors = { component radcontrol::CDressingControl::stm_dressing as DC, component radcontrol::CDressingControl::stm_movement as MC, component radcontrol::CDressingControl::stm_stop     as ES, world as W }
+//    message set MRelevant = {DC->>MC: event movementStart(any), ES->>MC: event allowMovement, MC->>W: event stepMoved, MC->>ES: event movementOccurred }
+//
+//    sequence DressingSequence
+//      actors DC, MC, ES and W
+//      loop
+//        any except set MRelevant until: DC->>MC: event movementStart
+//        loop
+//          any except set MRelevant until: ES->>MC: event allowMovement
+//          any except set MRelevant until
+//            alt: MC->>W: event stepMoved
+//            else: MC->>W: event forceApplied
+//            end
+//          end
+//          any except set MRelevant until: MC->>ES: event movementOccurred
+//        end
+//        any except set MRelevant until: MC->>DC: event movementEnd
+//      end
    	    	     
 assertion D1: RAD::DressingRequest holds in the traces model
 // Currently vacuously true since we do not get this far
@@ -120,4 +204,8 @@ assertion D3: RAD::DressesOutOfOrder does not hold in the traces model
 assertion D4: RAD::RespondToStop holds in the traces model
 assertion D5: RAD::RespondToStopImmediately holds in the traces model
 assertion D6: RAD::RespondToCollision holds in the traces model
+assertion D7: RAD::RespondToStopQuickly holds in the timed model
+assertion D8: RAD::MovementToGarment holds in the traces model
+assertion D9: RAD::CorrectHandling holds in the traces model
+assertion D10: RAD::CorrectHandling holds in the timed model
 
