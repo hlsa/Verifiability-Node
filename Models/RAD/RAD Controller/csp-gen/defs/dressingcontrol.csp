@@ -1,0 +1,3693 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+module dressingcontrol
+exports
+
+
+
+module SDressingControl
+exports
+	transparent diamond
+	transparent sbisim
+	transparent dbisim
+	transparent chase
+
+	-- Transition identifiers
+	-- declaring identifiers of transitions
+	datatype NIDS = 
+	              NID_i0|
+	              NID_GarmentAcquisition|
+	              NID_GarmentToUser|
+	              NID_DressingLoop|
+	              NID_Start|
+	              NID_SecondArm
+	
+	channel internal__ : NIDS
+	
+	-- Flow channels		
+	channel interrupt
+	channel exited
+	channel exit
+	channel terminate
+	
+	-- Variable channels
+	channel get_currentJoint, set_currentJoint, setL_currentJoint, setR_currentJoint: core_int
+	channel get_garmentAcquired, set_garmentAcquired, setL_garmentAcquired, setR_garmentAcquired: core_boolean
+	channel get_garmentWithUser, set_garmentWithUser, setL_garmentWithUser, setR_garmentWithUser: core_boolean
+	channel get_targetPosition, set_targetPosition, setL_targetPosition, setR_targetPosition: vector_real_3
+	channel get_arrivedAtTarget, set_arrivedAtTarget, setL_arrivedAtTarget, setR_arrivedAtTarget: core_boolean
+	channel get_isHandlingCorrect, set_isHandlingCorrect, setL_isHandlingCorrect, setR_isHandlingCorrect: core_boolean
+	channel get_isGripperEngaged, set_isGripperEngaged, setL_isGripperEngaged, setR_isGripperEngaged: core_boolean
+	channel get_firstArmDressed, set_firstArmDressed, setL_firstArmDressed, setR_firstArmDressed: core_boolean
+	channel get_userPose, set_userPose, setL_userPose, setR_userPose: vector_vector_real_3_3
+	channel get_garmentPosition, set_garmentPosition, setL_garmentPosition, setR_garmentPosition: vector_real_3
+	
+	-- Shared variable channels
+	
+	-- Local variable channels for defined operations that are required by the state machine
+	
+	-- Declaring state machine events
+	channel dressedJoint__: NIDS.InOut.core_int
+	channel dressedJoint: InOut.core_int
+	channel snaggingDetected__: NIDS.InOut
+	channel snaggingDetected: InOut
+	channel invalidTrajectory__: NIDS.InOut
+	channel invalidTrajectory: InOut
+	channel invalidPoseDetected__: NIDS.InOut
+	channel invalidPoseDetected: InOut
+	channel userInterrupt__: NIDS.InOut
+	channel userInterrupt: InOut
+	channel poseDetected__: NIDS.InOut.vector_vector_real_3_3
+	channel poseDetected: InOut.vector_vector_real_3_3
+	channel dressingRequest__: NIDS.InOut
+	channel dressingRequest: InOut
+	channel garmentDetected__: NIDS.InOut.vector_real_3
+	channel garmentDetected: InOut.vector_real_3
+	channel armConfig__: NIDS.InOut
+	channel armConfig: InOut
+	channel gripCorrect__: NIDS.InOut.core_boolean
+	channel gripCorrect: InOut.core_boolean
+	channel gripperEngaged__: NIDS.InOut.core_boolean
+	channel gripperEngaged: InOut.core_boolean
+	channel correctedMovement__: NIDS.InOut
+	channel correctedMovement: InOut
+	channel secondHandDetected__: NIDS.InOut.vector_real_3
+	channel secondHandDetected: InOut.vector_real_3
+	channel userDressed__: NIDS.InOut
+	channel userDressed: InOut
+	channel userMoved__: NIDS.InOut
+	channel userMoved: InOut
+	channel handlingCorrect__: NIDS.InOut.core_boolean
+	channel handlingCorrect: InOut.core_boolean
+	channel garmentAtHand__: NIDS.InOut
+	channel garmentAtHand: InOut
+	channel arrivedAtGarment__: NIDS.InOut
+	channel arrivedAtGarment: InOut
+	channel garmentGripped__: NIDS.InOut
+	channel garmentGripped: InOut
+	channel orientedGarment__: NIDS.InOut
+	channel orientedGarment: InOut
+	channel movementStart__: NIDS.InOut.vector_real_3
+	channel movementStart: InOut.vector_real_3
+	channel movementEnd__: NIDS.InOut
+	channel movementEnd: InOut
+	channel forceStart__: NIDS.InOut.vector_real_3
+	channel forceStart: InOut.vector_real_3
+	channel forceEnd__: NIDS.InOut
+	channel forceEnd: InOut
+	
+	-- Declaring call and ret events for undefined operations
+	channel reorientGarmentCall
+	channel pushTowardsCall: vector_real_3.core_real
+	channel checkFaultCall
+	channel setEEForcesCall: vector_real_3
+	channel getEEPosCall
+	channel detectGarmentCall
+	channel gripCall
+	channel checkCorrectHandlingCall
+	channel checkUserDressedCall
+	channel setEEPosCall: vector_real_3
+	channel checkMovementCall
+	channel stepTowardsCall: vector_real_3.core_real
+	channel detectSecondArmCall
+	channel releaseGripCall
+	channel detectUserPoseCall
+	
+	enterSS = {|
+	i0::enter,
+	GarmentAcquisition::enter,
+	GarmentToUser::enter,
+	DressingLoop::enter,
+	Start::enter,
+	SecondArm::enter
+	|}
+	
+	enteredSS = 	{|
+	GarmentAcquisition::entered,
+	GarmentToUser::entered,
+	DressingLoop::entered,
+	Start::entered,
+	SecondArm::entered
+	|}
+	
+	internal_events = union(enteredSS,union(enterSS,{|interrupt,exited|}))
+	
+	shared_variable_events = {|
+	|}
+	
+	-- channel set with all visible events
+	sem__events = {|
+		terminate
+	,	dressedJoint,
+		snaggingDetected,
+		invalidTrajectory,
+		invalidPoseDetected,
+		userInterrupt,
+		poseDetected,
+		dressingRequest,
+		garmentDetected,
+		armConfig,
+		gripCorrect,
+		gripperEngaged,
+		correctedMovement,
+		secondHandDetected,
+		userDressed,
+		userMoved,
+		handlingCorrect,
+		garmentAtHand,
+		arrivedAtGarment,
+		garmentGripped,
+		orientedGarment,
+		movementStart,
+		movementEnd,
+		forceStart,
+		forceEnd
+	,	reorientGarmentCall,
+		pushTowardsCall,
+		checkFaultCall,
+		setEEForcesCall,
+		getEEPosCall,
+		detectGarmentCall,
+		gripCall,
+		checkCorrectHandlingCall,
+		checkUserDressedCall,
+		setEEPosCall,
+		checkMovementCall,
+		stepTowardsCall,
+		detectSecondArmCall,
+		releaseGripCall,
+		detectUserPoseCall
+		|}
+
+	-- Nodes --
+	-- declaring all nodes
+	
+	----------------------------------------------------------------------
+	-- Initial: i0
+	module i0
+	exports
+	
+		channel enter, interrupt
+		
+		D__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= share__choice(interrupt -> SKIP) ; Inactive
+			within
+				Inactive [| {terminate} |> SKIP)
+		
+		VS_O__(id__) = D__(id__)
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: GarmentAcquisition
+	module GarmentAcquisition
+	
+	enterSS = 
+			{|			LookingForGarment::enter,
+				i0::enter,
+				EngageGarment::enter,
+				Moving::enter,
+				f0::enter,
+				confirmGripCorrect::enter,
+				j0::enter,
+				j1::enter,
+				Gripped::enter
+			|}
+	enteredSS = 
+			{|			LookingForGarment::entered,
+				EngageGarment::entered,
+				Moving::entered,
+				f0::entered,
+				confirmGripCorrect::entered,
+				Gripped::entered
+			|}
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		-- declaring identifiers of transitions
+		datatype NIDS = 
+		              NID_LookingForGarment|
+		              NID_i0|
+		              NID_EngageGarment|
+		              NID_Moving|
+		              NID_f0|
+		              NID_confirmGripCorrect|
+		              NID_j0|
+		              NID_j1|
+		              NID_Gripped
+		
+		channel internal__ : NIDS
+		channel dressedJoint__: NIDS.InOut.core_int
+		channel snaggingDetected__: NIDS.InOut
+		channel invalidTrajectory__: NIDS.InOut
+		channel invalidPoseDetected__: NIDS.InOut
+		channel userInterrupt__: NIDS.InOut
+		channel poseDetected__: NIDS.InOut.vector_vector_real_3_3
+		channel dressingRequest__: NIDS.InOut
+		channel garmentDetected__: NIDS.InOut.vector_real_3
+		channel armConfig__: NIDS.InOut
+		channel gripCorrect__: NIDS.InOut.core_boolean
+		channel gripperEngaged__: NIDS.InOut.core_boolean
+		channel correctedMovement__: NIDS.InOut
+		channel secondHandDetected__: NIDS.InOut.vector_real_3
+		channel userDressed__: NIDS.InOut
+		channel userMoved__: NIDS.InOut
+		channel handlingCorrect__: NIDS.InOut.core_boolean
+		channel garmentAtHand__: NIDS.InOut
+		channel arrivedAtGarment__: NIDS.InOut
+		channel garmentGripped__: NIDS.InOut
+		channel orientedGarment__: NIDS.InOut
+		channel movementStart__: NIDS.InOut.vector_real_3
+		channel movementEnd__: NIDS.InOut
+		channel forceStart__: NIDS.InOut.vector_real_3
+		channel forceEnd__: NIDS.InOut
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		----------------------------------------------------------------------
+		-- State: LookingForGarment
+		module LookingForGarment
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__detectGarment(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__detectGarment(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- Initial: i0
+		module i0
+		exports
+		
+			channel enter, interrupt
+			
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= share__choice(interrupt -> SKIP) ; Inactive
+				within
+					Inactive [| {terminate} |> SKIP)
+			
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: EngageGarment
+		module EngageGarment
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__grip(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__grip(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: Moving
+		module Moving
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= SKIP ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= SKIP ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- Final state: f0
+		module f0
+		
+		exports
+		
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+			--	Rule: behaviours(Node)
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Entering
+					
+					Entering 	= entered -> SKIP ; Active
+					Active		= share__choice(terminate -> SKIP [] interrupt -> SKIP) ; Interrupted
+					Interrupted	= share__choice(exit -> exited -> Inactive)
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: confirmGripCorrect
+		module confirmGripCorrect
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__checkCorrectHandling(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__checkCorrectHandling(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- Junction: j0
+		module j0
+		exports
+		
+			channel enter, interrupt
+			
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Active 		= share__choice(interrupt -> SKIP) ; Inactive
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- Junction: j1
+		module j1
+		exports
+		
+			channel enter, interrupt
+			
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Active 		= share__choice(interrupt -> SKIP) ; Inactive
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: Gripped
+		module Gripped
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= SKIP ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= SKIP ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= share__choice(true & (share__choice(set_garmentAcquired!false -> SKIP))) ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+		
+			Behaviour 	= dbisim(
+				((
+				 (((let
+				 	-- IMPLEMENTATION NOTE:
+				 	-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				 	-- modules for defining the semantics of each node.
+				 	enterSS = {|
+				 	LookingForGarment::enter,
+				 	i0::enter,
+				 	EngageGarment::enter,
+				 	Moving::enter,
+				 	f0::enter,
+				 	confirmGripCorrect::enter,
+				 	j0::enter,
+				 	j1::enter,
+				 	Gripped::enter
+				 	|}
+				 	hideSet = union(enterSS,{|exit,exited,internal__|})
+				 within 
+				 	((let
+				 		-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+				 		-- because CSPM modules are used for the semantics of Node.
+				 		flowevts = union(enterSS,{|exit,exited,interrupt|})
+				 		transSync = {|internal__.NID_i0,garmentDetected__.NID_LookingForGarment.in,internal__.NID_j0,movementEnd__.NID_Moving.in,handlingCorrect__.NID_confirmGripCorrect.in,gripCorrect__.NID_EngageGarment.in,internal__.NID_j0,internal__.NID_j1,internal__.NID_j1,internal__.NID_Gripped|}
+				 	within
+				 		((
+				 		 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+				 		   LookingForGarment::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   i0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   EngageGarment::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   Moving::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   f0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   confirmGripCorrect::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   j0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   j1::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   Gripped::D__(id__)
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		 )
+				 		 [[LookingForGarment::interrupt <- x__ | x__ <- {|interrupt,garmentDetected__.NID_LookingForGarment.in|}]]
+				 		 [[EngageGarment::interrupt <- x__ | x__ <- {|interrupt,gripCorrect__.NID_EngageGarment.in|}]]
+				 		 [[Moving::interrupt <- x__ | x__ <- {|interrupt,movementEnd__.NID_Moving.in|}]]
+				 		 [[f0::interrupt <- x__ | x__ <- {|interrupt|}]]
+				 		 [[confirmGripCorrect::interrupt <- x__ | x__ <- {|interrupt,handlingCorrect__.NID_confirmGripCorrect.in|}]]
+				 		 [[Gripped::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_Gripped|}]]
+				 		 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+				 		 [[j0::interrupt <- x__ | x__ <- {|internal__.NID_j0,internal__.NID_j0|}]]
+				 		 [[j1::interrupt <- x__ | x__ <- {|internal__.NID_j1,internal__.NID_j1|}]]
+				 		 )
+				 		  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_garmentPosition,setR_isGripperEngaged |} ]] 
+				 		  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_isGripperEngaged <- setL_isGripperEngaged]]
+				 		 )
+				 		 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+				 		 			,setL_isHandlingCorrect
+				 		 			,setL_isGripperEngaged
+				 		 			,setR_isHandlingCorrect
+				 		 			 			,setR_garmentPosition
+				 		 			 			,setR_isGripperEngaged
+				 		 			|}) |]
+				 		 ((i0::enter -> Transitions(id__))
+				 		  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_isGripperEngaged |} ]]
+				 		  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged]]
+				 		 )
+				 		)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_isGripperEngaged <- set_isGripperEngaged]]
+				 		 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged]]
+				 		)
+				 	)
+				 	 \ hideSet)
+				 	[[
+				 		dressedJoint__.x____ <- dressedJoint,
+				 		snaggingDetected__.x____ <- snaggingDetected,
+				 		invalidTrajectory__.x____ <- invalidTrajectory,
+				 		invalidPoseDetected__.x____ <- invalidPoseDetected,
+				 		userInterrupt__.x____ <- userInterrupt,
+				 		poseDetected__.x____ <- poseDetected,
+				 		dressingRequest__.x____ <- dressingRequest,
+				 		garmentDetected__.x____ <- garmentDetected,
+				 		armConfig__.x____ <- armConfig,
+				 		gripCorrect__.x____ <- gripCorrect,
+				 		gripperEngaged__.x____ <- gripperEngaged,
+				 		correctedMovement__.x____ <- correctedMovement,
+				 		secondHandDetected__.x____ <- secondHandDetected,
+				 		userDressed__.x____ <- userDressed,
+				 		userMoved__.x____ <- userMoved,
+				 		handlingCorrect__.x____ <- handlingCorrect,
+				 		garmentAtHand__.x____ <- garmentAtHand,
+				 		arrivedAtGarment__.x____ <- arrivedAtGarment,
+				 		garmentGripped__.x____ <- garmentGripped,
+				 		orientedGarment__.x____ <- orientedGarment,
+				 		movementStart__.x____ <- movementStart,
+				 		movementEnd__.x____ <- movementEnd,
+				 		forceStart__.x____ <- forceStart,
+				 		forceEnd__.x____ <- forceEnd
+				 		| x____ <- NIDS
+				 	]]
+				 )
+				 )
+				  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_firstArmDressed,setR_arrivedAtTarget,setR_garmentPosition,setR_isGripperEngaged,setR_targetPosition,setR_garmentAcquired,setR_currentJoint,setR_garmentWithUser,setR_userPose |} ]] 
+				  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_firstArmDressed <- setL_firstArmDressed,set_arrivedAtTarget <- setL_arrivedAtTarget,set_garmentPosition <- setL_garmentPosition,set_isGripperEngaged <- setL_isGripperEngaged,set_targetPosition <- setL_targetPosition,set_garmentAcquired <- setL_garmentAcquired,set_currentJoint <- setL_currentJoint,set_garmentWithUser <- setL_garmentWithUser,set_userPose <- setL_userPose]]
+				 )
+				 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+				 			,setL_isHandlingCorrect
+				 			,setL_firstArmDressed
+				 			,setL_arrivedAtTarget
+				 			,setL_garmentPosition
+				 			,setL_isGripperEngaged
+				 			,setL_targetPosition
+				 			,setL_garmentAcquired
+				 			,setL_currentJoint
+				 			,setL_garmentWithUser
+				 			,setL_userPose
+				 			,setR_isHandlingCorrect
+				 			 			,setR_firstArmDressed
+				 			 			,setR_arrivedAtTarget
+				 			 			,setR_garmentPosition
+				 			 			,setR_isGripperEngaged
+				 			 			,setR_targetPosition
+				 			 			,setR_garmentAcquired
+				 			 			,setR_currentJoint
+				 			 			,setR_garmentWithUser
+				 			 			,setR_userPose
+				 			|}) |]
+				 ((During)
+				  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_firstArmDressed,setL_arrivedAtTarget,setL_garmentPosition,setL_isGripperEngaged,setL_targetPosition,setL_garmentAcquired,setL_currentJoint,setL_garmentWithUser,setL_userPose |} ]]
+				  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_firstArmDressed <- setR_firstArmDressed,set_arrivedAtTarget <- setR_arrivedAtTarget,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged,set_targetPosition <- setR_targetPosition,set_garmentAcquired <- setR_garmentAcquired,set_currentJoint <- setR_currentJoint,set_garmentWithUser <- setR_garmentWithUser,set_userPose <- setR_userPose]]
+				 )
+				)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_firstArmDressed <- set_firstArmDressed,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_garmentPosition <- set_garmentPosition,setL_isGripperEngaged <- set_isGripperEngaged,setL_targetPosition <- set_targetPosition,setL_garmentAcquired <- set_garmentAcquired,setL_currentJoint <- set_currentJoint,setL_garmentWithUser <- set_garmentWithUser,setL_userPose <- set_userPose]]
+				 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_firstArmDressed <- set_firstArmDressed,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged,setR_targetPosition <- set_targetPosition,setR_garmentAcquired <- set_garmentAcquired,setR_currentJoint <- set_currentJoint,setR_garmentWithUser <- set_garmentWithUser,setR_userPose <- set_userPose]]
+				)\union(enteredSS,{terminate}) 
+			)
+			During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+					 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= share__choice(true & (share__choice(set_garmentAcquired!false -> SKIP))) ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+		
+			Behaviour 	= dbisim(
+				((
+				 (((let
+				 	-- IMPLEMENTATION NOTE:
+				 	-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				 	-- modules for defining the semantics of each node.
+				 	enterSS = {|
+				 	LookingForGarment::enter,
+				 	i0::enter,
+				 	EngageGarment::enter,
+				 	Moving::enter,
+				 	f0::enter,
+				 	confirmGripCorrect::enter,
+				 	j0::enter,
+				 	j1::enter,
+				 	Gripped::enter
+				 	|}
+				 	hideSet = union(enterSS,{|exit,exited,internal__|})
+				 within 
+				 	((let
+				 		-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+				 		-- because CSPM modules are used for the semantics of Node.
+				 		flowevts = union(enterSS,{|exit,exited,interrupt|})
+				 		transSync = {|internal__.NID_i0,garmentDetected__.NID_LookingForGarment.in,internal__.NID_j0,movementEnd__.NID_Moving.in,handlingCorrect__.NID_confirmGripCorrect.in,gripCorrect__.NID_EngageGarment.in,internal__.NID_j0,internal__.NID_j1,internal__.NID_j1,internal__.NID_Gripped|}
+				 	within
+				 		((
+				 		 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+				 		   LookingForGarment::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   i0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   EngageGarment::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   Moving::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   f0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   confirmGripCorrect::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   j0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   j1::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   Gripped::VS_O__(id__)
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		 )
+				 		 [[LookingForGarment::interrupt <- x__ | x__ <- {|interrupt,garmentDetected__.NID_LookingForGarment.in|}]]
+				 		 [[EngageGarment::interrupt <- x__ | x__ <- {|interrupt,gripCorrect__.NID_EngageGarment.in|}]]
+				 		 [[Moving::interrupt <- x__ | x__ <- {|interrupt,movementEnd__.NID_Moving.in|}]]
+				 		 [[f0::interrupt <- x__ | x__ <- {|interrupt|}]]
+				 		 [[confirmGripCorrect::interrupt <- x__ | x__ <- {|interrupt,handlingCorrect__.NID_confirmGripCorrect.in|}]]
+				 		 [[Gripped::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_Gripped|}]]
+				 		 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+				 		 [[j0::interrupt <- x__ | x__ <- {|internal__.NID_j0,internal__.NID_j0|}]]
+				 		 [[j1::interrupt <- x__ | x__ <- {|internal__.NID_j1,internal__.NID_j1|}]]
+				 		 )
+				 		  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_garmentPosition,setR_isGripperEngaged |} ]] 
+				 		  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_isGripperEngaged <- setL_isGripperEngaged]]
+				 		 )
+				 		 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+				 		 			,setL_isHandlingCorrect
+				 		 			,setL_isGripperEngaged
+				 		 			,setR_isHandlingCorrect
+				 		 			 			,setR_garmentPosition
+				 		 			 			,setR_isGripperEngaged
+				 		 			|}) |]
+				 		 ((i0::enter -> Transitions(id__))
+				 		  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_isGripperEngaged |} ]]
+				 		  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged]]
+				 		 )
+				 		)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_isGripperEngaged <- set_isGripperEngaged]]
+				 		 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged]]
+				 		)
+				 	)
+				 	 \ hideSet)
+				 	[[
+				 		dressedJoint__.x____ <- dressedJoint,
+				 		snaggingDetected__.x____ <- snaggingDetected,
+				 		invalidTrajectory__.x____ <- invalidTrajectory,
+				 		invalidPoseDetected__.x____ <- invalidPoseDetected,
+				 		userInterrupt__.x____ <- userInterrupt,
+				 		poseDetected__.x____ <- poseDetected,
+				 		dressingRequest__.x____ <- dressingRequest,
+				 		garmentDetected__.x____ <- garmentDetected,
+				 		armConfig__.x____ <- armConfig,
+				 		gripCorrect__.x____ <- gripCorrect,
+				 		gripperEngaged__.x____ <- gripperEngaged,
+				 		correctedMovement__.x____ <- correctedMovement,
+				 		secondHandDetected__.x____ <- secondHandDetected,
+				 		userDressed__.x____ <- userDressed,
+				 		userMoved__.x____ <- userMoved,
+				 		handlingCorrect__.x____ <- handlingCorrect,
+				 		garmentAtHand__.x____ <- garmentAtHand,
+				 		arrivedAtGarment__.x____ <- arrivedAtGarment,
+				 		garmentGripped__.x____ <- garmentGripped,
+				 		orientedGarment__.x____ <- orientedGarment,
+				 		movementStart__.x____ <- movementStart,
+				 		movementEnd__.x____ <- movementEnd,
+				 		forceStart__.x____ <- forceStart,
+				 		forceEnd__.x____ <- forceEnd
+				 		| x____ <- NIDS
+				 	]]
+				 )
+				 )
+				  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_firstArmDressed,setR_arrivedAtTarget,setR_garmentPosition,setR_isGripperEngaged,setR_targetPosition,setR_garmentAcquired,setR_currentJoint,setR_garmentWithUser,setR_userPose |} ]] 
+				  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_firstArmDressed <- setL_firstArmDressed,set_arrivedAtTarget <- setL_arrivedAtTarget,set_garmentPosition <- setL_garmentPosition,set_isGripperEngaged <- setL_isGripperEngaged,set_targetPosition <- setL_targetPosition,set_garmentAcquired <- setL_garmentAcquired,set_currentJoint <- setL_currentJoint,set_garmentWithUser <- setL_garmentWithUser,set_userPose <- setL_userPose]]
+				 )
+				 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+				 			,setL_isHandlingCorrect
+				 			,setL_firstArmDressed
+				 			,setL_arrivedAtTarget
+				 			,setL_garmentPosition
+				 			,setL_isGripperEngaged
+				 			,setL_targetPosition
+				 			,setL_garmentAcquired
+				 			,setL_currentJoint
+				 			,setL_garmentWithUser
+				 			,setL_userPose
+				 			,setR_isHandlingCorrect
+				 			 			,setR_firstArmDressed
+				 			 			,setR_arrivedAtTarget
+				 			 			,setR_garmentPosition
+				 			 			,setR_isGripperEngaged
+				 			 			,setR_targetPosition
+				 			 			,setR_garmentAcquired
+				 			 			,setR_currentJoint
+				 			 			,setR_garmentWithUser
+				 			 			,setR_userPose
+				 			|}) |]
+				 ((During)
+				  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_firstArmDressed,setL_arrivedAtTarget,setL_garmentPosition,setL_isGripperEngaged,setL_targetPosition,setL_garmentAcquired,setL_currentJoint,setL_garmentWithUser,setL_userPose |} ]]
+				  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_firstArmDressed <- setR_firstArmDressed,set_arrivedAtTarget <- setR_arrivedAtTarget,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged,set_targetPosition <- setR_targetPosition,set_garmentAcquired <- setR_garmentAcquired,set_currentJoint <- setR_currentJoint,set_garmentWithUser <- setR_garmentWithUser,set_userPose <- setR_userPose]]
+				 )
+				)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_firstArmDressed <- set_firstArmDressed,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_garmentPosition <- set_garmentPosition,setL_isGripperEngaged <- set_isGripperEngaged,setL_targetPosition <- set_targetPosition,setL_garmentAcquired <- set_garmentAcquired,setL_currentJoint <- set_currentJoint,setL_garmentWithUser <- set_garmentWithUser,setL_userPose <- set_userPose]]
+				 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_firstArmDressed <- set_firstArmDressed,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged,setR_targetPosition <- set_targetPosition,setR_garmentAcquired <- set_garmentAcquired,setR_currentJoint <- set_currentJoint,setR_garmentWithUser <- set_garmentWithUser,setR_userPose <- set_userPose]]
+				)\{terminate} 
+			)
+			During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+					 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+		Transitions(id__) = ((let
+			Trans = share__choice(get_isHandlingCorrect?isHandlingCorrect -> get_isGripperEngaged?isGripperEngaged -> (
+				((share__ -> SKIP
+				 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; LookingForGarment::enter -> SKIP))))
+				 	 [] dbisim((true)&(garmentDetected__!NID_LookingForGarment.in?garmentPosition:{garmentPosition|garmentPosition <- vector_real_3, true} -> share__choice(set_garmentPosition!garmentPosition -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(get_garmentPosition?garmentPosition -> true&(share__choice(movementStart.out!garmentPosition -> SKIP))) ; Moving::enter -> SKIP)))
+				 	 [] dbisim((isHandlingCorrect)&(internal__!NID_j0 -> SKIP ;  ((true&(share__choice(orientedGarment.out -> SKIP)) ; Gripped::enter -> SKIP))))
+				 	 [] dbisim((true)&(movementEnd__!NID_Moving.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; EngageGarment::enter -> SKIP)))
+				 	 [] dbisim((true)&(handlingCorrect__!NID_confirmGripCorrect.in?isHandlingCorrect:{isHandlingCorrect|isHandlingCorrect <- core_boolean, true} -> share__choice(set_isHandlingCorrect!isHandlingCorrect -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; j0::enter -> SKIP)))
+				 	 [] dbisim((true)&(gripCorrect__!NID_EngageGarment.in?isGripperEngaged:{isGripperEngaged|isGripperEngaged <- core_boolean, true} -> share__choice(set_isGripperEngaged!isGripperEngaged -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; j1::enter -> SKIP)))
+				 	 [] dbisim(((not (isHandlingCorrect)))&(internal__!NID_j0 -> SKIP ;  ((true&CALL__reorientGarment(
+				 			id__
+				 		) ; confirmGripCorrect::enter -> SKIP))))
+				 	 [] dbisim((isGripperEngaged)&(internal__!NID_j1 -> SKIP ;  ((true&(share__choice(garmentGripped.out -> SKIP)) ; confirmGripCorrect::enter -> SKIP))))
+				 	 [] dbisim(((not (isGripperEngaged)))&(internal__!NID_j1 -> SKIP ;  ((SKIP ; LookingForGarment::enter -> SKIP))))
+				 	 [] dbisim((true)&(internal__!NID_Gripped -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_garmentAcquired!true -> SKIP))) ; f0::enter -> SKIP)))
+				 ) ; Trans)
+				 []
+				 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+				 []
+				 terminate -> SKIP
+			)
+			)
+		within
+			Trans
+		)
+		)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: GarmentToUser
+	module GarmentToUser
+	
+	enterSS = 
+			{|			i0::enter,
+				f0::enter,
+				DetectStartPose::enter,
+				Moving::enter
+			|}
+	enteredSS = 
+			{|			f0::entered,
+				DetectStartPose::entered,
+				Moving::entered
+			|}
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		-- declaring identifiers of transitions
+		datatype NIDS = 
+		              NID_i0|
+		              NID_f0|
+		              NID_DetectStartPose|
+		              NID_Moving
+		
+		channel internal__ : NIDS
+		channel dressedJoint__: NIDS.InOut.core_int
+		channel snaggingDetected__: NIDS.InOut
+		channel invalidTrajectory__: NIDS.InOut
+		channel invalidPoseDetected__: NIDS.InOut
+		channel userInterrupt__: NIDS.InOut
+		channel poseDetected__: NIDS.InOut.vector_vector_real_3_3
+		channel dressingRequest__: NIDS.InOut
+		channel garmentDetected__: NIDS.InOut.vector_real_3
+		channel armConfig__: NIDS.InOut
+		channel gripCorrect__: NIDS.InOut.core_boolean
+		channel gripperEngaged__: NIDS.InOut.core_boolean
+		channel correctedMovement__: NIDS.InOut
+		channel secondHandDetected__: NIDS.InOut.vector_real_3
+		channel userDressed__: NIDS.InOut
+		channel userMoved__: NIDS.InOut
+		channel handlingCorrect__: NIDS.InOut.core_boolean
+		channel garmentAtHand__: NIDS.InOut
+		channel arrivedAtGarment__: NIDS.InOut
+		channel garmentGripped__: NIDS.InOut
+		channel orientedGarment__: NIDS.InOut
+		channel movementStart__: NIDS.InOut.vector_real_3
+		channel movementEnd__: NIDS.InOut
+		channel forceStart__: NIDS.InOut.vector_real_3
+		channel forceEnd__: NIDS.InOut
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		----------------------------------------------------------------------
+		-- Initial: i0
+		module i0
+		exports
+		
+			channel enter, interrupt
+			
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= share__choice(interrupt -> SKIP) ; Inactive
+				within
+					Inactive [| {terminate} |> SKIP)
+			
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- Final state: f0
+		module f0
+		
+		exports
+		
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+			--	Rule: behaviours(Node)
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Entering
+					
+					Entering 	= entered -> SKIP ; Active
+					Active		= share__choice(terminate -> SKIP [] interrupt -> SKIP) ; Interrupted
+					Interrupted	= share__choice(exit -> exited -> Inactive)
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: DetectStartPose
+		module DetectStartPose
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__detectUserPose(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__detectUserPose(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: Moving
+		module Moving
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= share__choice(get_targetPosition?targetPosition -> true&(share__choice(movementStart.out!targetPosition -> SKIP))) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= share__choice(get_targetPosition?targetPosition -> true&(share__choice(movementStart.out!targetPosition -> SKIP))) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+		
+			Behaviour 	= dbisim(
+				((
+				 (((let
+				 	-- IMPLEMENTATION NOTE:
+				 	-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				 	-- modules for defining the semantics of each node.
+				 	enterSS = {|
+				 	i0::enter,
+				 	f0::enter,
+				 	DetectStartPose::enter,
+				 	Moving::enter
+				 	|}
+				 	hideSet = union(enterSS,{|exit,exited,internal__|})
+				 within 
+				 	((let
+				 		-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+				 		-- because CSPM modules are used for the semantics of Node.
+				 		flowevts = union(enterSS,{|exit,exited,interrupt|})
+				 		transSync = {|internal__.NID_i0,poseDetected__.NID_DetectStartPose.in,movementEnd__.NID_Moving.in|}
+				 	within
+				 		((
+				 		 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+				 		   i0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   f0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   DetectStartPose::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   Moving::D__(id__)
+				 		   )
+				 		   )
+				 		   )
+				 		 )
+				 		 [[f0::interrupt <- x__ | x__ <- {|interrupt|}]]
+				 		 [[DetectStartPose::interrupt <- x__ | x__ <- {|interrupt,poseDetected__.NID_DetectStartPose.in|}]]
+				 		 [[Moving::interrupt <- x__ | x__ <- {|interrupt,movementEnd__.NID_Moving.in|}]]
+				 		 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+				 		 )
+				 		  [[ share__ <- x__ | x__ <- {| share__,setR_userPose |} ]] 
+				 		 )
+				 		 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+				 		 			,setR_userPose
+				 		 			|}) |]
+				 		 ((i0::enter -> Transitions(id__))
+				 		  [[ share__ <- x__ | x__ <- {| share__ |} ]]
+				 		  [[set_userPose <- setR_userPose]]
+				 		 )
+				 		)
+				 		 [[setR_userPose <- set_userPose]]
+				 		)
+				 	)
+				 	 \ hideSet)
+				 	[[
+				 		dressedJoint__.x____ <- dressedJoint,
+				 		snaggingDetected__.x____ <- snaggingDetected,
+				 		invalidTrajectory__.x____ <- invalidTrajectory,
+				 		invalidPoseDetected__.x____ <- invalidPoseDetected,
+				 		userInterrupt__.x____ <- userInterrupt,
+				 		poseDetected__.x____ <- poseDetected,
+				 		dressingRequest__.x____ <- dressingRequest,
+				 		garmentDetected__.x____ <- garmentDetected,
+				 		armConfig__.x____ <- armConfig,
+				 		gripCorrect__.x____ <- gripCorrect,
+				 		gripperEngaged__.x____ <- gripperEngaged,
+				 		correctedMovement__.x____ <- correctedMovement,
+				 		secondHandDetected__.x____ <- secondHandDetected,
+				 		userDressed__.x____ <- userDressed,
+				 		userMoved__.x____ <- userMoved,
+				 		handlingCorrect__.x____ <- handlingCorrect,
+				 		garmentAtHand__.x____ <- garmentAtHand,
+				 		arrivedAtGarment__.x____ <- arrivedAtGarment,
+				 		garmentGripped__.x____ <- garmentGripped,
+				 		orientedGarment__.x____ <- orientedGarment,
+				 		movementStart__.x____ <- movementStart,
+				 		movementEnd__.x____ <- movementEnd,
+				 		forceStart__.x____ <- forceStart,
+				 		forceEnd__.x____ <- forceEnd
+				 		| x____ <- NIDS
+				 	]]
+				 )
+				 )
+				  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_firstArmDressed,setR_arrivedAtTarget,setR_garmentPosition,setR_isGripperEngaged,setR_targetPosition,setR_garmentAcquired,setR_currentJoint,setR_garmentWithUser,setR_userPose |} ]] 
+				  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_firstArmDressed <- setL_firstArmDressed,set_arrivedAtTarget <- setL_arrivedAtTarget,set_garmentPosition <- setL_garmentPosition,set_isGripperEngaged <- setL_isGripperEngaged,set_targetPosition <- setL_targetPosition,set_garmentAcquired <- setL_garmentAcquired,set_currentJoint <- setL_currentJoint,set_garmentWithUser <- setL_garmentWithUser,set_userPose <- setL_userPose]]
+				 )
+				 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+				 			,setL_isHandlingCorrect
+				 			,setL_firstArmDressed
+				 			,setL_arrivedAtTarget
+				 			,setL_garmentPosition
+				 			,setL_isGripperEngaged
+				 			,setL_targetPosition
+				 			,setL_garmentAcquired
+				 			,setL_currentJoint
+				 			,setL_garmentWithUser
+				 			,setL_userPose
+				 			,setR_isHandlingCorrect
+				 			 			,setR_firstArmDressed
+				 			 			,setR_arrivedAtTarget
+				 			 			,setR_garmentPosition
+				 			 			,setR_isGripperEngaged
+				 			 			,setR_targetPosition
+				 			 			,setR_garmentAcquired
+				 			 			,setR_currentJoint
+				 			 			,setR_garmentWithUser
+				 			 			,setR_userPose
+				 			|}) |]
+				 ((During)
+				  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_firstArmDressed,setL_arrivedAtTarget,setL_garmentPosition,setL_isGripperEngaged,setL_targetPosition,setL_garmentAcquired,setL_currentJoint,setL_garmentWithUser,setL_userPose |} ]]
+				  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_firstArmDressed <- setR_firstArmDressed,set_arrivedAtTarget <- setR_arrivedAtTarget,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged,set_targetPosition <- setR_targetPosition,set_garmentAcquired <- setR_garmentAcquired,set_currentJoint <- setR_currentJoint,set_garmentWithUser <- setR_garmentWithUser,set_userPose <- setR_userPose]]
+				 )
+				)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_firstArmDressed <- set_firstArmDressed,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_garmentPosition <- set_garmentPosition,setL_isGripperEngaged <- set_isGripperEngaged,setL_targetPosition <- set_targetPosition,setL_garmentAcquired <- set_garmentAcquired,setL_currentJoint <- set_currentJoint,setL_garmentWithUser <- set_garmentWithUser,setL_userPose <- set_userPose]]
+				 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_firstArmDressed <- set_firstArmDressed,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged,setR_targetPosition <- set_targetPosition,setR_garmentAcquired <- set_garmentAcquired,setR_currentJoint <- set_currentJoint,setR_garmentWithUser <- set_garmentWithUser,setR_userPose <- set_userPose]]
+				)\union(enteredSS,{terminate}) 
+			)
+			During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+					 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+		
+			Behaviour 	= dbisim(
+				((
+				 (((let
+				 	-- IMPLEMENTATION NOTE:
+				 	-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				 	-- modules for defining the semantics of each node.
+				 	enterSS = {|
+				 	i0::enter,
+				 	f0::enter,
+				 	DetectStartPose::enter,
+				 	Moving::enter
+				 	|}
+				 	hideSet = union(enterSS,{|exit,exited,internal__|})
+				 within 
+				 	((let
+				 		-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+				 		-- because CSPM modules are used for the semantics of Node.
+				 		flowevts = union(enterSS,{|exit,exited,interrupt|})
+				 		transSync = {|internal__.NID_i0,poseDetected__.NID_DetectStartPose.in,movementEnd__.NID_Moving.in|}
+				 	within
+				 		((
+				 		 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+				 		   i0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   f0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   DetectStartPose::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   Moving::VS_O__(id__)
+				 		   )
+				 		   )
+				 		   )
+				 		 )
+				 		 [[f0::interrupt <- x__ | x__ <- {|interrupt|}]]
+				 		 [[DetectStartPose::interrupt <- x__ | x__ <- {|interrupt,poseDetected__.NID_DetectStartPose.in|}]]
+				 		 [[Moving::interrupt <- x__ | x__ <- {|interrupt,movementEnd__.NID_Moving.in|}]]
+				 		 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+				 		 )
+				 		  [[ share__ <- x__ | x__ <- {| share__,setR_userPose |} ]] 
+				 		 )
+				 		 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+				 		 			,setR_userPose
+				 		 			|}) |]
+				 		 ((i0::enter -> Transitions(id__))
+				 		  [[ share__ <- x__ | x__ <- {| share__ |} ]]
+				 		  [[set_userPose <- setR_userPose]]
+				 		 )
+				 		)
+				 		 [[setR_userPose <- set_userPose]]
+				 		)
+				 	)
+				 	 \ hideSet)
+				 	[[
+				 		dressedJoint__.x____ <- dressedJoint,
+				 		snaggingDetected__.x____ <- snaggingDetected,
+				 		invalidTrajectory__.x____ <- invalidTrajectory,
+				 		invalidPoseDetected__.x____ <- invalidPoseDetected,
+				 		userInterrupt__.x____ <- userInterrupt,
+				 		poseDetected__.x____ <- poseDetected,
+				 		dressingRequest__.x____ <- dressingRequest,
+				 		garmentDetected__.x____ <- garmentDetected,
+				 		armConfig__.x____ <- armConfig,
+				 		gripCorrect__.x____ <- gripCorrect,
+				 		gripperEngaged__.x____ <- gripperEngaged,
+				 		correctedMovement__.x____ <- correctedMovement,
+				 		secondHandDetected__.x____ <- secondHandDetected,
+				 		userDressed__.x____ <- userDressed,
+				 		userMoved__.x____ <- userMoved,
+				 		handlingCorrect__.x____ <- handlingCorrect,
+				 		garmentAtHand__.x____ <- garmentAtHand,
+				 		arrivedAtGarment__.x____ <- arrivedAtGarment,
+				 		garmentGripped__.x____ <- garmentGripped,
+				 		orientedGarment__.x____ <- orientedGarment,
+				 		movementStart__.x____ <- movementStart,
+				 		movementEnd__.x____ <- movementEnd,
+				 		forceStart__.x____ <- forceStart,
+				 		forceEnd__.x____ <- forceEnd
+				 		| x____ <- NIDS
+				 	]]
+				 )
+				 )
+				  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_firstArmDressed,setR_arrivedAtTarget,setR_garmentPosition,setR_isGripperEngaged,setR_targetPosition,setR_garmentAcquired,setR_currentJoint,setR_garmentWithUser,setR_userPose |} ]] 
+				  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_firstArmDressed <- setL_firstArmDressed,set_arrivedAtTarget <- setL_arrivedAtTarget,set_garmentPosition <- setL_garmentPosition,set_isGripperEngaged <- setL_isGripperEngaged,set_targetPosition <- setL_targetPosition,set_garmentAcquired <- setL_garmentAcquired,set_currentJoint <- setL_currentJoint,set_garmentWithUser <- setL_garmentWithUser,set_userPose <- setL_userPose]]
+				 )
+				 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+				 			,setL_isHandlingCorrect
+				 			,setL_firstArmDressed
+				 			,setL_arrivedAtTarget
+				 			,setL_garmentPosition
+				 			,setL_isGripperEngaged
+				 			,setL_targetPosition
+				 			,setL_garmentAcquired
+				 			,setL_currentJoint
+				 			,setL_garmentWithUser
+				 			,setL_userPose
+				 			,setR_isHandlingCorrect
+				 			 			,setR_firstArmDressed
+				 			 			,setR_arrivedAtTarget
+				 			 			,setR_garmentPosition
+				 			 			,setR_isGripperEngaged
+				 			 			,setR_targetPosition
+				 			 			,setR_garmentAcquired
+				 			 			,setR_currentJoint
+				 			 			,setR_garmentWithUser
+				 			 			,setR_userPose
+				 			|}) |]
+				 ((During)
+				  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_firstArmDressed,setL_arrivedAtTarget,setL_garmentPosition,setL_isGripperEngaged,setL_targetPosition,setL_garmentAcquired,setL_currentJoint,setL_garmentWithUser,setL_userPose |} ]]
+				  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_firstArmDressed <- setR_firstArmDressed,set_arrivedAtTarget <- setR_arrivedAtTarget,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged,set_targetPosition <- setR_targetPosition,set_garmentAcquired <- setR_garmentAcquired,set_currentJoint <- setR_currentJoint,set_garmentWithUser <- setR_garmentWithUser,set_userPose <- setR_userPose]]
+				 )
+				)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_firstArmDressed <- set_firstArmDressed,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_garmentPosition <- set_garmentPosition,setL_isGripperEngaged <- set_isGripperEngaged,setL_targetPosition <- set_targetPosition,setL_garmentAcquired <- set_garmentAcquired,setL_currentJoint <- set_currentJoint,setL_garmentWithUser <- set_garmentWithUser,setL_userPose <- set_userPose]]
+				 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_firstArmDressed <- set_firstArmDressed,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged,setR_targetPosition <- set_targetPosition,setR_garmentAcquired <- set_garmentAcquired,setR_currentJoint <- set_currentJoint,setR_garmentWithUser <- set_garmentWithUser,setR_userPose <- set_userPose]]
+				)\{terminate} 
+			)
+			During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+					 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+		Transitions(id__) = ((let
+			Trans = (
+				((share__ -> SKIP
+				 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; DetectStartPose::enter -> SKIP))))
+				 	 [] dbisim((true)&(poseDetected__!NID_DetectStartPose.in?userPose:{userPose|userPose <- vector_vector_real_3_3, true} -> share__choice(set_userPose!userPose -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(share__choice(get_userPose?userPose -> true & (share__choice(set_targetPosition!definitions_jointPosition(userPose,2) -> SKIP)))) ; Moving::enter -> SKIP)))
+				 	 [] dbisim((true)&(movementEnd__!NID_Moving.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(garmentAtHand.out -> SKIP));share__choice(true & (share__choice(set_garmentWithUser!true -> SKIP))) ; f0::enter -> SKIP)))
+				 ) ; Trans)
+				 []
+				 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+				 []
+				 terminate -> SKIP
+			)
+		within
+			Trans
+		)
+		)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: DressingLoop
+	module DressingLoop
+	
+	enterSS = 
+			{|			i0::enter,
+				DetectUserPose::enter,
+				MovingToJoint::enter,
+				f0::enter,
+				j0::enter,
+				FaultCheck::enter,
+				SnaggingCorrection::enter
+			|}
+	enteredSS = 
+			{|			DetectUserPose::entered,
+				MovingToJoint::entered,
+				f0::entered,
+				FaultCheck::entered,
+				SnaggingCorrection::entered
+			|}
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		-- declaring identifiers of transitions
+		datatype NIDS = 
+		              NID_i0|
+		              NID_DetectUserPose|
+		              NID_MovingToJoint|
+		              NID_f0|
+		              NID_j0|
+		              NID_FaultCheck|
+		              NID_SnaggingCorrection
+		
+		channel internal__ : NIDS
+		channel dressedJoint__: NIDS.InOut.core_int
+		channel snaggingDetected__: NIDS.InOut
+		channel invalidTrajectory__: NIDS.InOut
+		channel invalidPoseDetected__: NIDS.InOut
+		channel userInterrupt__: NIDS.InOut
+		channel poseDetected__: NIDS.InOut.vector_vector_real_3_3
+		channel dressingRequest__: NIDS.InOut
+		channel garmentDetected__: NIDS.InOut.vector_real_3
+		channel armConfig__: NIDS.InOut
+		channel gripCorrect__: NIDS.InOut.core_boolean
+		channel gripperEngaged__: NIDS.InOut.core_boolean
+		channel correctedMovement__: NIDS.InOut
+		channel secondHandDetected__: NIDS.InOut.vector_real_3
+		channel userDressed__: NIDS.InOut
+		channel userMoved__: NIDS.InOut
+		channel handlingCorrect__: NIDS.InOut.core_boolean
+		channel garmentAtHand__: NIDS.InOut
+		channel arrivedAtGarment__: NIDS.InOut
+		channel garmentGripped__: NIDS.InOut
+		channel orientedGarment__: NIDS.InOut
+		channel movementStart__: NIDS.InOut.vector_real_3
+		channel movementEnd__: NIDS.InOut
+		channel forceStart__: NIDS.InOut.vector_real_3
+		channel forceEnd__: NIDS.InOut
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		----------------------------------------------------------------------
+		-- Initial: i0
+		module i0
+		exports
+		
+			channel enter, interrupt
+			
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= share__choice(interrupt -> SKIP) ; Inactive
+				within
+					Inactive [| {terminate} |> SKIP)
+			
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: DetectUserPose
+		module DetectUserPose
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__detectUserPose(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__detectUserPose(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: MovingToJoint
+		module MovingToJoint
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= share__choice(get_targetPosition?targetPosition -> true&(share__choice(forceStart.out!targetPosition -> SKIP))) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= share__choice(get_targetPosition?targetPosition -> true&(share__choice(forceStart.out!targetPosition -> SKIP))) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- Final state: f0
+		module f0
+		
+		exports
+		
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+			--	Rule: behaviours(Node)
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Entering
+					
+					Entering 	= entered -> SKIP ; Active
+					Active		= share__choice(terminate -> SKIP [] interrupt -> SKIP) ; Interrupted
+					Interrupted	= share__choice(exit -> exited -> Inactive)
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- Junction: j0
+		module j0
+		exports
+		
+			channel enter, interrupt
+			
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Active 		= share__choice(interrupt -> SKIP) ; Inactive
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: FaultCheck
+		module FaultCheck
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__checkFault(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__checkFault(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: SnaggingCorrection
+		module SnaggingCorrection
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= SKIP ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= SKIP ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+		
+			Behaviour 	= dbisim(
+				((
+				 (((let
+				 	-- IMPLEMENTATION NOTE:
+				 	-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				 	-- modules for defining the semantics of each node.
+				 	enterSS = {|
+				 	i0::enter,
+				 	DetectUserPose::enter,
+				 	MovingToJoint::enter,
+				 	f0::enter,
+				 	j0::enter,
+				 	FaultCheck::enter,
+				 	SnaggingCorrection::enter
+				 	|}
+				 	hideSet = union(enterSS,{|exit,exited,internal__|})
+				 within 
+				 	((let
+				 		-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+				 		-- because CSPM modules are used for the semantics of Node.
+				 		flowevts = union(enterSS,{|exit,exited,interrupt|})
+				 		transSync = {|internal__.NID_j0,internal__.NID_i0,poseDetected__.NID_DetectUserPose.in,internal__.NID_j0,invalidPoseDetected__.NID_FaultCheck.in,forceEnd__.NID_MovingToJoint.in,snaggingDetected__.NID_FaultCheck.in,internal__.NID_SnaggingCorrection,internal__.NID_FaultCheck|}
+				 	within
+				 		((
+				 		 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+				 		   i0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   DetectUserPose::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   MovingToJoint::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   f0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   j0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   FaultCheck::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   SnaggingCorrection::D__(id__)
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		 )
+				 		 [[DetectUserPose::interrupt <- x__ | x__ <- {|interrupt,poseDetected__.NID_DetectUserPose.in|}]]
+				 		 [[MovingToJoint::interrupt <- x__ | x__ <- {|interrupt,forceEnd__.NID_MovingToJoint.in|}]]
+				 		 [[f0::interrupt <- x__ | x__ <- {|interrupt|}]]
+				 		 [[FaultCheck::interrupt <- x__ | x__ <- {|interrupt,invalidPoseDetected__.NID_FaultCheck.in,snaggingDetected__.NID_FaultCheck.in,internal__.NID_FaultCheck|}]]
+				 		 [[SnaggingCorrection::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_SnaggingCorrection|}]]
+				 		 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+				 		 [[j0::interrupt <- x__ | x__ <- {|internal__.NID_j0,internal__.NID_j0|}]]
+				 		 )
+				 		  [[ share__ <- x__ | x__ <- {| share__,setR_userPose |} ]] 
+				 		  [[set_currentJoint <- setL_currentJoint]]
+				 		 )
+				 		 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+				 		 			,setL_currentJoint
+				 		 			,setR_userPose
+				 		 			|}) |]
+				 		 ((i0::enter -> Transitions(id__))
+				 		  [[ share__ <- x__ | x__ <- {| share__,setL_currentJoint |} ]]
+				 		  [[set_userPose <- setR_userPose]]
+				 		 )
+				 		)[[setL_currentJoint <- set_currentJoint]]
+				 		 [[setR_userPose <- set_userPose]]
+				 		)
+				 	)
+				 	 \ hideSet)
+				 	[[
+				 		dressedJoint__.x____ <- dressedJoint,
+				 		snaggingDetected__.x____ <- snaggingDetected,
+				 		invalidTrajectory__.x____ <- invalidTrajectory,
+				 		invalidPoseDetected__.x____ <- invalidPoseDetected,
+				 		userInterrupt__.x____ <- userInterrupt,
+				 		poseDetected__.x____ <- poseDetected,
+				 		dressingRequest__.x____ <- dressingRequest,
+				 		garmentDetected__.x____ <- garmentDetected,
+				 		armConfig__.x____ <- armConfig,
+				 		gripCorrect__.x____ <- gripCorrect,
+				 		gripperEngaged__.x____ <- gripperEngaged,
+				 		correctedMovement__.x____ <- correctedMovement,
+				 		secondHandDetected__.x____ <- secondHandDetected,
+				 		userDressed__.x____ <- userDressed,
+				 		userMoved__.x____ <- userMoved,
+				 		handlingCorrect__.x____ <- handlingCorrect,
+				 		garmentAtHand__.x____ <- garmentAtHand,
+				 		arrivedAtGarment__.x____ <- arrivedAtGarment,
+				 		garmentGripped__.x____ <- garmentGripped,
+				 		orientedGarment__.x____ <- orientedGarment,
+				 		movementStart__.x____ <- movementStart,
+				 		movementEnd__.x____ <- movementEnd,
+				 		forceStart__.x____ <- forceStart,
+				 		forceEnd__.x____ <- forceEnd
+				 		| x____ <- NIDS
+				 	]]
+				 )
+				 )
+				  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_firstArmDressed,setR_arrivedAtTarget,setR_garmentPosition,setR_isGripperEngaged,setR_targetPosition,setR_garmentAcquired,setR_currentJoint,setR_garmentWithUser,setR_userPose |} ]] 
+				  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_firstArmDressed <- setL_firstArmDressed,set_arrivedAtTarget <- setL_arrivedAtTarget,set_garmentPosition <- setL_garmentPosition,set_isGripperEngaged <- setL_isGripperEngaged,set_targetPosition <- setL_targetPosition,set_garmentAcquired <- setL_garmentAcquired,set_currentJoint <- setL_currentJoint,set_garmentWithUser <- setL_garmentWithUser,set_userPose <- setL_userPose]]
+				 )
+				 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+				 			,setL_isHandlingCorrect
+				 			,setL_firstArmDressed
+				 			,setL_arrivedAtTarget
+				 			,setL_garmentPosition
+				 			,setL_isGripperEngaged
+				 			,setL_targetPosition
+				 			,setL_garmentAcquired
+				 			,setL_currentJoint
+				 			,setL_garmentWithUser
+				 			,setL_userPose
+				 			,setR_isHandlingCorrect
+				 			 			,setR_firstArmDressed
+				 			 			,setR_arrivedAtTarget
+				 			 			,setR_garmentPosition
+				 			 			,setR_isGripperEngaged
+				 			 			,setR_targetPosition
+				 			 			,setR_garmentAcquired
+				 			 			,setR_currentJoint
+				 			 			,setR_garmentWithUser
+				 			 			,setR_userPose
+				 			|}) |]
+				 ((During)
+				  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_firstArmDressed,setL_arrivedAtTarget,setL_garmentPosition,setL_isGripperEngaged,setL_targetPosition,setL_garmentAcquired,setL_currentJoint,setL_garmentWithUser,setL_userPose |} ]]
+				  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_firstArmDressed <- setR_firstArmDressed,set_arrivedAtTarget <- setR_arrivedAtTarget,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged,set_targetPosition <- setR_targetPosition,set_garmentAcquired <- setR_garmentAcquired,set_currentJoint <- setR_currentJoint,set_garmentWithUser <- setR_garmentWithUser,set_userPose <- setR_userPose]]
+				 )
+				)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_firstArmDressed <- set_firstArmDressed,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_garmentPosition <- set_garmentPosition,setL_isGripperEngaged <- set_isGripperEngaged,setL_targetPosition <- set_targetPosition,setL_garmentAcquired <- set_garmentAcquired,setL_currentJoint <- set_currentJoint,setL_garmentWithUser <- set_garmentWithUser,setL_userPose <- set_userPose]]
+				 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_firstArmDressed <- set_firstArmDressed,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged,setR_targetPosition <- set_targetPosition,setR_garmentAcquired <- set_garmentAcquired,setR_currentJoint <- set_currentJoint,setR_garmentWithUser <- set_garmentWithUser,setR_userPose <- set_userPose]]
+				)\union(enteredSS,{terminate}) 
+			)
+			During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+					 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+		
+			Behaviour 	= dbisim(
+				((
+				 (((let
+				 	-- IMPLEMENTATION NOTE:
+				 	-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				 	-- modules for defining the semantics of each node.
+				 	enterSS = {|
+				 	i0::enter,
+				 	DetectUserPose::enter,
+				 	MovingToJoint::enter,
+				 	f0::enter,
+				 	j0::enter,
+				 	FaultCheck::enter,
+				 	SnaggingCorrection::enter
+				 	|}
+				 	hideSet = union(enterSS,{|exit,exited,internal__|})
+				 within 
+				 	((let
+				 		-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+				 		-- because CSPM modules are used for the semantics of Node.
+				 		flowevts = union(enterSS,{|exit,exited,interrupt|})
+				 		transSync = {|internal__.NID_j0,internal__.NID_i0,poseDetected__.NID_DetectUserPose.in,internal__.NID_j0,invalidPoseDetected__.NID_FaultCheck.in,forceEnd__.NID_MovingToJoint.in,snaggingDetected__.NID_FaultCheck.in,internal__.NID_SnaggingCorrection,internal__.NID_FaultCheck|}
+				 	within
+				 		((
+				 		 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+				 		   i0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   DetectUserPose::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   MovingToJoint::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   f0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   j0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   FaultCheck::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   SnaggingCorrection::VS_O__(id__)
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		 )
+				 		 [[DetectUserPose::interrupt <- x__ | x__ <- {|interrupt,poseDetected__.NID_DetectUserPose.in|}]]
+				 		 [[MovingToJoint::interrupt <- x__ | x__ <- {|interrupt,forceEnd__.NID_MovingToJoint.in|}]]
+				 		 [[f0::interrupt <- x__ | x__ <- {|interrupt|}]]
+				 		 [[FaultCheck::interrupt <- x__ | x__ <- {|interrupt,invalidPoseDetected__.NID_FaultCheck.in,snaggingDetected__.NID_FaultCheck.in,internal__.NID_FaultCheck|}]]
+				 		 [[SnaggingCorrection::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_SnaggingCorrection|}]]
+				 		 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+				 		 [[j0::interrupt <- x__ | x__ <- {|internal__.NID_j0,internal__.NID_j0|}]]
+				 		 )
+				 		  [[ share__ <- x__ | x__ <- {| share__,setR_userPose |} ]] 
+				 		  [[set_currentJoint <- setL_currentJoint]]
+				 		 )
+				 		 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+				 		 			,setL_currentJoint
+				 		 			,setR_userPose
+				 		 			|}) |]
+				 		 ((i0::enter -> Transitions(id__))
+				 		  [[ share__ <- x__ | x__ <- {| share__,setL_currentJoint |} ]]
+				 		  [[set_userPose <- setR_userPose]]
+				 		 )
+				 		)[[setL_currentJoint <- set_currentJoint]]
+				 		 [[setR_userPose <- set_userPose]]
+				 		)
+				 	)
+				 	 \ hideSet)
+				 	[[
+				 		dressedJoint__.x____ <- dressedJoint,
+				 		snaggingDetected__.x____ <- snaggingDetected,
+				 		invalidTrajectory__.x____ <- invalidTrajectory,
+				 		invalidPoseDetected__.x____ <- invalidPoseDetected,
+				 		userInterrupt__.x____ <- userInterrupt,
+				 		poseDetected__.x____ <- poseDetected,
+				 		dressingRequest__.x____ <- dressingRequest,
+				 		garmentDetected__.x____ <- garmentDetected,
+				 		armConfig__.x____ <- armConfig,
+				 		gripCorrect__.x____ <- gripCorrect,
+				 		gripperEngaged__.x____ <- gripperEngaged,
+				 		correctedMovement__.x____ <- correctedMovement,
+				 		secondHandDetected__.x____ <- secondHandDetected,
+				 		userDressed__.x____ <- userDressed,
+				 		userMoved__.x____ <- userMoved,
+				 		handlingCorrect__.x____ <- handlingCorrect,
+				 		garmentAtHand__.x____ <- garmentAtHand,
+				 		arrivedAtGarment__.x____ <- arrivedAtGarment,
+				 		garmentGripped__.x____ <- garmentGripped,
+				 		orientedGarment__.x____ <- orientedGarment,
+				 		movementStart__.x____ <- movementStart,
+				 		movementEnd__.x____ <- movementEnd,
+				 		forceStart__.x____ <- forceStart,
+				 		forceEnd__.x____ <- forceEnd
+				 		| x____ <- NIDS
+				 	]]
+				 )
+				 )
+				  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_firstArmDressed,setR_arrivedAtTarget,setR_garmentPosition,setR_isGripperEngaged,setR_targetPosition,setR_garmentAcquired,setR_currentJoint,setR_garmentWithUser,setR_userPose |} ]] 
+				  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_firstArmDressed <- setL_firstArmDressed,set_arrivedAtTarget <- setL_arrivedAtTarget,set_garmentPosition <- setL_garmentPosition,set_isGripperEngaged <- setL_isGripperEngaged,set_targetPosition <- setL_targetPosition,set_garmentAcquired <- setL_garmentAcquired,set_currentJoint <- setL_currentJoint,set_garmentWithUser <- setL_garmentWithUser,set_userPose <- setL_userPose]]
+				 )
+				 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+				 			,setL_isHandlingCorrect
+				 			,setL_firstArmDressed
+				 			,setL_arrivedAtTarget
+				 			,setL_garmentPosition
+				 			,setL_isGripperEngaged
+				 			,setL_targetPosition
+				 			,setL_garmentAcquired
+				 			,setL_currentJoint
+				 			,setL_garmentWithUser
+				 			,setL_userPose
+				 			,setR_isHandlingCorrect
+				 			 			,setR_firstArmDressed
+				 			 			,setR_arrivedAtTarget
+				 			 			,setR_garmentPosition
+				 			 			,setR_isGripperEngaged
+				 			 			,setR_targetPosition
+				 			 			,setR_garmentAcquired
+				 			 			,setR_currentJoint
+				 			 			,setR_garmentWithUser
+				 			 			,setR_userPose
+				 			|}) |]
+				 ((During)
+				  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_firstArmDressed,setL_arrivedAtTarget,setL_garmentPosition,setL_isGripperEngaged,setL_targetPosition,setL_garmentAcquired,setL_currentJoint,setL_garmentWithUser,setL_userPose |} ]]
+				  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_firstArmDressed <- setR_firstArmDressed,set_arrivedAtTarget <- setR_arrivedAtTarget,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged,set_targetPosition <- setR_targetPosition,set_garmentAcquired <- setR_garmentAcquired,set_currentJoint <- setR_currentJoint,set_garmentWithUser <- setR_garmentWithUser,set_userPose <- setR_userPose]]
+				 )
+				)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_firstArmDressed <- set_firstArmDressed,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_garmentPosition <- set_garmentPosition,setL_isGripperEngaged <- set_isGripperEngaged,setL_targetPosition <- set_targetPosition,setL_garmentAcquired <- set_garmentAcquired,setL_currentJoint <- set_currentJoint,setL_garmentWithUser <- set_garmentWithUser,setL_userPose <- set_userPose]]
+				 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_firstArmDressed <- set_firstArmDressed,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged,setR_targetPosition <- set_targetPosition,setR_garmentAcquired <- set_garmentAcquired,setR_currentJoint <- set_currentJoint,setR_garmentWithUser <- set_garmentWithUser,setR_userPose <- set_userPose]]
+				)\{terminate} 
+			)
+			During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+					 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+		Transitions(id__) = ((let
+			Trans = share__choice(get_currentJoint?currentJoint -> (
+				((share__ -> SKIP
+				 [] dbisim(((currentJoint>0))&(internal__!NID_j0 -> SKIP ;  ((share__choice(share__choice(get_currentJoint?currentJoint -> true & (share__choice(set_currentJoint!Minus(currentJoint, 1, core_int) -> SKIP)))) ; DetectUserPose::enter -> SKIP))))
+				 	 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; DetectUserPose::enter -> SKIP))))
+				 	 [] dbisim((poseDetected__!NID_DetectUserPose.in?userPose:{userPose|userPose <- vector_vector_real_3_3, (((currentJoint==0) or (currentJoint==1)) or (currentJoint==2))} -> share__choice(set_userPose!userPose -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(share__choice(get_userPose?userPose -> share__choice(get_currentJoint?currentJoint -> true & (share__choice(set_targetPosition!definitions_jointPosition(userPose,currentJoint) -> SKIP))))) ; MovingToJoint::enter -> SKIP)))
+				 	 [] dbisim(((currentJoint==0))&(internal__!NID_j0 -> SKIP ;  ((share__choice(true & (share__choice(set_firstArmDressed!true -> SKIP))) ; f0::enter -> SKIP))))
+				 	 [] dbisim((true)&(invalidPoseDetected__!NID_FaultCheck.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; DetectUserPose::enter -> SKIP)))
+				 	 [] dbisim((true)&(forceEnd__!NID_MovingToJoint.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; FaultCheck::enter -> SKIP)))
+				 	 [] dbisim((true)&(snaggingDetected__!NID_FaultCheck.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; SnaggingCorrection::enter -> SKIP)))
+				 	 [] dbisim((true)&(internal__!NID_SnaggingCorrection -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(correctedMovement.out -> SKIP)) ; MovingToJoint::enter -> SKIP)))
+				 	 [] dbisim((true)&(internal__!NID_FaultCheck -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(get_currentJoint?currentJoint -> true&(share__choice(dressedJoint.out!currentJoint -> SKIP))) ; j0::enter -> SKIP)))
+				 ) ; Trans)
+				 []
+				 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+				 []
+				 terminate -> SKIP
+			)
+			)
+		within
+			Trans
+		)
+		)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: Start
+	module Start
+	
+	enterSS = {}
+	
+	enteredSS = {}
+	
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: SecondArm
+	module SecondArm
+	
+	enterSS = 
+			{|			i0::enter,
+				DetectSecondHand::enter,
+				ReleaseGrip::enter,
+				f0::enter,
+				MovingToSecondHand::enter,
+				CheckingUserDressed::enter
+			|}
+	enteredSS = 
+			{|			DetectSecondHand::entered,
+				ReleaseGrip::entered,
+				f0::entered,
+				MovingToSecondHand::entered,
+				CheckingUserDressed::entered
+			|}
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		-- declaring identifiers of transitions
+		datatype NIDS = 
+		              NID_i0|
+		              NID_DetectSecondHand|
+		              NID_ReleaseGrip|
+		              NID_f0|
+		              NID_MovingToSecondHand|
+		              NID_CheckingUserDressed
+		
+		channel internal__ : NIDS
+		channel dressedJoint__: NIDS.InOut.core_int
+		channel snaggingDetected__: NIDS.InOut
+		channel invalidTrajectory__: NIDS.InOut
+		channel invalidPoseDetected__: NIDS.InOut
+		channel userInterrupt__: NIDS.InOut
+		channel poseDetected__: NIDS.InOut.vector_vector_real_3_3
+		channel dressingRequest__: NIDS.InOut
+		channel garmentDetected__: NIDS.InOut.vector_real_3
+		channel armConfig__: NIDS.InOut
+		channel gripCorrect__: NIDS.InOut.core_boolean
+		channel gripperEngaged__: NIDS.InOut.core_boolean
+		channel correctedMovement__: NIDS.InOut
+		channel secondHandDetected__: NIDS.InOut.vector_real_3
+		channel userDressed__: NIDS.InOut
+		channel userMoved__: NIDS.InOut
+		channel handlingCorrect__: NIDS.InOut.core_boolean
+		channel garmentAtHand__: NIDS.InOut
+		channel arrivedAtGarment__: NIDS.InOut
+		channel garmentGripped__: NIDS.InOut
+		channel orientedGarment__: NIDS.InOut
+		channel movementStart__: NIDS.InOut.vector_real_3
+		channel movementEnd__: NIDS.InOut
+		channel forceStart__: NIDS.InOut.vector_real_3
+		channel forceEnd__: NIDS.InOut
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		----------------------------------------------------------------------
+		-- Initial: i0
+		module i0
+		exports
+		
+			channel enter, interrupt
+			
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= share__choice(interrupt -> SKIP) ; Inactive
+				within
+					Inactive [| {terminate} |> SKIP)
+			
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: DetectSecondHand
+		module DetectSecondHand
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__detectSecondArm(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__detectSecondArm(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: ReleaseGrip
+		module ReleaseGrip
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__releaseGrip(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__releaseGrip(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- Final state: f0
+		module f0
+		
+		exports
+		
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+			--	Rule: behaviours(Node)
+			D__(id__) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Entering
+					
+					Entering 	= entered -> SKIP ; Active
+					Active		= share__choice(terminate -> SKIP [] interrupt -> SKIP) ; Interrupted
+					Interrupted	= share__choice(exit -> exited -> Inactive)
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = D__(id__)
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: MovingToSecondHand
+		module MovingToSecondHand
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= SKIP ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= SKIP ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: CheckingUserDressed
+		module CheckingUserDressed
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			--	Rule: behaviours(Node)
+			--  Note that FDR has problems with efficiently compiling the process below
+			-- 	if using a different recursion pattern.
+			D__(id__) = 
+			dbisim(let
+				-- IMPLEMENTATION NOTE: 
+				-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+				-- however FDR struggles with that form in certain cases. So we use the exception operator
+				-- instead to 'terminate'.
+				
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__checkUserDressed(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+				
+			VS_O__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= true&CALL__checkUserDressed(
+							id__
+						) ; 
+						 	  Behaviour ; 
+						 	  share__choice(exit -> SKIP) ; SKIP ; 
+						 	  share__choice(exited -> SKIP) ; Inactive
+			
+				Behaviour 	= entered -> During
+				During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+			within
+				Inactive [| {terminate} |> SKIP)
+			
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+		
+			Behaviour 	= dbisim(
+				((
+				 (((let
+				 	-- IMPLEMENTATION NOTE:
+				 	-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				 	-- modules for defining the semantics of each node.
+				 	enterSS = {|
+				 	i0::enter,
+				 	DetectSecondHand::enter,
+				 	ReleaseGrip::enter,
+				 	f0::enter,
+				 	MovingToSecondHand::enter,
+				 	CheckingUserDressed::enter
+				 	|}
+				 	hideSet = union(enterSS,{|exit,exited,internal__|})
+				 within 
+				 	((let
+				 		-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+				 		-- because CSPM modules are used for the semantics of Node.
+				 		flowevts = union(enterSS,{|exit,exited,interrupt|})
+				 		transSync = {|internal__.NID_i0,internal__.NID_ReleaseGrip,secondHandDetected__.NID_DetectSecondHand.in,movementEnd__.NID_MovingToSecondHand.in,userDressed__.NID_CheckingUserDressed.in|}
+				 	within
+				 		((
+				 		 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+				 		   i0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   DetectSecondHand::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   ReleaseGrip::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   f0::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   MovingToSecondHand::D__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   CheckingUserDressed::D__(id__)
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		 )
+				 		 [[DetectSecondHand::interrupt <- x__ | x__ <- {|interrupt,secondHandDetected__.NID_DetectSecondHand.in|}]]
+				 		 [[ReleaseGrip::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_ReleaseGrip|}]]
+				 		 [[f0::interrupt <- x__ | x__ <- {|interrupt|}]]
+				 		 [[MovingToSecondHand::interrupt <- x__ | x__ <- {|interrupt,movementEnd__.NID_MovingToSecondHand.in|}]]
+				 		 [[CheckingUserDressed::interrupt <- x__ | x__ <- {|interrupt,userDressed__.NID_CheckingUserDressed.in|}]]
+				 		 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+				 		 )
+				 		  [[ share__ <- x__ | x__ <- {| share__,setR_targetPosition |} ]] 
+				 		 )
+				 		 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+				 		 			,setR_targetPosition
+				 		 			|}) |]
+				 		 ((i0::enter -> Transitions(id__))
+				 		  [[ share__ <- x__ | x__ <- {| share__ |} ]]
+				 		  [[set_targetPosition <- setR_targetPosition]]
+				 		 )
+				 		)
+				 		 [[setR_targetPosition <- set_targetPosition]]
+				 		)
+				 	)
+				 	 \ hideSet)
+				 	[[
+				 		dressedJoint__.x____ <- dressedJoint,
+				 		snaggingDetected__.x____ <- snaggingDetected,
+				 		invalidTrajectory__.x____ <- invalidTrajectory,
+				 		invalidPoseDetected__.x____ <- invalidPoseDetected,
+				 		userInterrupt__.x____ <- userInterrupt,
+				 		poseDetected__.x____ <- poseDetected,
+				 		dressingRequest__.x____ <- dressingRequest,
+				 		garmentDetected__.x____ <- garmentDetected,
+				 		armConfig__.x____ <- armConfig,
+				 		gripCorrect__.x____ <- gripCorrect,
+				 		gripperEngaged__.x____ <- gripperEngaged,
+				 		correctedMovement__.x____ <- correctedMovement,
+				 		secondHandDetected__.x____ <- secondHandDetected,
+				 		userDressed__.x____ <- userDressed,
+				 		userMoved__.x____ <- userMoved,
+				 		handlingCorrect__.x____ <- handlingCorrect,
+				 		garmentAtHand__.x____ <- garmentAtHand,
+				 		arrivedAtGarment__.x____ <- arrivedAtGarment,
+				 		garmentGripped__.x____ <- garmentGripped,
+				 		orientedGarment__.x____ <- orientedGarment,
+				 		movementStart__.x____ <- movementStart,
+				 		movementEnd__.x____ <- movementEnd,
+				 		forceStart__.x____ <- forceStart,
+				 		forceEnd__.x____ <- forceEnd
+				 		| x____ <- NIDS
+				 	]]
+				 )
+				 )
+				  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_firstArmDressed,setR_arrivedAtTarget,setR_garmentPosition,setR_isGripperEngaged,setR_targetPosition,setR_garmentAcquired,setR_currentJoint,setR_garmentWithUser,setR_userPose |} ]] 
+				  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_firstArmDressed <- setL_firstArmDressed,set_arrivedAtTarget <- setL_arrivedAtTarget,set_garmentPosition <- setL_garmentPosition,set_isGripperEngaged <- setL_isGripperEngaged,set_targetPosition <- setL_targetPosition,set_garmentAcquired <- setL_garmentAcquired,set_currentJoint <- setL_currentJoint,set_garmentWithUser <- setL_garmentWithUser,set_userPose <- setL_userPose]]
+				 )
+				 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+				 			,setL_isHandlingCorrect
+				 			,setL_firstArmDressed
+				 			,setL_arrivedAtTarget
+				 			,setL_garmentPosition
+				 			,setL_isGripperEngaged
+				 			,setL_targetPosition
+				 			,setL_garmentAcquired
+				 			,setL_currentJoint
+				 			,setL_garmentWithUser
+				 			,setL_userPose
+				 			,setR_isHandlingCorrect
+				 			 			,setR_firstArmDressed
+				 			 			,setR_arrivedAtTarget
+				 			 			,setR_garmentPosition
+				 			 			,setR_isGripperEngaged
+				 			 			,setR_targetPosition
+				 			 			,setR_garmentAcquired
+				 			 			,setR_currentJoint
+				 			 			,setR_garmentWithUser
+				 			 			,setR_userPose
+				 			|}) |]
+				 ((During)
+				  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_firstArmDressed,setL_arrivedAtTarget,setL_garmentPosition,setL_isGripperEngaged,setL_targetPosition,setL_garmentAcquired,setL_currentJoint,setL_garmentWithUser,setL_userPose |} ]]
+				  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_firstArmDressed <- setR_firstArmDressed,set_arrivedAtTarget <- setR_arrivedAtTarget,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged,set_targetPosition <- setR_targetPosition,set_garmentAcquired <- setR_garmentAcquired,set_currentJoint <- setR_currentJoint,set_garmentWithUser <- setR_garmentWithUser,set_userPose <- setR_userPose]]
+				 )
+				)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_firstArmDressed <- set_firstArmDressed,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_garmentPosition <- set_garmentPosition,setL_isGripperEngaged <- set_isGripperEngaged,setL_targetPosition <- set_targetPosition,setL_garmentAcquired <- set_garmentAcquired,setL_currentJoint <- set_currentJoint,setL_garmentWithUser <- set_garmentWithUser,setL_userPose <- set_userPose]]
+				 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_firstArmDressed <- set_firstArmDressed,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged,setR_targetPosition <- set_targetPosition,setR_garmentAcquired <- set_garmentAcquired,setR_currentJoint <- set_currentJoint,setR_garmentWithUser <- set_garmentWithUser,setR_userPose <- set_userPose]]
+				)\union(enteredSS,{terminate}) 
+			)
+			During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+					 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+		
+			Behaviour 	= dbisim(
+				((
+				 (((let
+				 	-- IMPLEMENTATION NOTE:
+				 	-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				 	-- modules for defining the semantics of each node.
+				 	enterSS = {|
+				 	i0::enter,
+				 	DetectSecondHand::enter,
+				 	ReleaseGrip::enter,
+				 	f0::enter,
+				 	MovingToSecondHand::enter,
+				 	CheckingUserDressed::enter
+				 	|}
+				 	hideSet = union(enterSS,{|exit,exited,internal__|})
+				 within 
+				 	((let
+				 		-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+				 		-- because CSPM modules are used for the semantics of Node.
+				 		flowevts = union(enterSS,{|exit,exited,interrupt|})
+				 		transSync = {|internal__.NID_i0,internal__.NID_ReleaseGrip,secondHandDetected__.NID_DetectSecondHand.in,movementEnd__.NID_MovingToSecondHand.in,userDressed__.NID_CheckingUserDressed.in|}
+				 	within
+				 		((
+				 		 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+				 		   i0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   DetectSecondHand::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   ReleaseGrip::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   f0::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   MovingToSecondHand::VS_O__(id__)
+				 		   [| { share__, terminate } |] (
+				 		   CheckingUserDressed::VS_O__(id__)
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		   )
+				 		 )
+				 		 [[DetectSecondHand::interrupt <- x__ | x__ <- {|interrupt,secondHandDetected__.NID_DetectSecondHand.in|}]]
+				 		 [[ReleaseGrip::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_ReleaseGrip|}]]
+				 		 [[f0::interrupt <- x__ | x__ <- {|interrupt|}]]
+				 		 [[MovingToSecondHand::interrupt <- x__ | x__ <- {|interrupt,movementEnd__.NID_MovingToSecondHand.in|}]]
+				 		 [[CheckingUserDressed::interrupt <- x__ | x__ <- {|interrupt,userDressed__.NID_CheckingUserDressed.in|}]]
+				 		 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+				 		 )
+				 		  [[ share__ <- x__ | x__ <- {| share__,setR_targetPosition |} ]] 
+				 		 )
+				 		 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+				 		 			,setR_targetPosition
+				 		 			|}) |]
+				 		 ((i0::enter -> Transitions(id__))
+				 		  [[ share__ <- x__ | x__ <- {| share__ |} ]]
+				 		  [[set_targetPosition <- setR_targetPosition]]
+				 		 )
+				 		)
+				 		 [[setR_targetPosition <- set_targetPosition]]
+				 		)
+				 	)
+				 	 \ hideSet)
+				 	[[
+				 		dressedJoint__.x____ <- dressedJoint,
+				 		snaggingDetected__.x____ <- snaggingDetected,
+				 		invalidTrajectory__.x____ <- invalidTrajectory,
+				 		invalidPoseDetected__.x____ <- invalidPoseDetected,
+				 		userInterrupt__.x____ <- userInterrupt,
+				 		poseDetected__.x____ <- poseDetected,
+				 		dressingRequest__.x____ <- dressingRequest,
+				 		garmentDetected__.x____ <- garmentDetected,
+				 		armConfig__.x____ <- armConfig,
+				 		gripCorrect__.x____ <- gripCorrect,
+				 		gripperEngaged__.x____ <- gripperEngaged,
+				 		correctedMovement__.x____ <- correctedMovement,
+				 		secondHandDetected__.x____ <- secondHandDetected,
+				 		userDressed__.x____ <- userDressed,
+				 		userMoved__.x____ <- userMoved,
+				 		handlingCorrect__.x____ <- handlingCorrect,
+				 		garmentAtHand__.x____ <- garmentAtHand,
+				 		arrivedAtGarment__.x____ <- arrivedAtGarment,
+				 		garmentGripped__.x____ <- garmentGripped,
+				 		orientedGarment__.x____ <- orientedGarment,
+				 		movementStart__.x____ <- movementStart,
+				 		movementEnd__.x____ <- movementEnd,
+				 		forceStart__.x____ <- forceStart,
+				 		forceEnd__.x____ <- forceEnd
+				 		| x____ <- NIDS
+				 	]]
+				 )
+				 )
+				  [[ share__ <- x__ | x__ <- {| share__,setR_isHandlingCorrect,setR_firstArmDressed,setR_arrivedAtTarget,setR_garmentPosition,setR_isGripperEngaged,setR_targetPosition,setR_garmentAcquired,setR_currentJoint,setR_garmentWithUser,setR_userPose |} ]] 
+				  [[set_isHandlingCorrect <- setL_isHandlingCorrect,set_firstArmDressed <- setL_firstArmDressed,set_arrivedAtTarget <- setL_arrivedAtTarget,set_garmentPosition <- setL_garmentPosition,set_isGripperEngaged <- setL_isGripperEngaged,set_targetPosition <- setL_targetPosition,set_garmentAcquired <- setL_garmentAcquired,set_currentJoint <- setL_currentJoint,set_garmentWithUser <- setL_garmentWithUser,set_userPose <- setL_userPose]]
+				 )
+				 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+				 			,setL_isHandlingCorrect
+				 			,setL_firstArmDressed
+				 			,setL_arrivedAtTarget
+				 			,setL_garmentPosition
+				 			,setL_isGripperEngaged
+				 			,setL_targetPosition
+				 			,setL_garmentAcquired
+				 			,setL_currentJoint
+				 			,setL_garmentWithUser
+				 			,setL_userPose
+				 			,setR_isHandlingCorrect
+				 			 			,setR_firstArmDressed
+				 			 			,setR_arrivedAtTarget
+				 			 			,setR_garmentPosition
+				 			 			,setR_isGripperEngaged
+				 			 			,setR_targetPosition
+				 			 			,setR_garmentAcquired
+				 			 			,setR_currentJoint
+				 			 			,setR_garmentWithUser
+				 			 			,setR_userPose
+				 			|}) |]
+				 ((During)
+				  [[ share__ <- x__ | x__ <- {| share__,setL_isHandlingCorrect,setL_firstArmDressed,setL_arrivedAtTarget,setL_garmentPosition,setL_isGripperEngaged,setL_targetPosition,setL_garmentAcquired,setL_currentJoint,setL_garmentWithUser,setL_userPose |} ]]
+				  [[set_isHandlingCorrect <- setR_isHandlingCorrect,set_firstArmDressed <- setR_firstArmDressed,set_arrivedAtTarget <- setR_arrivedAtTarget,set_garmentPosition <- setR_garmentPosition,set_isGripperEngaged <- setR_isGripperEngaged,set_targetPosition <- setR_targetPosition,set_garmentAcquired <- setR_garmentAcquired,set_currentJoint <- setR_currentJoint,set_garmentWithUser <- setR_garmentWithUser,set_userPose <- setR_userPose]]
+				 )
+				)[[setL_isHandlingCorrect <- set_isHandlingCorrect,setL_firstArmDressed <- set_firstArmDressed,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_garmentPosition <- set_garmentPosition,setL_isGripperEngaged <- set_isGripperEngaged,setL_targetPosition <- set_targetPosition,setL_garmentAcquired <- set_garmentAcquired,setL_currentJoint <- set_currentJoint,setL_garmentWithUser <- set_garmentWithUser,setL_userPose <- set_userPose]]
+				 [[setR_isHandlingCorrect <- set_isHandlingCorrect,setR_firstArmDressed <- set_firstArmDressed,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_garmentPosition <- set_garmentPosition,setR_isGripperEngaged <- set_isGripperEngaged,setR_targetPosition <- set_targetPosition,setR_garmentAcquired <- set_garmentAcquired,setR_currentJoint <- set_currentJoint,setR_garmentWithUser <- set_garmentWithUser,setR_userPose <- set_userPose]]
+				)\{terminate} 
+			)
+			During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+					 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+		Transitions(id__) = ((let
+			Trans = (
+				((share__ -> SKIP
+				 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; DetectSecondHand::enter -> SKIP))))
+				 	 [] dbisim((true)&(internal__!NID_ReleaseGrip -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; f0::enter -> SKIP)))
+				 	 [] dbisim((true)&(secondHandDetected__!NID_DetectSecondHand.in?targetPosition:{targetPosition|targetPosition <- vector_real_3, true} -> share__choice(set_targetPosition!targetPosition -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(get_targetPosition?targetPosition -> true&(share__choice(movementStart.out!targetPosition -> SKIP))) ; MovingToSecondHand::enter -> SKIP)))
+				 	 [] dbisim((true)&(movementEnd__!NID_MovingToSecondHand.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; CheckingUserDressed::enter -> SKIP)))
+				 	 [] dbisim((true)&(userDressed__!NID_CheckingUserDressed.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; ReleaseGrip::enter -> SKIP)))
+				 ) ; Trans)
+				 []
+				 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+				 []
+				 terminate -> SKIP
+			)
+		within
+			Trans
+		)
+		)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	-- END of Nodes --
+	
+	-- Operation calls --
+	-- Only the undefined operations are declared here.
+	-- If the state machine is in isolation, all required operations will be undefined.
+	-- If it is in the context of a controller, the required operations not provided by the
+	-- controller will be declared here, and the defined operations will be defined in the
+	-- context of the Controller module, and therefore within scope of the state machine module.
+	CALL__reorientGarment(id__) 	= reorientGarmentCall -> SKIP
+	CALL__pushTowards(id__,
+				param_target,
+				param_force) 	= pushTowardsCall.param_target.param_force -> SKIP
+	CALL__checkFault(id__) 	= checkFaultCall -> SKIP
+	CALL__setEEForces(id__,
+				param_v) 	= setEEForcesCall.param_v -> SKIP
+	CALL__getEEPos(id__) 	= getEEPosCall -> SKIP
+	CALL__detectGarment(id__) 	= detectGarmentCall -> SKIP
+	CALL__grip(id__) 	= gripCall -> SKIP
+	CALL__checkCorrectHandling(id__) 	= checkCorrectHandlingCall -> SKIP
+	CALL__checkUserDressed(id__) 	= checkUserDressedCall -> SKIP
+	CALL__setEEPos(id__,
+				param_v) 	= setEEPosCall.param_v -> SKIP
+	CALL__checkMovement(id__) 	= checkMovementCall -> SKIP
+	CALL__stepTowards(id__,
+				param_target,
+				param_speed) 	= stepTowardsCall.param_target.param_speed -> SKIP
+	CALL__detectSecondArm(id__) 	= detectSecondArmCall -> SKIP
+	CALL__releaseGrip(id__) 	= releaseGripCall -> SKIP
+	CALL__detectUserPose(id__) 	= detectUserPoseCall -> SKIP
+	
+	-- END of Operation calls --
+	
+	-- STM processes
+	STM(id__) = -- RULE: [[stm:StateMachineDef]]_STM^nops : CSPProcess
+	( 
+		(
+			(
+				(IteratedStateful(id__) \ {terminate} ; share__choice(terminate -> SKIP))
+			 	[[ share__ <- x__ | x__ <- {||} ]]
+			)
+		[| {share__} |]
+		SKIP
+		)
+		[| union(sharedVarSync,{terminate}) |]
+		dbisim(sharedVarMemory(id__))
+	)\sharedVarHide
+	
+	STM_VS_O(id__) = -- RULE: [[stm:StateMachineDef]]_STM^nops : CSPProcess
+	( 
+		(
+			(
+				(IteratedStateful_VS_O(id__) \ {terminate} ; share__choice(terminate -> SKIP))
+			 	[[ share__ <- x__ | x__ <- {||} ]]
+			)
+		[| {share__} |]
+		SKIP
+		)
+		[| union(sharedVarSync,{terminate}) |]
+		dbisim(sharedVarMemory(id__))
+	)\sharedVarHide
+	
+	-- Transitions
+	Transitions(id__) = ((let
+		Trans = share__choice(get_firstArmDressed?firstArmDressed -> get_garmentAcquired?garmentAcquired -> get_garmentWithUser?garmentWithUser -> (
+			((share__ -> SKIP
+			 [] dbisim((garmentAcquired)&(internal__!NID_GarmentAcquisition -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; GarmentToUser::enter -> SKIP)))
+			 	 [] dbisim((garmentWithUser)&(internal__!NID_GarmentToUser -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; DressingLoop::enter -> SKIP)))
+			 	 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; Start::enter -> SKIP))))
+			 	 [] dbisim((true)&(dressingRequest__!NID_Start.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; GarmentAcquisition::enter -> SKIP)))
+			 	 [] dbisim((firstArmDressed)&(internal__!NID_DressingLoop -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; SecondArm::enter -> SKIP)))
+			 ) ; Trans)
+			 []
+			 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+			 []
+			 terminate -> SKIP
+		)
+		)
+	within
+		Trans
+	)
+	)
+	
+	-- Stateful
+	-- RULE: Stateful(stm:StateMachineBody) : CSPProcess
+	
+	-- Named process definitions
+	MachineBody(id__) = 
+		dbisim((
+		let
+			finalNodesEntered = {||}
+		within
+			((let
+				-- IMPLEMENTATION NOTE:
+				-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				-- modules for defining the semantics of each node.
+				enterSS = {|
+				i0::enter,
+				GarmentAcquisition::enter,
+				GarmentToUser::enter,
+				DressingLoop::enter,
+				Start::enter,
+				SecondArm::enter
+				|}
+				hideSet = union(enterSS,{|exit,exited,internal__|})
+			within 
+				((let
+					-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+					-- because CSPM modules are used for the semantics of Node.
+					flowevts = union(enterSS,{|exit,exited,interrupt|})
+					transSync = {|internal__.NID_GarmentAcquisition,internal__.NID_GarmentToUser,internal__.NID_i0,dressingRequest__.NID_Start.in,internal__.NID_DressingLoop|}
+				within
+					((
+					 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+					   i0::D__(id__)
+					   [| { share__, terminate } |] (
+					   GarmentAcquisition::D__(id__)
+					   [| { share__, terminate } |] (
+					   GarmentToUser::D__(id__)
+					   [| { share__, terminate } |] (
+					   DressingLoop::D__(id__)
+					   [| { share__, terminate } |] (
+					   Start::D__(id__)
+					   [| { share__, terminate } |] (
+					   SecondArm::D__(id__)
+					   )
+					   )
+					   )
+					   )
+					   )
+					 )
+					 [[GarmentAcquisition::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_GarmentAcquisition|}]]
+					 [[GarmentToUser::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_GarmentToUser|}]]
+					 [[DressingLoop::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_DressingLoop|}]]
+					 [[Start::interrupt <- x__ | x__ <- {|interrupt,dressingRequest__.NID_Start.in|}]]
+					 [[SecondArm::interrupt <- x__ | x__ <- {|interrupt|}]]
+					 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+					 )
+					  [[ share__ <- x__ | x__ <- {| share__ |} ]] 
+					  [[set_firstArmDressed <- setL_firstArmDressed,set_garmentAcquired <- setL_garmentAcquired,set_garmentWithUser <- setL_garmentWithUser]]
+					 )
+					 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+					 			,setL_firstArmDressed
+					 			,setL_garmentAcquired
+					 			,setL_garmentWithUser
+					|}) |]
+					 ((i0::enter -> Transitions(id__))
+					  [[ share__ <- x__ | x__ <- {| share__,setL_firstArmDressed,setL_garmentAcquired,setL_garmentWithUser |} ]]
+					 )
+					)[[setL_firstArmDressed <- set_firstArmDressed,setL_garmentAcquired <- set_garmentAcquired,setL_garmentWithUser <- set_garmentWithUser]]
+					)
+				)
+				 \ hideSet)
+				[[
+					dressedJoint__.x____ <- dressedJoint,
+					snaggingDetected__.x____ <- snaggingDetected,
+					invalidTrajectory__.x____ <- invalidTrajectory,
+					invalidPoseDetected__.x____ <- invalidPoseDetected,
+					userInterrupt__.x____ <- userInterrupt,
+					poseDetected__.x____ <- poseDetected,
+					dressingRequest__.x____ <- dressingRequest,
+					garmentDetected__.x____ <- garmentDetected,
+					armConfig__.x____ <- armConfig,
+					gripCorrect__.x____ <- gripCorrect,
+					gripperEngaged__.x____ <- gripperEngaged,
+					correctedMovement__.x____ <- correctedMovement,
+					secondHandDetected__.x____ <- secondHandDetected,
+					userDressed__.x____ <- userDressed,
+					userMoved__.x____ <- userMoved,
+					handlingCorrect__.x____ <- handlingCorrect,
+					garmentAtHand__.x____ <- garmentAtHand,
+					arrivedAtGarment__.x____ <- arrivedAtGarment,
+					garmentGripped__.x____ <- garmentGripped,
+					orientedGarment__.x____ <- orientedGarment,
+					movementStart__.x____ <- movementStart,
+					movementEnd__.x____ <- movementEnd,
+					forceStart__.x____ <- forceStart,
+					forceEnd__.x____ <- forceEnd
+					| x____ <- NIDS
+				]]
+			)
+			 [| {| interrupt |} |] SKIP)
+		)
+		)
+	
+	Behaviour(id__) = 
+		dbisim((MachineBody(id__)\ enteredSS)
+		)
+	
+	IteratedBehaviour(id__) = 
+		dbisim((MachineBody(id__)\ enteredSS)
+		)
+	
+	Stateful(id__) = 
+		((
+			(Behaviour(id__) [| union(getsetLocalChannels,{terminate}) |] varMemory(id__))
+		 	\getsetLocalChannels
+		)
+		)
+	
+	IteratedStateful(id__) =
+		(dbisim(
+			sbisim(
+				dbisim(
+					sbisim(
+						dbisim(
+							sbisim(
+								dbisim(
+									sbisim(
+										dbisim(
+											sbisim(
+												dbisim(
+													sbisim(
+														dbisim(
+															sbisim(
+																dbisim(
+																	sbisim(
+																		dbisim(
+																			sbisim(
+																				dbisim(
+																					sbisim(
+																						Behaviour(id__)
+																						[| {|get_garmentPosition,set_garmentPosition,terminate|} |]
+																						Memory_garmentPosition((0, 0, 0))
+																					)\{|get_garmentPosition,set_garmentPosition|}
+																				)
+																				[| {|get_userPose,set_userPose,terminate|} |]
+																				Memory_userPose(((0, 0, 0), (0, 0, 0), (0, 0, 0)))
+																			)\{|get_userPose,set_userPose|}
+																		)
+																		[| {|get_firstArmDressed,set_firstArmDressed,terminate|} |]
+																		Memory_firstArmDressed(false)
+																	)\{|get_firstArmDressed,set_firstArmDressed|}
+																)
+																[| {|get_isGripperEngaged,set_isGripperEngaged,terminate|} |]
+																Memory_isGripperEngaged(false)
+															)\{|get_isGripperEngaged,set_isGripperEngaged|}
+														)
+														[| {|get_isHandlingCorrect,set_isHandlingCorrect,terminate|} |]
+														Memory_isHandlingCorrect(false)
+													)\{|get_isHandlingCorrect,set_isHandlingCorrect|}
+												)
+												[| {|get_arrivedAtTarget,set_arrivedAtTarget,terminate|} |]
+												Memory_arrivedAtTarget(false)
+											)\{|get_arrivedAtTarget,set_arrivedAtTarget|}
+										)
+										[| {|get_targetPosition,set_targetPosition,terminate|} |]
+										Memory_targetPosition((0, 0, 0))
+									)\{|get_targetPosition,set_targetPosition|}
+								)
+								[| {|get_garmentWithUser,set_garmentWithUser,terminate|} |]
+								Memory_garmentWithUser(false)
+							)\{|get_garmentWithUser,set_garmentWithUser|}
+						)
+						[| {|get_garmentAcquired,set_garmentAcquired,terminate|} |]
+						Memory_garmentAcquired(false)
+					)\{|get_garmentAcquired,set_garmentAcquired|}
+				)
+				[| {|get_currentJoint,set_currentJoint,terminate|} |]
+				Memory_currentJoint(2)
+			)\{|get_currentJoint,set_currentJoint|}
+		)
+		)
+	
+	-- Visible counterparts
+	MachineBody_VS_O(id__) = 
+		dbisim((
+		let
+			finalNodesEntered = {||}
+		within
+			((let
+				-- IMPLEMENTATION NOTE:
+				-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				-- modules for defining the semantics of each node.
+				enterSS = {|
+				i0::enter,
+				GarmentAcquisition::enter,
+				GarmentToUser::enter,
+				DressingLoop::enter,
+				Start::enter,
+				SecondArm::enter
+				|}
+				hideSet = union(enterSS,{|exit,exited,internal__|})
+			within 
+				((let
+					-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+					-- because CSPM modules are used for the semantics of Node.
+					flowevts = union(enterSS,{|exit,exited,interrupt|})
+					transSync = {|internal__.NID_GarmentAcquisition,internal__.NID_GarmentToUser,internal__.NID_i0,dressingRequest__.NID_Start.in,internal__.NID_DressingLoop|}
+				within
+					((
+					 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+					   i0::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   GarmentAcquisition::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   GarmentToUser::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   DressingLoop::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   Start::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   SecondArm::VS_O__(id__)
+					   )
+					   )
+					   )
+					   )
+					   )
+					 )
+					 [[GarmentAcquisition::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_GarmentAcquisition|}]]
+					 [[GarmentToUser::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_GarmentToUser|}]]
+					 [[DressingLoop::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_DressingLoop|}]]
+					 [[Start::interrupt <- x__ | x__ <- {|interrupt,dressingRequest__.NID_Start.in|}]]
+					 [[SecondArm::interrupt <- x__ | x__ <- {|interrupt|}]]
+					 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+					 )
+					  [[ share__ <- x__ | x__ <- {| share__ |} ]] 
+					  [[set_firstArmDressed <- setL_firstArmDressed,set_garmentAcquired <- setL_garmentAcquired,set_garmentWithUser <- setL_garmentWithUser]]
+					 )
+					 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+					 			,setL_firstArmDressed
+					 			,setL_garmentAcquired
+					 			,setL_garmentWithUser
+					|}) |]
+					 ((i0::enter -> Transitions(id__))
+					  [[ share__ <- x__ | x__ <- {| share__,setL_firstArmDressed,setL_garmentAcquired,setL_garmentWithUser |} ]]
+					 )
+					)[[setL_firstArmDressed <- set_firstArmDressed,setL_garmentAcquired <- set_garmentAcquired,setL_garmentWithUser <- set_garmentWithUser]]
+					)
+				)
+				 \ hideSet)
+				[[
+					dressedJoint__.x____ <- dressedJoint,
+					snaggingDetected__.x____ <- snaggingDetected,
+					invalidTrajectory__.x____ <- invalidTrajectory,
+					invalidPoseDetected__.x____ <- invalidPoseDetected,
+					userInterrupt__.x____ <- userInterrupt,
+					poseDetected__.x____ <- poseDetected,
+					dressingRequest__.x____ <- dressingRequest,
+					garmentDetected__.x____ <- garmentDetected,
+					armConfig__.x____ <- armConfig,
+					gripCorrect__.x____ <- gripCorrect,
+					gripperEngaged__.x____ <- gripperEngaged,
+					correctedMovement__.x____ <- correctedMovement,
+					secondHandDetected__.x____ <- secondHandDetected,
+					userDressed__.x____ <- userDressed,
+					userMoved__.x____ <- userMoved,
+					handlingCorrect__.x____ <- handlingCorrect,
+					garmentAtHand__.x____ <- garmentAtHand,
+					arrivedAtGarment__.x____ <- arrivedAtGarment,
+					garmentGripped__.x____ <- garmentGripped,
+					orientedGarment__.x____ <- orientedGarment,
+					movementStart__.x____ <- movementStart,
+					movementEnd__.x____ <- movementEnd,
+					forceStart__.x____ <- forceStart,
+					forceEnd__.x____ <- forceEnd
+					| x____ <- NIDS
+				]]
+			)
+			 [| {| interrupt |} |] SKIP)
+		)
+		)
+	
+	Behaviour_VS_O(id__) = 
+		dbisim((MachineBody_VS_O(id__))
+		)
+	
+	IteratedBehaviour_VS_O(id__) = 
+		dbisim((MachineBody_VS_O(id__))
+		)
+	
+	Stateful_VS_O(id__) = 
+		dbisim((
+			(Behaviour_VS_O(id__) [| union(getsetLocalChannels,{terminate}) |] varMemory(id__))
+		 	\getsetLocalChannels
+		)
+		)
+	
+	IteratedStateful_VS_O(id__) =
+		(dbisim(
+			sbisim(
+				dbisim(
+					sbisim(
+						dbisim(
+							sbisim(
+								dbisim(
+									sbisim(
+										dbisim(
+											sbisim(
+												dbisim(
+													sbisim(
+														dbisim(
+															sbisim(
+																dbisim(
+																	sbisim(
+																		dbisim(
+																			sbisim(
+																				dbisim(
+																					sbisim(
+																						Behaviour_VS_O(id__)
+																						[| {|get_garmentPosition,set_garmentPosition,terminate|} |]
+																						Memory_garmentPosition((0, 0, 0))
+																					)\{|get_garmentPosition,set_garmentPosition|}
+																				)
+																				[| {|get_userPose,set_userPose,terminate|} |]
+																				Memory_userPose(((0, 0, 0), (0, 0, 0), (0, 0, 0)))
+																			)\{|get_userPose,set_userPose|}
+																		)
+																		[| {|get_firstArmDressed,set_firstArmDressed,terminate|} |]
+																		Memory_firstArmDressed(false)
+																	)\{|get_firstArmDressed,set_firstArmDressed|}
+																)
+																[| {|get_isGripperEngaged,set_isGripperEngaged,terminate|} |]
+																Memory_isGripperEngaged(false)
+															)\{|get_isGripperEngaged,set_isGripperEngaged|}
+														)
+														[| {|get_isHandlingCorrect,set_isHandlingCorrect,terminate|} |]
+														Memory_isHandlingCorrect(false)
+													)\{|get_isHandlingCorrect,set_isHandlingCorrect|}
+												)
+												[| {|get_arrivedAtTarget,set_arrivedAtTarget,terminate|} |]
+												Memory_arrivedAtTarget(false)
+											)\{|get_arrivedAtTarget,set_arrivedAtTarget|}
+										)
+										[| {|get_targetPosition,set_targetPosition,terminate|} |]
+										Memory_targetPosition((0, 0, 0))
+									)\{|get_targetPosition,set_targetPosition|}
+								)
+								[| {|get_garmentWithUser,set_garmentWithUser,terminate|} |]
+								Memory_garmentWithUser(false)
+							)\{|get_garmentWithUser,set_garmentWithUser|}
+						)
+						[| {|get_garmentAcquired,set_garmentAcquired,terminate|} |]
+						Memory_garmentAcquired(false)
+					)\{|get_garmentAcquired,set_garmentAcquired|}
+				)
+				[| {|get_currentJoint,set_currentJoint,terminate|} |]
+				Memory_currentJoint(2)
+			)\{|get_currentJoint,set_currentJoint|}
+		)
+		)
+	
+	-- END
+	
+	-- Memory
+	-- Memory variables
+	Memory_currentJoint(currentJoint) =
+		get_currentJoint!currentJoint -> Memory_currentJoint(currentJoint)
+		[]
+		set_currentJoint?x__ -> Memory_currentJoint(x__)
+		[]
+		terminate -> SKIP
+	Memory_garmentAcquired(garmentAcquired) =
+		get_garmentAcquired!garmentAcquired -> Memory_garmentAcquired(garmentAcquired)
+		[]
+		set_garmentAcquired?x__ -> Memory_garmentAcquired(x__)
+		[]
+		terminate -> SKIP
+	Memory_garmentWithUser(garmentWithUser) =
+		get_garmentWithUser!garmentWithUser -> Memory_garmentWithUser(garmentWithUser)
+		[]
+		set_garmentWithUser?x__ -> Memory_garmentWithUser(x__)
+		[]
+		terminate -> SKIP
+	Memory_targetPosition(targetPosition) =
+		get_targetPosition!targetPosition -> Memory_targetPosition(targetPosition)
+		[]
+		set_targetPosition?x__ -> Memory_targetPosition(x__)
+		[]
+		terminate -> SKIP
+	Memory_arrivedAtTarget(arrivedAtTarget) =
+		get_arrivedAtTarget!arrivedAtTarget -> Memory_arrivedAtTarget(arrivedAtTarget)
+		[]
+		set_arrivedAtTarget?x__ -> Memory_arrivedAtTarget(x__)
+		[]
+		terminate -> SKIP
+	Memory_isHandlingCorrect(isHandlingCorrect) =
+		get_isHandlingCorrect!isHandlingCorrect -> Memory_isHandlingCorrect(isHandlingCorrect)
+		[]
+		set_isHandlingCorrect?x__ -> Memory_isHandlingCorrect(x__)
+		[]
+		terminate -> SKIP
+	Memory_isGripperEngaged(isGripperEngaged) =
+		get_isGripperEngaged!isGripperEngaged -> Memory_isGripperEngaged(isGripperEngaged)
+		[]
+		set_isGripperEngaged?x__ -> Memory_isGripperEngaged(x__)
+		[]
+		terminate -> SKIP
+	Memory_firstArmDressed(firstArmDressed) =
+		get_firstArmDressed!firstArmDressed -> Memory_firstArmDressed(firstArmDressed)
+		[]
+		set_firstArmDressed?x__ -> Memory_firstArmDressed(x__)
+		[]
+		terminate -> SKIP
+	Memory_userPose(userPose) =
+		get_userPose!userPose -> Memory_userPose(userPose)
+		[]
+		set_userPose?x__ -> Memory_userPose(x__)
+		[]
+		terminate -> SKIP
+	Memory_garmentPosition(garmentPosition) =
+		get_garmentPosition!garmentPosition -> Memory_garmentPosition(garmentPosition)
+		[]
+		set_garmentPosition?x__ -> Memory_garmentPosition(x__)
+		[]
+		terminate -> SKIP
+	
+	-- varMemory process
+	varMemory(id__) = Memory_currentJoint(2)
+	[| { terminate } |] (
+	Memory_garmentAcquired(false)
+	[| { terminate } |] (
+	Memory_garmentWithUser(false)
+	[| { terminate } |] (
+	Memory_targetPosition((0, 0, 0))
+	[| { terminate } |] (
+	Memory_arrivedAtTarget(false)
+	[| { terminate } |] (
+	Memory_isHandlingCorrect(false)
+	[| { terminate } |] (
+	Memory_isGripperEngaged(false)
+	[| { terminate } |] (
+	Memory_firstArmDressed(false)
+	[| { terminate } |] (
+	Memory_userPose(((0, 0, 0), (0, 0, 0), (0, 0, 0)))
+	[| { terminate } |] (
+	Memory_garmentPosition((0, 0, 0))
+	)
+	)
+	)
+	)
+	)
+	)
+	)
+	)
+	)
+	
+	getsetLocalChannels = {|get_currentJoint,set_currentJoint,get_garmentAcquired,set_garmentAcquired,get_garmentWithUser,set_garmentWithUser,get_targetPosition,set_targetPosition,get_arrivedAtTarget,set_arrivedAtTarget,get_isHandlingCorrect,set_isHandlingCorrect,get_isGripperEngaged,set_isGripperEngaged,get_firstArmDressed,set_firstArmDressed,get_userPose,set_userPose,get_garmentPosition,set_garmentPosition|}
+	
+	-- Definition of the behaviour of state machines (default, optimised, visible, visible and optimised)
+	FVS__(id__) = STM_VS_O(id__)
+	
+	D__(id__) = STM(id__) \ internal_events
+	O__(id__) = sbisim(diamond(D__(id__)))
+	VS__(id__) = FVS__(id__)
+	VS_O__(id__) = sbisim(diamond(FVS__(id__)))
+	HEXT__(id__) = O__(id__) [|shared_variable_events|] SKIP
+	HUP__(id__) = O__(id__) [|{share__}|] SKIP
+	
+	-- Shared memory
+	-- Shared memory variables
+	
+	-- sharedVarMemory process
+	sharedVarMemory(id__) = terminate -> SKIP
+	
+	sharedVarSync = {||}
+	
+	sharedVarHide = {||}
+endmodule
+
+
+endmodule

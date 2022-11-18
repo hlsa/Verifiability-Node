@@ -1,0 +1,28 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "dressingcontrol.csp"
+
+-- generate dressingcontrol_SDressingControl
+P_dressingcontrol_SDressingControl = let
+	id__ = 0
+	
+	
+	
+within
+	dressingcontrol::SDressingControl::O__(
+		id__
+	)
+assert P_dressingcontrol_SDressingControl :[deadlock-free]	
+assert P_dressingcontrol_SDressingControl;RUN({r__}) :[deadlock-free]
+assert P_dressingcontrol_SDressingControl :[deterministic]
+assert P_dressingcontrol_SDressingControl :[divergence-free]
+
+
+

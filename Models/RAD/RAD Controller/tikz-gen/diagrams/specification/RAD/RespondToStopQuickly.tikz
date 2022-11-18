@@ -1,0 +1,36 @@
+% Remember to \input or import the baseline definitions for RoboCert TikZ files.
+% See the standalone .tex file for an example.
+
+
+\matrix[rcseq, row sep=(\the\rctopmargin + (5*\the\rcstepmargin))]{
+  \coordinate(diagram_enter_g); & \node[rcactor](diagram_enter_aT){\rctarget~T}; & \coordinate(diagram_enter_w); \\
+  \coordinate(cf_1_enter_g); &  & \coordinate(cf_1_enter_w); \\
+  \coordinate(cf_3_enter_g); &  & \coordinate(cf_3_enter_w); \\
+  \coordinate(cf_3_exit_g); &  & \coordinate(cf_3_exit_w); \\
+  \coordinate(cf_6_enter_g); &  & \coordinate(cf_6_enter_w); \\
+  \coordinate(cf_8_enter_g); &  & \coordinate(cf_8_enter_w); \\
+  \coordinate(cf_10_enter_g); &  & \coordinate(cf_10_enter_w); \\
+  \coordinate(branch_13_g); &  & \coordinate(branch_13_w); \\
+  \coordinate(cf_10_exit_g); &  & \coordinate(cf_10_exit_w); \\
+  \coordinate(cf_8_exit_g); &  & \coordinate(cf_8_exit_w); \\
+  \coordinate(cf_6_exit_g); &  & \coordinate(cf_6_exit_w); \\
+  \coordinate(cf_15_enter_g); &  & \coordinate(cf_15_enter_w); \\
+  \coordinate(cf_15_exit_g); &  & \coordinate(cf_15_exit_w); \\
+  \coordinate(cf_18_enter_g); &  & \coordinate(cf_18_enter_w); \\
+  \coordinate(cf_18_exit_g); &  & \coordinate(cf_18_exit_w); \\
+  \coordinate(cf_1_exit_g); &  & \coordinate(cf_1_exit_w); \\
+  \coordinate(diagram_exit_g); & \coordinate(diagram_exit_aT); & \coordinate(diagram_exit_w); \\
+};
+
+\draw[rclifeline](diagram_enter_aT) -- (diagram_exit_aT);
+
+\draw[rcsep]($(branch_13_g) + (-1*\the\rcstepmargin, 0)$) -- ($(branch_13_w) + (1*\the\rcstepmargin, 0)$);
+
+\rcframe{5}{diagram_enter_g}{diagram_exit_w}{\rcseq{RespondToStopQuickly}{\rccomptarget{module}}{RAD::RobotAssistedDressing}}
+\rcframe{4}{cf_1_enter_g}{cf_1_exit_w}{\rcloop{}}
+\rcframe{3}{cf_3_enter_g}{cf_3_exit_w}{unknown (robostar.robocert.impl.UntilFragmentImpl@373f613b (name: null)) 3}
+\rcframe{3}{cf_6_enter_g}{cf_6_exit_w}{\rckeyword{opt}}
+\rcframe{2}{cf_8_enter_g}{cf_8_exit_w}{unknown (robostar.robocert.impl.UntilFragmentImpl@1cf387a7 (name: null)) 8}
+\rcframe{1}{cf_10_enter_g}{cf_10_exit_w}{\rckeyword{alt}}
+\rcframe{3}{cf_15_enter_g}{cf_15_exit_w}{unknown (robostar.robocert.impl.UntilFragmentImpl@275c77a7 (name: null)) 15}
+\rcframe{3}{cf_18_enter_g}{cf_18_exit_w}{unknown (robostar.robocert.impl.UntilFragmentImpl@4118fb9f (name: null)) 18}

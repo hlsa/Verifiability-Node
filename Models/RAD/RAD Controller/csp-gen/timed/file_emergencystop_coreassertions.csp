@@ -1,0 +1,52 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "file_emergencystop.csp"
+
+-- generate EmergencyStopControl
+P_EmergencyStopControl = let
+	id__ = 0
+	
+	
+	
+within
+	EmergencyStopControl::O__(
+		id__
+	)
+assert P_EmergencyStopControl :[deadlock-free]	
+assert P_EmergencyStopControl;RUN({r__}) :[deadlock-free]
+assert P_EmergencyStopControl :[deterministic]
+assert P_EmergencyStopControl :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_EmergencyStopControl[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_EmergencyStopControl
+-- generate EnvironmentalMonitor
+P_EnvironmentalMonitor = let
+	id__ = 0
+	
+	
+	
+within
+	EnvironmentalMonitor::O__(
+		id__
+	)
+assert P_EnvironmentalMonitor :[deadlock-free]	
+assert P_EnvironmentalMonitor;RUN({r__}) :[deadlock-free]
+assert P_EnvironmentalMonitor :[deterministic]
+assert P_EnvironmentalMonitor :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_EnvironmentalMonitor[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_EnvironmentalMonitor
+
+
+

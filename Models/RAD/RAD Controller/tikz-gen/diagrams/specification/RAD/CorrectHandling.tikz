@@ -1,0 +1,23 @@
+% Remember to \input or import the baseline definitions for RoboCert TikZ files.
+% See the standalone .tex file for an example.
+
+
+\matrix[rcseq, row sep=(\the\rctopmargin + (3*\the\rcstepmargin))]{
+  \coordinate(diagram_enter_g); & \node[rcactor](diagram_enter_aT){\rctarget~T}; & \coordinate(diagram_enter_w); \\
+  \coordinate(cf_1_enter_g); &  & \coordinate(cf_1_enter_w); \\
+  \coordinate(cf_5_enter_g); &  & \coordinate(cf_5_enter_w); \\
+  \coordinate(cf_5_exit_g); &  & \coordinate(cf_5_exit_w); \\
+  \coordinate(cf_11_enter_g); &  & \coordinate(cf_11_enter_w); \\
+  \coordinate(cf_11_exit_g); &  & \coordinate(cf_11_exit_w); \\
+  \coordinate(cf_1_exit_g); &  & \coordinate(cf_1_exit_w); \\
+  \coordinate(diagram_exit_g); & \coordinate(diagram_exit_aT); & \coordinate(diagram_exit_w); \\
+};
+
+\draw[rclifeline](diagram_enter_aT) -- (diagram_exit_aT);
+
+
+
+\rcframe{3}{diagram_enter_g}{diagram_exit_w}{\rcseq{CorrectHandling}{\rccomptarget{module}}{RAD::RobotAssistedDressing}}
+\rcframe{2}{cf_1_enter_g}{cf_1_exit_w}{unknown (robostar.robocert.impl.UntilFragmentImpl@7abb60a2 (name: null)) 1}
+\rcframe{1}{cf_5_enter_g}{cf_5_exit_w}{\rcloop{}}
+\rcframe{1}{cf_11_enter_g}{cf_11_exit_w}{unknown (robostar.robocert.impl.UntilFragmentImpl@1f40d7e5 (name: null)) 11}

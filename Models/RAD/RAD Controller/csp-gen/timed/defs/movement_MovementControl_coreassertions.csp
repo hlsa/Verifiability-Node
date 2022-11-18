@@ -1,0 +1,51 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "core_timed_defs.csp"
+include "movement_defs.csp"
+include "core_defs.csp"
+include "definitions_defs.csp"
+include "state_timed_defs.csp"
+include "movement_MovementControl.csp"
+include "robochart_defs.csp"
+include "../instantiations.csp"
+
+transparent wbisim
+channel r__
+-- generate movement_MovementControl
+P_movement_MovementControl = let
+	id__ = 0
+	
+	const_movement_MovementControl_Kp = 1
+	const_movement_MovementControl_Ki = 1
+	const_movement_MovementControl_Kd = 0
+	const_movement_MovementControl_step = 0
+	
+	const_movement_MovementControl_EPSILON = 1
+	const_movement_MovementControl_TARGET_TOTAL_FORCE = 1
+	
+within
+	movement_MovementControl::O__(
+		id__,
+		const_movement_MovementControl_Kp,
+		const_movement_MovementControl_Ki,
+		const_movement_MovementControl_Kd,
+		const_movement_MovementControl_step,
+		const_movement_MovementControl_EPSILON,
+		const_movement_MovementControl_TARGET_TOTAL_FORCE
+	)
+assert P_movement_MovementControl :[deadlock-free]	
+assert P_movement_MovementControl;RUN({r__}) :[deadlock-free]
+assert P_movement_MovementControl :[deterministic]
+assert P_movement_MovementControl :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_movement_MovementControl[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_movement_MovementControl

@@ -1,0 +1,68 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "file_rad.csp"
+
+
+
+
+-- generate RobotAssistedDressing
+P_RobotAssistedDressing = let
+	id__ = 0
+	
+	
+	const_RobotAssistedDressing_ctrl_radcontrol_Kp = 1
+	const_RobotAssistedDressing_ctrl_radcontrol_Ki = 1
+	const_RobotAssistedDressing_ctrl_radcontrol_Kd = 0
+	const_RobotAssistedDressing_ctrl_radcontrol_step = 0
+	
+	const_radcontrol_CDressingControl_stm_movement_EPSILON = 1
+	const_radcontrol_CDressingControl_stm_movement_TARGET_TOTAL_FORCE = 1
+		
+	
+within
+	RobotAssistedDressing::O__(id__,
+			    const_RobotAssistedDressing_ctrl_radcontrol_Kp,
+			    const_RobotAssistedDressing_ctrl_radcontrol_Ki,
+			    const_RobotAssistedDressing_ctrl_radcontrol_Kd,
+			    const_RobotAssistedDressing_ctrl_radcontrol_step,
+			    const_radcontrol_CDressingControl_stm_movement_EPSILON,
+			    const_radcontrol_CDressingControl_stm_movement_TARGET_TOTAL_FORCE)
+assert P_RobotAssistedDressing :[deadlock-free]	
+assert P_RobotAssistedDressing;RUN({r__}) :[deadlock-free]
+assert P_RobotAssistedDressing :[deterministic]
+assert P_RobotAssistedDressing :[divergence-free]
+
+-- generate RobotAssistedDressing_ctrl_radcontrol
+P_RobotAssistedDressing_ctrl_radcontrol = let
+	id__ = 0
+	
+	
+	const_radcontrol_CDressingControl_Kp = 1
+	const_radcontrol_CDressingControl_Ki = 1
+	const_radcontrol_CDressingControl_Kd = 0
+	const_radcontrol_CDressingControl_step = 0
+	
+	const_radcontrol_CDressingControl_stm_movement_EPSILON = 1
+	const_radcontrol_CDressingControl_stm_movement_TARGET_TOTAL_FORCE = 1
+		
+within
+	RobotAssistedDressing::ctrl_radcontrol::O__(id__,
+			    const_radcontrol_CDressingControl_Kp,
+			    const_radcontrol_CDressingControl_Ki,
+			    const_radcontrol_CDressingControl_Kd,
+			    const_radcontrol_CDressingControl_step,
+			    const_radcontrol_CDressingControl_stm_movement_EPSILON,
+			    const_radcontrol_CDressingControl_stm_movement_TARGET_TOTAL_FORCE)
+
+assert P_RobotAssistedDressing_ctrl_radcontrol :[deadlock-free]	
+assert P_RobotAssistedDressing_ctrl_radcontrol;RUN({r__}) :[deadlock-free]
+assert P_RobotAssistedDressing_ctrl_radcontrol :[deterministic]
+assert P_RobotAssistedDressing_ctrl_radcontrol :[divergence-free]
+

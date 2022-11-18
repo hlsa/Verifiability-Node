@@ -1,0 +1,40 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "file_PID_defs.csp"
+include "core_defs.csp"
+include "definitions_defs.csp"
+include "state_defs.csp"
+include "PIDUpdate.csp"
+include "robochart_defs.csp"
+include "../instantiations.csp"
+channel r__
+-- generate OP_PIDUpdate
+P_OP_PIDUpdate = let
+	id__ = 0
+	
+	param_current = (0, 0, 0)
+	
+	const_PIDUpdate_Kp = 1
+	const_PIDUpdate_Ki = 1
+	const_PIDUpdate_Kd = 0
+	const_PIDUpdate_step = 0
+	
+	
+within
+	OP_PIDUpdate::O__(id__,
+				param_current,
+			    const_PIDUpdate_Kp,
+			    const_PIDUpdate_Ki,
+			    const_PIDUpdate_Kd,
+			    const_PIDUpdate_step)
+assert P_OP_PIDUpdate :[deadlock-free]	
+assert P_OP_PIDUpdate;RUN({r__}) :[deadlock-free]
+assert P_OP_PIDUpdate :[deterministic]
+assert P_OP_PIDUpdate :[divergence-free]

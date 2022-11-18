@@ -1,0 +1,804 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+		<model name="pmbaxter4">
+			<self_collide>true</self_collide>
+			<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+			<!-- Start of parts of the pmodel pmbaxter4 -->
+			<!-- End of parts of the pmodel pmbaxter4 -->
+			
+			<!-- Start of links of the pmodel pmbaxter4 -->
+			<!-- link full name is pmbaxter4::LiBase -->
+			<link name="1-LiBase">
+					<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+					<!-- body full name is pmbaxter4::LiBase::CyB0 -->
+					<collision name="1--CyB0">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.44999998807907104 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.20000000298023224</radius>
+								<length>0.8999999761581421</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="1--CyB0">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.44999998807907104 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.20000000298023224</radius>
+								<length>0.8999999761581421</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmbaxter4::LiBase::CyB1 -->
+					<collision name="2--CyB1">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.20000000298023224 0.0 0.949999988079071 0.0 -1.5707499980926514 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.47099998593330383</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="2--CyB1">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.20000000298023224 0.0 0.949999988079071 0.0 -1.5707499980926514 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.47099998593330383</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmbaxter4::LiBase::CyB2 -->
+					<collision name="3--CyB2">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.4000000059604645 0.0 0.984499990940094 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.10000000149011612</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="3--CyB2">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.4000000059604645 0.0 0.984499990940094 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.10000000149011612</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmbaxter4::LiBase::SpB -->
+					<collision name="4--SpB">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.8500000238418579 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.20000000298023224</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="4--SpB">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.8500000238418579 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.20000000298023224</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+			</link>	
+			<!-- link full name is pmbaxter4::LiS0 -->
+			<link name="2-LiS0">
+					<pose>0.4000000059604645 0.0 1.034500002861023 0.0 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+					<!-- body full name is pmbaxter4::LiS0::CyS -->
+					<collision name="5--CyS">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.13517500460147858 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.27035000920295715</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="5--CyS">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.13517500460147858 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.27035000920295715</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+			</link>	
+			<!-- link full name is pmbaxter4::LiS1 -->
+			<link name="3-LiS1">
+					<pose>0.4690000042319298 0.0 1.30485001206398 0.0 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+			</link>	
+			<!-- link full name is pmbaxter4::LiE0 -->
+			<link name="4-LiE0">
+					<pose>0.4690000042319298 0.0 1.30485001206398 0.0 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+					<!-- body full name is pmbaxter4::LiE0::CyE -->
+					<collision name="6--CyE">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.18217499554157257 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.36434999108314514</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="6--CyE">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.18217499554157257 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.36434999108314514</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+			</link>	
+			<!-- link full name is pmbaxter4::LiE1 -->
+			<link name="5-LiE1">
+					<pose>0.5380000025033951 0.0 1.6692000031471252 0.0 1.5707499980926514 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+			</link>	
+			<!-- link full name is pmbaxter4::LiW0 -->
+			<link name="6-LiW0">
+					<pose>0.5380000025033951 0.0 1.6692000031471252 0.0 1.5707499980926514 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+					<!-- body full name is pmbaxter4::LiW0::CyWA -->
+					<collision name="7--CyWA">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.18714499473571777 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.37428998947143555</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="7--CyWA">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.18714499473571777 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.37428998947143555</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+			</link>	
+			<!-- link full name is pmbaxter4::LiW1 -->
+			<link name="7-LiW1">
+					<pose>0.9122899919748306 0.0 1.6792000029236078 0.0 1.5707499980926514 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+					<!-- body full name is pmbaxter4::LiW1::CyWB -->
+					<collision name="8--CyWB">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.11476500332355499 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.22953000664710999</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="8--CyWB">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.11476500332355499 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.0689999982714653</radius>
+								<length>0.22953000664710999</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+			</link>	
+			<!-- link full name is pmbaxter4::LiW2 -->
+			<link name="8-LiW2">
+					<pose>1.1418199986219406 0.0 1.6792000029236078 0.0 1.5707499980926514 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+					<!-- body full name is pmbaxter4::LiW2::CyEE -->
+					<collision name="9--CyEE">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.08500000089406967 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.02199999988079071</radius>
+								<length>0.17000000178813934</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="9--CyEE">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.08500000089406967 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.02199999988079071</radius>
+								<length>0.17000000178813934</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmbaxter4::LiW2::SpEE -->
+					<collision name="10--SpEE">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.0689999982714653</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="10--SpEE">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.0689999982714653</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+			</link>	
+			<!-- End of links of the pmodel pmbaxter4 -->
+			
+			<!-- Start of joints of the pmodel pmbaxter4 -->
+			<!-- Full name of joint: pmbaxter4::LiS1::JS1 from pmbaxter4::LiS1 to pmbaxter4::LiE0-->
+			<joint name="9-JS1" type="revolute">
+				<pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+				<parent>3-LiS1</parent>
+				<child>4-LiE0</child>
+				<!-- WARNING: Annotation not found for the joint 9-JS1. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator MS1. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmbaxter4::LiE1::JE1 from pmbaxter4::LiE1 to pmbaxter4::LiW0-->
+			<joint name="10-JE1" type="revolute">
+				<pose>0.0 0.0 0.0 0.0 -0.0 0.0</pose>
+				<parent>5-LiE1</parent>
+				<child>6-LiW0</child>
+				<!-- WARNING: Annotation not found for the joint 10-JE1. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator ME1. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmbaxter4::LiW1::JW1 from pmbaxter4::LiW1 to pmbaxter4::LiW2-->
+			<joint name="11-JW1" type="revolute">
+				<pose>-1.063382733046403E-5 0.0 -0.22953000640078425 0.0 -0.0 0.0</pose>
+				<parent>7-LiW1</parent>
+				<child>8-LiW2</child>
+				<!-- WARNING: Annotation not found for the joint 11-JW1. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator MW1. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmbaxter4::LiW0::JW0 from pmbaxter4::LiW0 to pmbaxter4::LiW1-->
+			<joint name="12-JW0" type="revolute">
+				<pose>0.009982659396281512 0.0 -0.37429045235676917 0.0 -0.0 0.0</pose>
+				<parent>6-LiW0</parent>
+				<child>7-LiW1</child>
+				<!-- WARNING: Annotation not found for the joint 12-JW0. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator MW0. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmbaxter4::LiS0::JS0 from pmbaxter4::LiS0 to pmbaxter4::LiS1-->
+			<joint name="13-JS0" type="revolute">
+				<pose>-0.0689999982714653 0.0 -0.27035000920295715 0.0 -0.0 0.0</pose>
+				<parent>2-LiS0</parent>
+				<child>3-LiS1</child>
+				<!-- WARNING: Annotation not found for the joint 13-JS0. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator MS0. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmbaxter4::LiE0::JE0 from pmbaxter4::LiE0 to pmbaxter4::LiE1-->
+			<joint name="14-JE0" type="revolute">
+				<pose>0.3643467940117604 0.0 -0.06901687805966011 0.0 -1.5707499980926514 0.0</pose>
+				<parent>4-LiE0</parent>
+				<child>5-LiE1</child>
+				<!-- WARNING: Annotation not found for the joint 14-JE0. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator ME0. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- End of joints of the pmodel pmbaxter4 -->
+			
+			<!-- Start of fixed connections of the pmodel pmbaxter4 -->
+			<!-- End of fixed connections of the pmodel pmbaxter4 -->
+		</model>
+</sdf>

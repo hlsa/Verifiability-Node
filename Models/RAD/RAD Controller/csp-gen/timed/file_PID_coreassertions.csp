@@ -1,0 +1,70 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "file_PID.csp"
+
+
+-- generate OP_PIDInitialize
+P_OP_PIDInitialize = let
+	id__ = 0
+	
+	param_target = (0, 0, 0)
+	
+	const_PIDInitialize_Kp = 1
+	const_PIDInitialize_Ki = 1
+	const_PIDInitialize_Kd = 0
+	const_PIDInitialize_step = 0
+	
+	
+within
+	OP_PIDInitialize::O__(id__,
+				param_target,
+			    const_PIDInitialize_Kp,
+			    const_PIDInitialize_Ki,
+			    const_PIDInitialize_Kd,
+			    const_PIDInitialize_step)
+assert P_OP_PIDInitialize :[deadlock-free]	
+assert P_OP_PIDInitialize;RUN({r__}) :[deadlock-free]
+assert P_OP_PIDInitialize :[deterministic]
+assert P_OP_PIDInitialize :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_OP_PIDInitialize[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_OP_PIDInitialize
+-- generate OP_PIDUpdate
+P_OP_PIDUpdate = let
+	id__ = 0
+	
+	param_current = (0, 0, 0)
+	
+	const_PIDUpdate_Kp = 1
+	const_PIDUpdate_Ki = 1
+	const_PIDUpdate_Kd = 0
+	const_PIDUpdate_step = 0
+	
+	
+within
+	OP_PIDUpdate::O__(id__,
+				param_current,
+			    const_PIDUpdate_Kp,
+			    const_PIDUpdate_Ki,
+			    const_PIDUpdate_Kd,
+			    const_PIDUpdate_step)
+assert P_OP_PIDUpdate :[deadlock-free]	
+assert P_OP_PIDUpdate;RUN({r__}) :[deadlock-free]
+assert P_OP_PIDUpdate :[deterministic]
+assert P_OP_PIDUpdate :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_OP_PIDUpdate[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_OP_PIDUpdate
+
+

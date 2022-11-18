@@ -1,0 +1,1104 @@
+<?xml version='1.0'?>
+<sdf version='1.6'>
+		<model name="pmfranka">
+			<self_collide>true</self_collide>
+			<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+			<!-- Start of parts of the pmodel pmfranka -->
+			<!-- End of parts of the pmodel pmfranka -->
+			
+			<!-- Start of links of the pmodel pmfranka -->
+			<!-- link full name is pmfranka::Li0 -->
+			<link name="1-Li0">
+					<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>3.452500104904175</mass>
+					</inertial>
+					<!-- body full name is pmfranka::Li0::Cy0 -->
+					<collision name="1--Cy0">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.1665000021457672 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.3330000042915344</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="1--Cy0">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.1665000021457672 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.3330000042915344</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSJ0. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+			</link>	
+			<!-- link full name is pmfranka::Li1 -->
+			<link name="2-Li1">
+					<pose>0.0 0.0 0.3330000042915344 1.5707499980926514 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>3.482100009918213</mass>
+					</inertial>
+					<!-- body full name is pmfranka::Li1::Cy1 -->
+					<collision name="2--Cy1">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.10999999940395355</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="2--Cy1">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.10999999940395355</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmfranka::Li1::Sp1a -->
+					<collision name="3--Sp1a">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.054999999701976776 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="3--Sp1a">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.054999999701976776 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmfranka::Li1::Sp1b -->
+					<collision name="4--Sp1b">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 -0.054999999701976776 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="4--Sp1b">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 -0.054999999701976776 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSJ1. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+			</link>	
+			<!-- link full name is pmfranka::Li2 -->
+			<link name="3-Li2">
+					<pose>0.0 0.0 0.3330000042915344 0.0 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>3.482100009918213</mass>
+					</inertial>
+					<!-- body full name is pmfranka::Li2::Cy2 -->
+					<collision name="5--Cy2">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.15800000727176666 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.3160000145435333</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="5--Cy2">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.15800000727176666 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.3160000145435333</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSJ2. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+			</link>	
+			<!-- link full name is pmfranka::Li3 -->
+			<link name="4-Li3">
+					<pose>0.08250000327825546 0.0 0.6489999890327454 1.5707499980926514 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>4.05620002746582</mass>
+					</inertial>
+					<!-- body full name is pmfranka::Li3::Cy3 -->
+					<collision name="6--Cy3">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.10999999940395355</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="6--Cy3">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.10999999940395355</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmfranka::Li3::Sp3a -->
+					<collision name="7--Sp3a">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.054999999701976776 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="7--Sp3a">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.054999999701976776 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmfranka::Li3::Sp3b -->
+					<collision name="8--Sp3b">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 -0.054999999701976776 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="8--Sp3b">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 -0.054999999701976776 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSJ3. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+			</link>	
+			<!-- link full name is pmfranka::Li4 -->
+			<link name="5-Li4">
+					<pose>0.0 0.0 0.6489999890327454 0.0 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>3.4821999073028564</mass>
+					</inertial>
+					<!-- body full name is pmfranka::Li4::Cy4 -->
+					<collision name="9--Cy4">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.19200000166893005 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.3840000033378601</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="9--Cy4">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.19200000166893005 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.3840000033378601</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSJ4. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+			</link>	
+			<!-- link full name is pmfranka::Li5 -->
+			<link name="6-Li5">
+					<pose>0.0 0.0 1.0330000221729279 1.5707499980926514 0.0 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>2.163300037384033</mass>
+					</inertial>
+					<!-- body full name is pmfranka::Li5::Cy5 -->
+					<collision name="10--Cy5">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.10999999940395355</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="10--Cy5">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.10999999940395355</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSJ5. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+			</link>	
+			<!-- link full name is pmfranka::Li6 -->
+			<link name="7-Li6">
+					<pose>0.0 0.0 1.0330000221729279 1.5707499980926514 0.0 1.5707499980926514</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>2.34660005569458</mass>
+					</inertial>
+					<!-- body full name is pmfranka::Li6::Cy6 -->
+					<collision name="11--Cy6">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.04399999976158142 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.08799999952316284</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="11--Cy6">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.04399999976158142 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.08799999952316284</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSJ6. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+			</link>	
+			<!-- link full name is pmfranka::Li7 -->
+			<link name="8-Li7">
+					<pose>0.08799999952316284 0.0 1.0330000221729279 0.0 -3.1414999961853027 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>0.31290000677108765</mass>
+					</inertial>
+					<!-- body full name is pmfranka::Li7::Sp7 -->
+					<collision name="12--Sp7">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="12--Sp7">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<geometry>
+							<sphere>
+								<radius>0.054999999701976776</radius>
+							</sphere>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- body full name is pmfranka::Li7::Cy7 -->
+					<collision name="13--Cy7">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.05350000038743019 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.10700000077486038</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="13--Cy7">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.05350000038743019 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.054999999701976776</radius>
+								<length>0.10700000077486038</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSJ7. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+			</link>	
+			<!-- link full name is pmfranka::LiF -->
+			<link name="9-LiF">
+					<pose>0.08799999952316284 0.0 0.9260000213980675 0.0 -3.1414999961853027 0.0</pose>
+					<inertial>
+						<pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+						<inertia>
+							<ixx>1.0</ixx>
+							<ixy>0.0</ixy>
+							<ixz>0.0</ixz>
+							<iyy>1.0</iyy>
+							<iyz>0.0</iyz>
+							<izz>1.0</izz>
+						</inertia>
+						<mass>1.0</mass>
+					</inertial>
+					<!-- body full name is pmfranka::LiF::CyF -->
+					<collision name="14--CyF">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.03999999910593033 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.019999999552965164</radius>
+								<length>0.07999999821186066</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</collision>
+					<visual name="14--CyF">
+						<laser_retro>0.0</laser_retro>
+						<pose>0.0 0.0 0.03999999910593033 0.0 0.0 0.0</pose>
+						<geometry>
+							<cylinder>
+								<radius>0.019999999552965164</radius>
+								<length>0.07999999821186066</length>
+							</cylinder>
+						</geometry>
+						<surface>
+							<bounce>
+								<restitution_coefficient>0.0</restitution_coefficient>
+								<threshold>100000.0</threshold>
+							</bounce>
+							<friction>
+								<ode>
+									<mu>1.0</mu>
+									<mu2>1.0</mu2>
+									<fdir1>0.0 0.0 0.0</fdir1>
+									<slip1>0.0</slip1>
+									<slip2>0.0</slip2>
+								</ode>
+								<torsional>
+									<coefficient>1.0</coefficient>
+									<surface_radius>0.0</surface_radius>
+								</torsional>
+							</friction>
+						</surface>
+					</visual>
+					<!-- WARNING: Annotation not found for the sensor FSG. The SDF generator relies on annotations to specify aspects of the 
+					  	 sensor that are accounted for in the equations. --> If you wish to reflect these aspects in SDF,
+					     please add an appropriate annotation to the sensor. --> 
+					<!-- WARNING: Annotation not found for the actuator GR1. RoboSim actuators have no explicit counterparts in SDF, 
+						 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+						 please add an appropriate annotation to the actuator. -->
+			</link>	
+			<!-- End of links of the pmodel pmfranka -->
+			
+			<!-- Start of joints of the pmodel pmfranka -->
+			<!-- Full name of joint: pmfranka::Li6::J6 from pmfranka::Li6 to pmfranka::Li7-->
+			<joint name="10-J6" type="revolute">
+				<pose>0.08799999914540547 0.0 8.153851539294266E-6 -1.570935312901533 4.292697295780423E-9 1.570842655496943</pose>
+				<parent>7-Li6</parent>
+				<child>8-Li7</child>
+				<!-- WARNING: Annotation not found for the joint 10-J6. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator M6. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmfranka::Li7::J7 from pmfranka::Li7 to pmfranka::LiF-->
+			<joint name="11-J7" type="revolute">
+				<pose>9.914342338088189E-6 0.0 -0.1070000003155418 0.0 -0.0 0.0</pose>
+				<parent>8-Li7</parent>
+				<child>9-LiF</child>
+				<!-- WARNING: Annotation not found for the joint 11-J7. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator M7. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmfranka::Li2::J2 from pmfranka::Li2 to pmfranka::Li3-->
+			<joint name="12-J2" type="revolute">
+				<pose>-0.08250000327825546 -0.31599998440208793 -1.4639869197342705E-5 -1.5707499980926514 -0.0 0.0</pose>
+				<parent>3-Li2</parent>
+				<child>4-Li3</child>
+				<!-- WARNING: Annotation not found for the joint 12-J2. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator M2. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmfranka::Li0::J0 from pmfranka::Li0 to pmfranka::Li1-->
+			<joint name="13-J0" type="revolute">
+				<pose>0.0 -0.33300000393416734 -1.5427458040971366E-5 -1.5707499980926514 -0.0 0.0</pose>
+				<parent>1-Li0</parent>
+				<child>2-Li1</child>
+				<!-- WARNING: Annotation not found for the joint 13-J0. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator M0. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmfranka::Li1::J1 from pmfranka::Li1 to pmfranka::Li2-->
+			<joint name="14-J1" type="revolute">
+				<pose>0.0 0.0 0.0 1.5707499980926514 -0.0 0.0</pose>
+				<parent>2-Li1</parent>
+				<child>3-Li2</child>
+				<!-- WARNING: Annotation not found for the joint 14-J1. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator MS1. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmfranka::Li3::J3 from pmfranka::Li3 to pmfranka::Li4-->
+			<joint name="15-J3" type="revolute">
+				<pose>0.08250000327825546 0.0 0.0 1.5707499980926514 -0.0 0.0</pose>
+				<parent>4-Li3</parent>
+				<child>5-Li4</child>
+				<!-- WARNING: Annotation not found for the joint 15-J3. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator M3. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmfranka::Li4::J4 from pmfranka::Li4 to pmfranka::Li5-->
+			<joint name="16-J4" type="revolute">
+				<pose>0.0 -0.3840000327280836 -1.7790223191154432E-5 -1.5707499980926514 -0.0 0.0</pose>
+				<parent>5-Li4</parent>
+				<child>6-Li5</child>
+				<!-- WARNING: Annotation not found for the joint 16-J4. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator M4. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- Full name of joint: pmfranka::Li5::J5 from pmfranka::Li5 to pmfranka::Li6-->
+			<joint name="17-J5" type="revolute">
+				<pose>0.0 0.0 0.0 0.7853518352317902 -1.570730808115866 -0.7853981628608612</pose>
+				<parent>6-Li5</parent>
+				<child>7-Li6</child>
+				<!-- WARNING: Annotation not found for the joint 17-J5. The SDF generator relies on annotations to specify SDF aspects
+				     of the joint that are accounted for in the equations. If you wish to reflect these aspects in SDF,
+				     please add an appropriate annotation to the joint. --> 
+				<!-- WARNING: Annotation not found for the actuator M5. RoboSim actuators have no explicit counterparts in SDF, 
+					 so the generator must rely on annotations to produce something meaningful in SDF. If you wish to reflect these aspects in SDF,
+					 please add an appropriate annotation to the actuator. -->
+			</joint>
+			<!-- End of joints of the pmodel pmfranka -->
+			
+			<!-- Start of fixed connections of the pmodel pmfranka -->
+			<!-- End of fixed connections of the pmodel pmfranka -->
+		</model>
+</sdf>

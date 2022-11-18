@@ -1,0 +1,31 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "file_emergencystop_defs.csp"
+include "core_defs.csp"
+include "definitions_defs.csp"
+include "state_defs.csp"
+include "robochart_defs.csp"
+include "EmergencyStopControl.csp"
+include "../instantiations.csp"
+channel r__
+-- generate EmergencyStopControl
+P_EmergencyStopControl = let
+	id__ = 0
+	
+	
+	
+within
+	EmergencyStopControl::O__(
+		id__
+	)
+assert P_EmergencyStopControl :[deadlock-free]	
+assert P_EmergencyStopControl;RUN({r__}) :[deadlock-free]
+assert P_EmergencyStopControl :[deterministic]
+assert P_EmergencyStopControl :[divergence-free]

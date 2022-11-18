@@ -1,0 +1,213 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 28-10-2022 20:35:34
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "defs/state_timed_defs.csp"
+include "defs/core_defs.csp"
+include "defs/definitions_defs.csp"
+include "defs/radcontrol_defs.csp"
+include "defs/sequence_toolkit_defs.csp"
+include "defs/dressingcontrol_defs.csp"
+include "defs/file_emergencystop_defs.csp"
+include "defs/dressingcontrol.csp"
+include "defs/function_toolkit_defs.csp"
+include "defs/robochart_defs.csp"
+include "defs/file_rad_defs.csp"
+include "defs/radcontrol.csp"
+include "defs/core_timed_defs.csp"
+include "defs/file_PID_defs.csp"
+include "defs/EmergencyStopControl.csp"
+include "defs/set_toolkit_defs.csp"
+include "instantiations.csp"
+include "defs/movement_defs.csp"
+include "defs/relation_toolkit_defs.csp"
+
+channel r__
+
+channel done4
+    DONE4 = done4 -> DONE4
+    SpecES4 = EmergencyStopControl::O__(0) [ EmergencyStopControl::emergencyStop.in <-> EmergencyStopControl::emergencyStop.out ] EmergencyStopControl::emergencyStop.out -> DONE4
+
+EVENSTOPS = EmergencyStopControl::emergencyStop.out -> ODDSTOPS
+    ODDSTOPS = EmergencyStopControl::resumeDressing.out -> EVENSTOPS
+    EVENCSTOPS = EmergencyStopControl::collisionStop.out -> ODDCSTOPS
+    ODDCSTOPS = EmergencyStopControl::collisionResume.out -> EVENCSTOPS
+    EVENESTOPS = EmergencyStopControl::environmentalStop.out -> ODDESTOPS
+    ODDESTOPS = EmergencyStopControl::environmentalResume.out -> EVENESTOPS
+	SpecES5 = (
+	           	EVENCSTOPS
+	            [ EmergencyStopControl::collisionStop.out <-> EmergencyStopControl::collisionStop.in,
+	          	  EmergencyStopControl::collisionResume.out <-> EmergencyStopControl::collisionResume.in ]
+	            (EVENESTOPS
+	            [ EmergencyStopControl::environmentalStop.out <-> EmergencyStopControl::environmentalStop.in,
+	    	      EmergencyStopControl::environmentalResume.out <-> EmergencyStopControl::environmentalResume.in]
+	          	(EVENSTOPS
+	          	[ EmergencyStopControl::emergencyStop.out <-> EmergencyStopControl::emergencyStop.in,
+	          	  EmergencyStopControl::resumeDressing.out <-> EmergencyStopControl::resumeDressing.in ]
+	          	EmergencyStopControl::O__(0)))
+    	      )
+
+SpecAlwaysAllowMovement = (EmergencyStopControl::allowMovement.out -> SpecAlwaysAllowMovement) |~| DIV
+
+ESHiddenStops = (EmergencyStopControl::O__(0) \ {EmergencyStopControl::emergencyStop.in, EmergencyStopControl::resumeDressing.in,
+													 EmergencyStopControl::collisionStop.in, EmergencyStopControl::collisionStop.in,
+		                                             EmergencyStopControl::environmentalStop.in, EmergencyStopControl::environmentalResume.in})
+
+ESChaoticMovement = CHAOS({EmergencyStopControl::allowMovement.out})|~|DIV
+
+AnyEvents = CHAOS({
+		dressingcontrol::SDressingControl::dressingRequest.in,
+		dressingcontrol::SDressingControl::gripperEngaged.in.true,
+		dressingcontrol::SDressingControl::gripperEngaged.in.false,
+		dressingcontrol::SDressingControl::gripCorrect.in.true,
+		dressingcontrol::SDressingControl::gripCorrect.in.false,
+		dressingcontrol::SDressingControl::checkCorrectHandlingCall,
+		dressingcontrol::SDressingControl::garmentDetected.in.(0,0,0),
+		dressingcontrol::SDressingControl::detectGarmentCall,
+		dressingcontrol::SDressingControl::invalidPoseDetected.in,
+		dressingcontrol::SDressingControl::releaseGripCall,
+		dressingcontrol::SDressingControl::gripCall,
+		dressingcontrol::SDressingControl::setEEForcesCall.(0,0,0),
+		dressingcontrol::SDressingControl::setEEPosCall.(0,0,0),
+		dressingcontrol::SDressingControl::detectUserPoseCall,
+		dressingcontrol::SDressingControl::poseDetected.in.((0,0,0), (0,0,0), (0,0,0)),
+		dressingcontrol::SDressingControl::dressedJoint.out.0,
+		dressingcontrol::SDressingControl::dressedJoint.out.1,
+		dressingcontrol::SDressingControl::dressedJoint.out.2,
+		dressingcontrol::SDressingControl::movementStart.out.(0,0,0),
+		dressingcontrol::SDressingControl::movementEnd.in,
+		dressingcontrol::SDressingControl::snaggingDetected.in,
+		dressingcontrol::SDressingControl::checkFaultCall,
+		dressingcontrol::SDressingControl::correctedMovement.out
+	})
+	GANothingUntilRequest = (
+		(dressingcontrol::SDressingControl::dressingRequest.in -> SKIP);
+		AnyEvents
+	)
+
+-- R1 - reachable
+assert not STOP [T= let 
+	id__ = 0
+	
+	
+	const_radcontrol_CDressingControl_Kp = 1
+	const_radcontrol_CDressingControl_Ki = 1
+	const_radcontrol_CDressingControl_Kd = 0
+	const_radcontrol_CDressingControl_step = 0
+	
+	const_radcontrol_CDressingControl_stm_movement_EPSILON = 1
+	const_radcontrol_CDressingControl_stm_movement_TARGET_TOTAL_FORCE = 1
+		
+within
+	radcontrol::CDressingControl::VS__(id__,
+			    const_radcontrol_CDressingControl_Kp,
+			    const_radcontrol_CDressingControl_Ki,
+			    const_radcontrol_CDressingControl_Kd,
+			    const_radcontrol_CDressingControl_step,
+			    const_radcontrol_CDressingControl_stm_movement_EPSILON,
+			    const_radcontrol_CDressingControl_stm_movement_TARGET_TOTAL_FORCE) |\ {|dressingcontrol::SDressingControl::GarmentAcquisition::entered|}
+
+-- R2 - timed deadlock free
+assert prioritise(let 
+	id__ = 0
+	
+	
+	
+within
+	dressingcontrol::SDressingControl::D__(id__)[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- R3 - deterministic
+assert let 
+	id__ = 0
+	
+	
+	
+within
+	dressingcontrol::SDressingControl::D__(id__) :[deterministic]
+
+-- ES1 - timed deadlock free
+assert prioritise(let 
+	id__ = 0
+	
+	
+	
+within
+	EmergencyStopControl::D__(id__)[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- ES2 - divergence free
+assert let 
+	id__ = 0
+	
+	
+	
+within
+	EmergencyStopControl::D__(id__) :[divergence free]
+
+-- ES3 - deterministic
+assert let 
+	id__ = 0
+	
+	
+	
+within
+	EmergencyStopControl::D__(id__) :[deterministic]
+
+-- ES4 - timed deadlock free
+assert prioritise(SpecES4[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- ES5 - timed deadlock free
+assert prioritise(SpecES5[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- ES6a - refinement
+assert SpecAlwaysAllowMovement [T= SpecES5
+
+-- ES6b - refinement
+assert SpecAlwaysAllowMovement [F= SpecES5
+
+-- ES6c - refinement
+assert SpecAlwaysAllowMovement [FD= SpecES5
+
+-- ES7 - refinement
+assert ESHiddenStops [FD= ESChaoticMovement
+
+-- ES8 - refinement
+assert ESChaoticMovement [T= ESHiddenStops
+
+-- ES9 - refinement
+assert ESChaoticMovement [F= ESHiddenStops
+
+-- ES10 - refinement
+assert ESChaoticMovement [FD= ESHiddenStops
+
+-- GA1t - refinement
+assert GANothingUntilRequest [T= let 
+	id__ = 0
+	
+	
+	
+within
+	dressingcontrol::SDressingControl::D__(id__)
+
+-- GA1f - refinement
+assert GANothingUntilRequest [F= let 
+	id__ = 0
+	
+	
+	
+within
+	dressingcontrol::SDressingControl::D__(id__)
+
+-- GA1fd - refinement
+assert GANothingUntilRequest [FD= let 
+	id__ = 0
+	
+	
+	
+within
+	dressingcontrol::SDressingControl::D__(id__)
+

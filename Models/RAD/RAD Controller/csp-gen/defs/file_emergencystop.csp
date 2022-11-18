@@ -1,0 +1,1211 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+
+
+
+module EmergencyStopControl
+exports
+	transparent diamond
+	transparent sbisim
+	transparent dbisim
+	transparent chase
+
+	-- Transition identifiers
+	-- declaring identifiers of transitions
+	datatype NIDS = 
+	              NID_i0|
+	              NID_Allowing|
+	              NID_Awaiting
+	
+	channel internal__ : NIDS
+	
+	-- Flow channels		
+	channel interrupt
+	channel exited
+	channel exit
+	channel terminate
+	
+	-- Variable channels
+	channel get_emergencyStopped, set_emergencyStopped, setL_emergencyStopped, setR_emergencyStopped: core_boolean
+	channel get_environmentallyStopped, set_environmentallyStopped, setL_environmentallyStopped, setR_environmentallyStopped: core_boolean
+	channel get_collisionStopped, set_collisionStopped, setL_collisionStopped, setR_collisionStopped: core_boolean
+	
+	-- Shared variable channels
+	
+	-- Local variable channels for defined operations that are required by the state machine
+	
+	-- Declaring state machine events
+	channel allowMovement__: NIDS.InOut
+	channel allowMovement: InOut
+	channel environmentalStop__: NIDS.InOut
+	channel environmentalStop: InOut
+	channel environmentalResume__: NIDS.InOut
+	channel environmentalResume: InOut
+	channel movementOccurred__: NIDS.InOut
+	channel movementOccurred: InOut
+	channel allowedMovement__: NIDS.InOut
+	channel allowedMovement: InOut
+	channel noticedMovementOccurred__: NIDS.InOut
+	channel noticedMovementOccurred: InOut
+	channel resetMovement__: NIDS.InOut
+	channel resetMovement: InOut
+	channel emergencyStop__: NIDS.InOut
+	channel emergencyStop: InOut
+	channel resumeDressing__: NIDS.InOut
+	channel resumeDressing: InOut
+	channel collisionStop__: NIDS.InOut
+	channel collisionStop: InOut
+	channel collisionResume__: NIDS.InOut
+	channel collisionResume: InOut
+	
+	-- Declaring call and ret events for undefined operations
+	
+	enterSS = {|
+	i0::enter,
+	Allowing::enter,
+	Awaiting::enter
+	|}
+	
+	enteredSS = 	{|
+	Allowing::entered,
+	Awaiting::entered
+	|}
+	
+	internal_events = union(enteredSS,union(enterSS,{|interrupt,exited|}))
+	
+	shared_variable_events = {|
+	|}
+	
+	-- channel set with all visible events
+	sem__events = {|
+		terminate
+	,	allowMovement,
+		environmentalStop,
+		environmentalResume,
+		movementOccurred,
+		allowedMovement,
+		noticedMovementOccurred,
+		resetMovement,
+		emergencyStop,
+		resumeDressing,
+		collisionStop,
+		collisionResume
+		|}
+
+	-- Nodes --
+	-- declaring all nodes
+	
+	----------------------------------------------------------------------
+	-- Initial: i0
+	module i0
+	exports
+	
+		channel enter, interrupt
+		
+		D__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= share__choice(interrupt -> SKIP) ; Inactive
+			within
+				Inactive [| {terminate} |> SKIP)
+		
+		VS_O__(id__) = D__(id__)
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: Allowing
+	module Allowing
+	
+	enterSS = {}
+	
+	enteredSS = {}
+	
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: Awaiting
+	module Awaiting
+	
+	enterSS = {}
+	
+	enteredSS = {}
+	
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	-- END of Nodes --
+	
+	-- Operation calls --
+	-- Only the undefined operations are declared here.
+	-- If the state machine is in isolation, all required operations will be undefined.
+	-- If it is in the context of a controller, the required operations not provided by the
+	-- controller will be declared here, and the defined operations will be defined in the
+	-- context of the Controller module, and therefore within scope of the state machine module.
+	
+	-- END of Operation calls --
+	
+	-- STM processes
+	STM(id__) = -- RULE: [[stm:StateMachineDef]]_STM^nops : CSPProcess
+	( 
+		(
+			(
+				(IteratedStateful(id__) \ {terminate} ; share__choice(terminate -> SKIP))
+			 	[[ share__ <- x__ | x__ <- {||} ]]
+			)
+		[| {share__} |]
+		SKIP
+		)
+		[| union(sharedVarSync,{terminate}) |]
+		dbisim(sharedVarMemory(id__))
+	)\sharedVarHide
+	
+	STM_VS_O(id__) = -- RULE: [[stm:StateMachineDef]]_STM^nops : CSPProcess
+	( 
+		(
+			(
+				(IteratedStateful_VS_O(id__) \ {terminate} ; share__choice(terminate -> SKIP))
+			 	[[ share__ <- x__ | x__ <- {||} ]]
+			)
+		[| {share__} |]
+		SKIP
+		)
+		[| union(sharedVarSync,{terminate}) |]
+		dbisim(sharedVarMemory(id__))
+	)\sharedVarHide
+	
+	-- Transitions
+	Transitions(id__) = ((let
+		Trans = share__choice(get_emergencyStopped?emergencyStopped -> get_collisionStopped?collisionStopped -> get_environmentallyStopped?environmentallyStopped -> (
+			((share__ -> SKIP
+			 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; Allowing::enter -> SKIP))))
+			 	 [] dbisim(((not (emergencyStopped)))&(emergencyStop__!NID_Allowing.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_emergencyStopped!true -> SKIP))) ; Allowing::enter -> SKIP)))
+			 	 [] dbisim(((not (environmentallyStopped)))&(environmentalStop__!NID_Allowing.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(resetMovement.out -> SKIP));share__choice(true & (share__choice(set_environmentallyStopped!true -> SKIP))) ; Allowing::enter -> SKIP)))
+			 	 [] dbisim((emergencyStopped)&(resumeDressing__!NID_Allowing.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(resetMovement.out -> SKIP));share__choice(true & (share__choice(set_emergencyStopped!false -> SKIP))) ; Allowing::enter -> SKIP)))
+			 	 [] dbisim((environmentallyStopped)&(environmentalResume__!NID_Allowing.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(resetMovement.out -> SKIP));share__choice(true & (share__choice(set_environmentallyStopped!false -> SKIP))) ; Allowing::enter -> SKIP)))
+			 	 [] dbisim(((not (collisionStopped)))&(collisionStop__!NID_Allowing.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_collisionStopped!true -> SKIP))) ; Allowing::enter -> SKIP)))
+			 	 [] dbisim(((((not (emergencyStopped)) and (not (environmentallyStopped))) and (not (collisionStopped))))&(internal__!NID_Allowing -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(allowMovement.out -> SKIP)) ; Awaiting::enter -> SKIP)))
+			 	 [] dbisim((true)&(movementOccurred__!NID_Awaiting.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; Allowing::enter -> SKIP)))
+			 	 [] dbisim((environmentallyStopped)&(environmentalResume__!NID_Awaiting.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_environmentallyStopped!false -> SKIP))) ; Awaiting::enter -> SKIP)))
+			 	 [] dbisim(((not (emergencyStopped)))&(emergencyStop__!NID_Awaiting.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_emergencyStopped!true -> SKIP))) ; Awaiting::enter -> SKIP)))
+			 	 [] dbisim(((not (environmentallyStopped)))&(environmentalStop__!NID_Awaiting.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_environmentallyStopped!true -> SKIP))) ; Awaiting::enter -> SKIP)))
+			 	 [] dbisim((emergencyStopped)&(resumeDressing__!NID_Awaiting.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_emergencyStopped!false -> SKIP))) ; Awaiting::enter -> SKIP)))
+			 	 [] dbisim((emergencyStopped)&(resumeDressing__!NID_Awaiting.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_emergencyStopped!false -> SKIP))) ; Awaiting::enter -> SKIP)))
+			 	 [] dbisim((collisionStopped)&(collisionResume__!NID_Allowing.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(resetMovement.out -> SKIP));share__choice(true & (share__choice(set_collisionStopped!false -> SKIP))) ; Allowing::enter -> SKIP)))
+			 	 [] dbisim(((not (collisionStopped)))&(collisionStop__!NID_Awaiting.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_collisionStopped!true -> SKIP))) ; Awaiting::enter -> SKIP)))
+			 	 [] dbisim((collisionStopped)&(collisionResume__!NID_Awaiting.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_collisionStopped!false -> SKIP))) ; Awaiting::enter -> SKIP)))
+			 ) ; Trans)
+			 []
+			 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+			 []
+			 terminate -> SKIP
+		)
+		)
+	within
+		Trans
+	)
+	)
+	
+	-- Stateful
+	-- RULE: Stateful(stm:StateMachineBody) : CSPProcess
+	
+	-- Named process definitions
+	MachineBody(id__) = 
+		dbisim((
+		let
+			finalNodesEntered = {||}
+		within
+			((let
+				-- IMPLEMENTATION NOTE:
+				-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				-- modules for defining the semantics of each node.
+				enterSS = {|
+				i0::enter,
+				Allowing::enter,
+				Awaiting::enter
+				|}
+				hideSet = union(enterSS,{|exit,exited,internal__|})
+			within 
+				((let
+					-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+					-- because CSPM modules are used for the semantics of Node.
+					flowevts = union(enterSS,{|exit,exited,interrupt|})
+					transSync = {|internal__.NID_i0,emergencyStop__.NID_Allowing.in,environmentalStop__.NID_Allowing.in,resumeDressing__.NID_Allowing.in,environmentalResume__.NID_Allowing.in,collisionStop__.NID_Allowing.in,internal__.NID_Allowing,movementOccurred__.NID_Awaiting.in,environmentalResume__.NID_Awaiting.in,emergencyStop__.NID_Awaiting.in,environmentalStop__.NID_Awaiting.in,resumeDressing__.NID_Awaiting.in,resumeDressing__.NID_Awaiting.in,collisionResume__.NID_Allowing.in,collisionStop__.NID_Awaiting.in,collisionResume__.NID_Awaiting.in|}
+				within
+					((
+					 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+					   i0::D__(id__)
+					   [| { share__, terminate } |] (
+					   Allowing::D__(id__)
+					   [| { share__, terminate } |] (
+					   Awaiting::D__(id__)
+					   )
+					   )
+					 )
+					 [[Allowing::interrupt <- x__ | x__ <- {|interrupt,emergencyStop__.NID_Allowing.in,environmentalStop__.NID_Allowing.in,resumeDressing__.NID_Allowing.in,environmentalResume__.NID_Allowing.in,collisionStop__.NID_Allowing.in,internal__.NID_Allowing,collisionResume__.NID_Allowing.in|}]]
+					 [[Awaiting::interrupt <- x__ | x__ <- {|interrupt,movementOccurred__.NID_Awaiting.in,environmentalResume__.NID_Awaiting.in,emergencyStop__.NID_Awaiting.in,environmentalStop__.NID_Awaiting.in,resumeDressing__.NID_Awaiting.in,resumeDressing__.NID_Awaiting.in,collisionStop__.NID_Awaiting.in,collisionResume__.NID_Awaiting.in|}]]
+					 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+					 )
+					  [[ share__ <- x__ | x__ <- {| share__ |} ]] 
+					  [[set_emergencyStopped <- setL_emergencyStopped,set_collisionStopped <- setL_collisionStopped,set_environmentallyStopped <- setL_environmentallyStopped]]
+					 )
+					 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+					 			,setL_emergencyStopped
+					 			,setL_collisionStopped
+					 			,setL_environmentallyStopped
+					|}) |]
+					 ((i0::enter -> Transitions(id__))
+					  [[ share__ <- x__ | x__ <- {| share__,setL_emergencyStopped,setL_collisionStopped,setL_environmentallyStopped |} ]]
+					 )
+					)[[setL_emergencyStopped <- set_emergencyStopped,setL_collisionStopped <- set_collisionStopped,setL_environmentallyStopped <- set_environmentallyStopped]]
+					)
+				)
+				 \ hideSet)
+				[[
+					allowMovement__.x____ <- allowMovement,
+					environmentalStop__.x____ <- environmentalStop,
+					environmentalResume__.x____ <- environmentalResume,
+					movementOccurred__.x____ <- movementOccurred,
+					allowedMovement__.x____ <- allowedMovement,
+					noticedMovementOccurred__.x____ <- noticedMovementOccurred,
+					resetMovement__.x____ <- resetMovement,
+					emergencyStop__.x____ <- emergencyStop,
+					resumeDressing__.x____ <- resumeDressing,
+					collisionStop__.x____ <- collisionStop,
+					collisionResume__.x____ <- collisionResume
+					| x____ <- NIDS
+				]]
+			)
+			 [| {| interrupt |} |] SKIP)
+		)
+		)
+	
+	Behaviour(id__) = 
+		dbisim((MachineBody(id__)\ enteredSS)
+		)
+	
+	IteratedBehaviour(id__) = 
+		dbisim((MachineBody(id__)\ enteredSS)
+		)
+	
+	Stateful(id__) = 
+		((
+			(Behaviour(id__) [| union(getsetLocalChannels,{terminate}) |] varMemory(id__))
+		 	\getsetLocalChannels
+		)
+		)
+	
+	IteratedStateful(id__) =
+		(dbisim(
+			sbisim(
+				dbisim(
+					sbisim(
+						dbisim(
+							sbisim(
+								Behaviour(id__)
+								[| {|get_collisionStopped,set_collisionStopped,terminate|} |]
+								Memory_collisionStopped(false)
+							)\{|get_collisionStopped,set_collisionStopped|}
+						)
+						[| {|get_environmentallyStopped,set_environmentallyStopped,terminate|} |]
+						Memory_environmentallyStopped(false)
+					)\{|get_environmentallyStopped,set_environmentallyStopped|}
+				)
+				[| {|get_emergencyStopped,set_emergencyStopped,terminate|} |]
+				Memory_emergencyStopped(false)
+			)\{|get_emergencyStopped,set_emergencyStopped|}
+		)
+		)
+	
+	-- Visible counterparts
+	MachineBody_VS_O(id__) = 
+		dbisim((
+		let
+			finalNodesEntered = {||}
+		within
+			((let
+				-- IMPLEMENTATION NOTE:
+				-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				-- modules for defining the semantics of each node.
+				enterSS = {|
+				i0::enter,
+				Allowing::enter,
+				Awaiting::enter
+				|}
+				hideSet = union(enterSS,{|exit,exited,internal__|})
+			within 
+				((let
+					-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+					-- because CSPM modules are used for the semantics of Node.
+					flowevts = union(enterSS,{|exit,exited,interrupt|})
+					transSync = {|internal__.NID_i0,emergencyStop__.NID_Allowing.in,environmentalStop__.NID_Allowing.in,resumeDressing__.NID_Allowing.in,environmentalResume__.NID_Allowing.in,collisionStop__.NID_Allowing.in,internal__.NID_Allowing,movementOccurred__.NID_Awaiting.in,environmentalResume__.NID_Awaiting.in,emergencyStop__.NID_Awaiting.in,environmentalStop__.NID_Awaiting.in,resumeDressing__.NID_Awaiting.in,resumeDressing__.NID_Awaiting.in,collisionResume__.NID_Allowing.in,collisionStop__.NID_Awaiting.in,collisionResume__.NID_Awaiting.in|}
+				within
+					((
+					 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+					   i0::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   Allowing::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   Awaiting::VS_O__(id__)
+					   )
+					   )
+					 )
+					 [[Allowing::interrupt <- x__ | x__ <- {|interrupt,emergencyStop__.NID_Allowing.in,environmentalStop__.NID_Allowing.in,resumeDressing__.NID_Allowing.in,environmentalResume__.NID_Allowing.in,collisionStop__.NID_Allowing.in,internal__.NID_Allowing,collisionResume__.NID_Allowing.in|}]]
+					 [[Awaiting::interrupt <- x__ | x__ <- {|interrupt,movementOccurred__.NID_Awaiting.in,environmentalResume__.NID_Awaiting.in,emergencyStop__.NID_Awaiting.in,environmentalStop__.NID_Awaiting.in,resumeDressing__.NID_Awaiting.in,resumeDressing__.NID_Awaiting.in,collisionStop__.NID_Awaiting.in,collisionResume__.NID_Awaiting.in|}]]
+					 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+					 )
+					  [[ share__ <- x__ | x__ <- {| share__ |} ]] 
+					  [[set_emergencyStopped <- setL_emergencyStopped,set_collisionStopped <- setL_collisionStopped,set_environmentallyStopped <- setL_environmentallyStopped]]
+					 )
+					 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+					 			,setL_emergencyStopped
+					 			,setL_collisionStopped
+					 			,setL_environmentallyStopped
+					|}) |]
+					 ((i0::enter -> Transitions(id__))
+					  [[ share__ <- x__ | x__ <- {| share__,setL_emergencyStopped,setL_collisionStopped,setL_environmentallyStopped |} ]]
+					 )
+					)[[setL_emergencyStopped <- set_emergencyStopped,setL_collisionStopped <- set_collisionStopped,setL_environmentallyStopped <- set_environmentallyStopped]]
+					)
+				)
+				 \ hideSet)
+				[[
+					allowMovement__.x____ <- allowMovement,
+					environmentalStop__.x____ <- environmentalStop,
+					environmentalResume__.x____ <- environmentalResume,
+					movementOccurred__.x____ <- movementOccurred,
+					allowedMovement__.x____ <- allowedMovement,
+					noticedMovementOccurred__.x____ <- noticedMovementOccurred,
+					resetMovement__.x____ <- resetMovement,
+					emergencyStop__.x____ <- emergencyStop,
+					resumeDressing__.x____ <- resumeDressing,
+					collisionStop__.x____ <- collisionStop,
+					collisionResume__.x____ <- collisionResume
+					| x____ <- NIDS
+				]]
+			)
+			 [| {| interrupt |} |] SKIP)
+		)
+		)
+	
+	Behaviour_VS_O(id__) = 
+		dbisim((MachineBody_VS_O(id__))
+		)
+	
+	IteratedBehaviour_VS_O(id__) = 
+		dbisim((MachineBody_VS_O(id__))
+		)
+	
+	Stateful_VS_O(id__) = 
+		dbisim((
+			(Behaviour_VS_O(id__) [| union(getsetLocalChannels,{terminate}) |] varMemory(id__))
+		 	\getsetLocalChannels
+		)
+		)
+	
+	IteratedStateful_VS_O(id__) =
+		(dbisim(
+			sbisim(
+				dbisim(
+					sbisim(
+						dbisim(
+							sbisim(
+								Behaviour_VS_O(id__)
+								[| {|get_collisionStopped,set_collisionStopped,terminate|} |]
+								Memory_collisionStopped(false)
+							)\{|get_collisionStopped,set_collisionStopped|}
+						)
+						[| {|get_environmentallyStopped,set_environmentallyStopped,terminate|} |]
+						Memory_environmentallyStopped(false)
+					)\{|get_environmentallyStopped,set_environmentallyStopped|}
+				)
+				[| {|get_emergencyStopped,set_emergencyStopped,terminate|} |]
+				Memory_emergencyStopped(false)
+			)\{|get_emergencyStopped,set_emergencyStopped|}
+		)
+		)
+	
+	-- END
+	
+	-- Memory
+	-- Memory variables
+	Memory_emergencyStopped(emergencyStopped) =
+		get_emergencyStopped!emergencyStopped -> Memory_emergencyStopped(emergencyStopped)
+		[]
+		set_emergencyStopped?x__ -> Memory_emergencyStopped(x__)
+		[]
+		terminate -> SKIP
+	Memory_environmentallyStopped(environmentallyStopped) =
+		get_environmentallyStopped!environmentallyStopped -> Memory_environmentallyStopped(environmentallyStopped)
+		[]
+		set_environmentallyStopped?x__ -> Memory_environmentallyStopped(x__)
+		[]
+		terminate -> SKIP
+	Memory_collisionStopped(collisionStopped) =
+		get_collisionStopped!collisionStopped -> Memory_collisionStopped(collisionStopped)
+		[]
+		set_collisionStopped?x__ -> Memory_collisionStopped(x__)
+		[]
+		terminate -> SKIP
+	
+	-- varMemory process
+	varMemory(id__) = Memory_emergencyStopped(false)
+	[| { terminate } |] (
+	Memory_environmentallyStopped(false)
+	[| { terminate } |] (
+	Memory_collisionStopped(false)
+	)
+	)
+	
+	getsetLocalChannels = {|get_emergencyStopped,set_emergencyStopped,get_environmentallyStopped,set_environmentallyStopped,get_collisionStopped,set_collisionStopped|}
+	
+	-- Definition of the behaviour of state machines (default, optimised, visible, visible and optimised)
+	FVS__(id__) = STM_VS_O(id__)
+	
+	D__(id__) = STM(id__) \ internal_events
+	O__(id__) = sbisim(diamond(D__(id__)))
+	VS__(id__) = FVS__(id__)
+	VS_O__(id__) = sbisim(diamond(FVS__(id__)))
+	HEXT__(id__) = O__(id__) [|shared_variable_events|] SKIP
+	HUP__(id__) = O__(id__) [|{share__}|] SKIP
+	
+	-- Shared memory
+	-- Shared memory variables
+	
+	-- sharedVarMemory process
+	sharedVarMemory(id__) = terminate -> SKIP
+	
+	sharedVarSync = {||}
+	
+	sharedVarHide = {||}
+endmodule
+module EnvironmentalMonitor
+exports
+	transparent diamond
+	transparent sbisim
+	transparent dbisim
+	transparent chase
+
+	-- Transition identifiers
+	-- declaring identifiers of transitions
+	datatype NIDS = 
+	              NID_i0|
+	              NID_SensingHazard|
+	              NID_OtherAgent|
+	              NID_BackgroundNoise
+	
+	channel internal__ : NIDS
+	
+	-- Flow channels		
+	channel interrupt
+	channel exited
+	channel exit
+	channel terminate
+	
+	-- Variable channels
+	channel get_otherAgent, set_otherAgent, setL_otherAgent, setR_otherAgent: core_boolean
+	channel get_level, set_level, setL_level, setR_level: definitions_NoiseLevel
+	
+	-- Shared variable channels
+	
+	-- Local variable channels for defined operations that are required by the state machine
+	
+	-- Declaring state machine events
+	channel environmentalStop__: NIDS.InOut
+	channel environmentalStop: InOut
+	channel environmentalResume__: NIDS.InOut
+	channel environmentalResume: InOut
+	channel backgroundNoiseLevel__: NIDS.InOut.definitions_NoiseLevel
+	channel backgroundNoiseLevel: InOut.definitions_NoiseLevel
+	channel otherAgentDetected__: NIDS.InOut.core_boolean
+	channel otherAgentDetected: InOut.core_boolean
+	
+	-- Declaring call and ret events for undefined operations
+	
+	enterSS = {|
+	i0::enter,
+	SensingHazard::enter,
+	OtherAgent::enter,
+	BackgroundNoise::enter
+	|}
+	
+	enteredSS = 	{|
+	SensingHazard::entered,
+	OtherAgent::entered,
+	BackgroundNoise::entered
+	|}
+	
+	internal_events = union(enteredSS,union(enterSS,{|interrupt,exited|}))
+	
+	shared_variable_events = {|
+	|}
+	
+	-- channel set with all visible events
+	sem__events = {|
+		terminate
+	,	environmentalStop,
+		environmentalResume,
+		backgroundNoiseLevel,
+		otherAgentDetected
+		|}
+
+	-- Nodes --
+	-- declaring all nodes
+	
+	----------------------------------------------------------------------
+	-- Initial: i0
+	module i0
+	exports
+	
+		channel enter, interrupt
+		
+		D__(id__) = 
+			dbisim(let
+				Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+				
+				Termination = terminate -> SKIP
+				
+				Active 		= share__choice(interrupt -> SKIP) ; Inactive
+			within
+				Inactive [| {terminate} |> SKIP)
+		
+		VS_O__(id__) = D__(id__)
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: SensingHazard
+	module SensingHazard
+	
+	enterSS = {}
+	
+	enteredSS = {}
+	
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: OtherAgent
+	module OtherAgent
+	
+	enterSS = {}
+	
+	enteredSS = {}
+	
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	
+	----------------------------------------------------------------------
+	-- State: BackgroundNoise
+	module BackgroundNoise
+	
+	enterSS = {}
+	
+	enteredSS = {}
+	
+	exports
+	
+		--  Declarations
+		
+		channel enter, entered, interrupt
+		channel enteredL, enteredR
+		
+						
+		
+		--	Nodes
+		-- declaring all nodes
+		
+		
+		--	Rule: behaviours(Node)
+		--  Note that FDR has problems with efficiently compiling the process below
+		-- 	if using a different recursion pattern.
+		D__(id__) = 
+		dbisim(let
+			-- IMPLEMENTATION NOTE: 
+			-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+			-- however FDR struggles with that form in certain cases. So we use the exception operator
+			-- instead to 'terminate'.
+			
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+			
+		VS_O__(id__) = 
+		dbisim(let
+			Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+			
+			Termination = terminate -> SKIP
+			
+			Active 		= SKIP ; 
+					 	  Behaviour ; 
+					 	  share__choice(exit -> SKIP) ; SKIP ; 
+					 	  share__choice(exited -> SKIP) ; Inactive
+		
+			Behaviour 	= entered -> During
+			During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+		within
+			Inactive [| {terminate} |> SKIP)
+		
+	
+	endmodule
+	----------------------------------------------------------------------
+	
+	-- END of Nodes --
+	
+	-- Operation calls --
+	-- Only the undefined operations are declared here.
+	-- If the state machine is in isolation, all required operations will be undefined.
+	-- If it is in the context of a controller, the required operations not provided by the
+	-- controller will be declared here, and the defined operations will be defined in the
+	-- context of the Controller module, and therefore within scope of the state machine module.
+	
+	-- END of Operation calls --
+	
+	-- STM processes
+	STM(id__) = -- RULE: [[stm:StateMachineDef]]_STM^nops : CSPProcess
+	( 
+		(
+			(
+				(IteratedStateful(id__) \ {terminate} ; share__choice(terminate -> SKIP))
+			 	[[ share__ <- x__ | x__ <- {||} ]]
+			)
+		[| {share__} |]
+		SKIP
+		)
+		[| union(sharedVarSync,{terminate}) |]
+		dbisim(sharedVarMemory(id__))
+	)\sharedVarHide
+	
+	STM_VS_O(id__) = -- RULE: [[stm:StateMachineDef]]_STM^nops : CSPProcess
+	( 
+		(
+			(
+				(IteratedStateful_VS_O(id__) \ {terminate} ; share__choice(terminate -> SKIP))
+			 	[[ share__ <- x__ | x__ <- {||} ]]
+			)
+		[| {share__} |]
+		SKIP
+		)
+		[| union(sharedVarSync,{terminate}) |]
+		dbisim(sharedVarMemory(id__))
+	)\sharedVarHide
+	
+	-- Transitions
+	Transitions(id__) = ((let
+		Trans = share__choice(get_otherAgent?otherAgent -> get_level?level -> (
+			((share__ -> SKIP
+			 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; SensingHazard::enter -> SKIP))))
+			 	 [] dbisim((otherAgentDetected__!NID_SensingHazard.in?otherAgent:{otherAgent|otherAgent <- core_boolean, (not (otherAgent))} -> share__choice(set_otherAgent!otherAgent -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(environmentalResume.out -> SKIP)) ; OtherAgent::enter -> SKIP)))
+			 	 [] dbisim((otherAgentDetected__!NID_OtherAgent.in?otherAgent:{otherAgent|otherAgent <- core_boolean, otherAgent} -> share__choice(set_otherAgent!otherAgent -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(environmentalResume.out -> SKIP)) ; SensingHazard::enter -> SKIP)))
+			 	 [] dbisim(((level==definitions_NoiseLevel_High))&(internal__!NID_SensingHazard -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(environmentalStop.out -> SKIP)) ; BackgroundNoise::enter -> SKIP)))
+			 	 [] dbisim(((level!=definitions_NoiseLevel_High))&(internal__!NID_BackgroundNoise -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(environmentalResume.out -> SKIP)) ; SensingHazard::enter -> SKIP)))
+			 ) ; Trans)
+			 []
+			 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+			 []
+			 terminate -> SKIP
+		)
+		)
+	within
+		Trans
+	)
+	)
+	
+	-- Stateful
+	-- RULE: Stateful(stm:StateMachineBody) : CSPProcess
+	
+	-- Named process definitions
+	MachineBody(id__) = 
+		dbisim((
+		let
+			finalNodesEntered = {||}
+		within
+			((let
+				-- IMPLEMENTATION NOTE:
+				-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				-- modules for defining the semantics of each node.
+				enterSS = {|
+				i0::enter,
+				SensingHazard::enter,
+				OtherAgent::enter,
+				BackgroundNoise::enter
+				|}
+				hideSet = union(enterSS,{|exit,exited,internal__|})
+			within 
+				((let
+					-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+					-- because CSPM modules are used for the semantics of Node.
+					flowevts = union(enterSS,{|exit,exited,interrupt|})
+					transSync = {|internal__.NID_i0,otherAgentDetected__.NID_SensingHazard.in,otherAgentDetected__.NID_OtherAgent.in,internal__.NID_SensingHazard,internal__.NID_BackgroundNoise|}
+				within
+					((
+					 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+					   i0::D__(id__)
+					   [| { share__, terminate } |] (
+					   SensingHazard::D__(id__)
+					   [| { share__, terminate } |] (
+					   OtherAgent::D__(id__)
+					   [| { share__, terminate } |] (
+					   BackgroundNoise::D__(id__)
+					   )
+					   )
+					   )
+					 )
+					 [[SensingHazard::interrupt <- x__ | x__ <- {|interrupt,otherAgentDetected__.NID_SensingHazard.in,internal__.NID_SensingHazard|}]]
+					 [[OtherAgent::interrupt <- x__ | x__ <- {|interrupt,otherAgentDetected__.NID_OtherAgent.in|}]]
+					 [[BackgroundNoise::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_BackgroundNoise|}]]
+					 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+					 )
+					  [[ share__ <- x__ | x__ <- {| share__,setR_otherAgent |} ]] 
+					  [[set_otherAgent <- setL_otherAgent,set_level <- setL_level]]
+					 )
+					 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+					 			,setL_otherAgent
+					 			,setL_level
+					 			,setR_otherAgent
+					 			|}) |]
+					 ((i0::enter -> Transitions(id__))
+					  [[ share__ <- x__ | x__ <- {| share__,setL_otherAgent,setL_level |} ]]
+					  [[set_otherAgent <- setR_otherAgent]]
+					 )
+					)[[setL_otherAgent <- set_otherAgent,setL_level <- set_level]]
+					 [[setR_otherAgent <- set_otherAgent]]
+					)
+				)
+				 \ hideSet)
+				[[
+					environmentalStop__.x____ <- environmentalStop,
+					environmentalResume__.x____ <- environmentalResume,
+					backgroundNoiseLevel__.x____ <- backgroundNoiseLevel,
+					otherAgentDetected__.x____ <- otherAgentDetected
+					| x____ <- NIDS
+				]]
+			)
+			 [| {| interrupt |} |] SKIP)
+		)
+		)
+	
+	Behaviour(id__) = 
+		dbisim((MachineBody(id__)\ enteredSS)
+		)
+	
+	IteratedBehaviour(id__) = 
+		dbisim((MachineBody(id__)\ enteredSS)
+		)
+	
+	Stateful(id__) = 
+		((
+			(Behaviour(id__) [| union(getsetLocalChannels,{terminate}) |] varMemory(id__))
+		 	\getsetLocalChannels
+		)
+		)
+	
+	IteratedStateful(id__) =
+		(dbisim(
+			sbisim(
+				dbisim(
+					sbisim(
+						Behaviour(id__)
+						[| {|get_level,set_level,terminate|} |]
+						Memory_level(definitions_NoiseLevel_High)
+					)\{|get_level,set_level|}
+				)
+				[| {|get_otherAgent,set_otherAgent,terminate|} |]
+				Memory_otherAgent(true)
+			)\{|get_otherAgent,set_otherAgent|}
+		)
+		)
+	
+	-- Visible counterparts
+	MachineBody_VS_O(id__) = 
+		dbisim((
+		let
+			finalNodesEntered = {||}
+		within
+			((let
+				-- IMPLEMENTATION NOTE:
+				-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+				-- modules for defining the semantics of each node.
+				enterSS = {|
+				i0::enter,
+				SensingHazard::enter,
+				OtherAgent::enter,
+				BackgroundNoise::enter
+				|}
+				hideSet = union(enterSS,{|exit,exited,internal__|})
+			within 
+				((let
+					-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+					-- because CSPM modules are used for the semantics of Node.
+					flowevts = union(enterSS,{|exit,exited,interrupt|})
+					transSync = {|internal__.NID_i0,otherAgentDetected__.NID_SensingHazard.in,otherAgentDetected__.NID_OtherAgent.in,internal__.NID_SensingHazard,internal__.NID_BackgroundNoise|}
+				within
+					((
+					 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+					   i0::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   SensingHazard::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   OtherAgent::VS_O__(id__)
+					   [| { share__, terminate } |] (
+					   BackgroundNoise::VS_O__(id__)
+					   )
+					   )
+					   )
+					 )
+					 [[SensingHazard::interrupt <- x__ | x__ <- {|interrupt,otherAgentDetected__.NID_SensingHazard.in,internal__.NID_SensingHazard|}]]
+					 [[OtherAgent::interrupt <- x__ | x__ <- {|interrupt,otherAgentDetected__.NID_OtherAgent.in|}]]
+					 [[BackgroundNoise::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_BackgroundNoise|}]]
+					 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+					 )
+					  [[ share__ <- x__ | x__ <- {| share__,setR_otherAgent |} ]] 
+					  [[set_otherAgent <- setL_otherAgent,set_level <- setL_level]]
+					 )
+					 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+					 			,setL_otherAgent
+					 			,setL_level
+					 			,setR_otherAgent
+					 			|}) |]
+					 ((i0::enter -> Transitions(id__))
+					  [[ share__ <- x__ | x__ <- {| share__,setL_otherAgent,setL_level |} ]]
+					  [[set_otherAgent <- setR_otherAgent]]
+					 )
+					)[[setL_otherAgent <- set_otherAgent,setL_level <- set_level]]
+					 [[setR_otherAgent <- set_otherAgent]]
+					)
+				)
+				 \ hideSet)
+				[[
+					environmentalStop__.x____ <- environmentalStop,
+					environmentalResume__.x____ <- environmentalResume,
+					backgroundNoiseLevel__.x____ <- backgroundNoiseLevel,
+					otherAgentDetected__.x____ <- otherAgentDetected
+					| x____ <- NIDS
+				]]
+			)
+			 [| {| interrupt |} |] SKIP)
+		)
+		)
+	
+	Behaviour_VS_O(id__) = 
+		dbisim((MachineBody_VS_O(id__))
+		)
+	
+	IteratedBehaviour_VS_O(id__) = 
+		dbisim((MachineBody_VS_O(id__))
+		)
+	
+	Stateful_VS_O(id__) = 
+		dbisim((
+			(Behaviour_VS_O(id__) [| union(getsetLocalChannels,{terminate}) |] varMemory(id__))
+		 	\getsetLocalChannels
+		)
+		)
+	
+	IteratedStateful_VS_O(id__) =
+		(dbisim(
+			sbisim(
+				dbisim(
+					sbisim(
+						Behaviour_VS_O(id__)
+						[| {|get_level,set_level,terminate|} |]
+						Memory_level(definitions_NoiseLevel_High)
+					)\{|get_level,set_level|}
+				)
+				[| {|get_otherAgent,set_otherAgent,terminate|} |]
+				Memory_otherAgent(true)
+			)\{|get_otherAgent,set_otherAgent|}
+		)
+		)
+	
+	-- END
+	
+	-- Memory
+	-- Memory variables
+	Memory_otherAgent(otherAgent) =
+		get_otherAgent!otherAgent -> Memory_otherAgent(otherAgent)
+		[]
+		set_otherAgent?x__ -> Memory_otherAgent(x__)
+		[]
+		terminate -> SKIP
+	Memory_level(level) =
+		get_level!level -> Memory_level(level)
+		[]
+		set_level?x__ -> Memory_level(x__)
+		[]
+		terminate -> SKIP
+	
+	-- varMemory process
+	varMemory(id__) = Memory_otherAgent(true)
+	[| { terminate } |] (
+	Memory_level(definitions_NoiseLevel_High)
+	)
+	
+	getsetLocalChannels = {|get_otherAgent,set_otherAgent,get_level,set_level|}
+	
+	-- Definition of the behaviour of state machines (default, optimised, visible, visible and optimised)
+	FVS__(id__) = STM_VS_O(id__)
+	
+	D__(id__) = STM(id__) \ internal_events
+	O__(id__) = sbisim(diamond(D__(id__)))
+	VS__(id__) = FVS__(id__)
+	VS_O__(id__) = sbisim(diamond(FVS__(id__)))
+	HEXT__(id__) = O__(id__) [|shared_variable_events|] SKIP
+	HUP__(id__) = O__(id__) [|{share__}|] SKIP
+	
+	-- Shared memory
+	-- Shared memory variables
+	
+	-- sharedVarMemory process
+	sharedVarMemory(id__) = terminate -> SKIP
+	
+	sharedVarSync = {||}
+	
+	sharedVarHide = {||}
+endmodule
+
+

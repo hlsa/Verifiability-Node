@@ -1,0 +1,134 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:56
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+include "radcontrol.csp"
+
+
+
+-- generate radcontrol_CDressingControl
+P_radcontrol_CDressingControl = let
+	id__ = 0
+	
+	
+	const_radcontrol_CDressingControl_Kp = 1
+	const_radcontrol_CDressingControl_Ki = 1
+	const_radcontrol_CDressingControl_Kd = 0
+	const_radcontrol_CDressingControl_step = 0
+	
+	const_radcontrol_CDressingControl_stm_movement_EPSILON = 1
+	const_radcontrol_CDressingControl_stm_movement_TARGET_TOTAL_FORCE = 1
+		
+within
+	radcontrol::CDressingControl::O__(id__,
+			    const_radcontrol_CDressingControl_Kp,
+			    const_radcontrol_CDressingControl_Ki,
+			    const_radcontrol_CDressingControl_Kd,
+			    const_radcontrol_CDressingControl_step,
+			    const_radcontrol_CDressingControl_stm_movement_EPSILON,
+			    const_radcontrol_CDressingControl_stm_movement_TARGET_TOTAL_FORCE)
+
+assert P_radcontrol_CDressingControl :[deadlock-free]	
+assert P_radcontrol_CDressingControl;RUN({r__}) :[deadlock-free]
+assert P_radcontrol_CDressingControl :[deterministic]
+assert P_radcontrol_CDressingControl :[divergence-free]
+
+-- generate radcontrol_CDressingControl_stm_dressing
+P_radcontrol_CDressingControl_stm_dressing = let
+	id__ = 0
+	
+	
+	
+within
+	radcontrol::CDressingControl::stm_dressing::O__(
+		id__
+	)
+assert P_radcontrol_CDressingControl_stm_dressing :[deadlock-free]	
+assert P_radcontrol_CDressingControl_stm_dressing;RUN({r__}) :[deadlock-free]
+assert P_radcontrol_CDressingControl_stm_dressing :[deterministic]
+assert P_radcontrol_CDressingControl_stm_dressing :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_radcontrol_CDressingControl_stm_dressing[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_radcontrol_CDressingControl_stm_dressing
+-- generate radcontrol_CDressingControl_stm_movement
+P_radcontrol_CDressingControl_stm_movement = let
+	id__ = 0
+	
+	const_movement_MovementControl_Kp = 1
+	const_movement_MovementControl_Ki = 1
+	const_movement_MovementControl_Kd = 0
+	const_movement_MovementControl_step = 0
+	
+	const_movement_MovementControl_EPSILON = 1
+	const_movement_MovementControl_TARGET_TOTAL_FORCE = 1
+	
+within
+	radcontrol::CDressingControl::stm_movement::O__(
+		id__,
+		const_movement_MovementControl_Kp,
+		const_movement_MovementControl_Ki,
+		const_movement_MovementControl_Kd,
+		const_movement_MovementControl_step,
+		const_movement_MovementControl_EPSILON,
+		const_movement_MovementControl_TARGET_TOTAL_FORCE
+	)
+assert P_radcontrol_CDressingControl_stm_movement :[deadlock-free]	
+assert P_radcontrol_CDressingControl_stm_movement;RUN({r__}) :[deadlock-free]
+assert P_radcontrol_CDressingControl_stm_movement :[deterministic]
+assert P_radcontrol_CDressingControl_stm_movement :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_radcontrol_CDressingControl_stm_movement[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_radcontrol_CDressingControl_stm_movement
+-- generate radcontrol_CDressingControl_stm_stop
+P_radcontrol_CDressingControl_stm_stop = let
+	id__ = 0
+	
+	
+	
+within
+	radcontrol::CDressingControl::stm_stop::O__(
+		id__
+	)
+assert P_radcontrol_CDressingControl_stm_stop :[deadlock-free]	
+assert P_radcontrol_CDressingControl_stm_stop;RUN({r__}) :[deadlock-free]
+assert P_radcontrol_CDressingControl_stm_stop :[deterministic]
+assert P_radcontrol_CDressingControl_stm_stop :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_radcontrol_CDressingControl_stm_stop[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_radcontrol_CDressingControl_stm_stop
+-- generate radcontrol_CDressingControl_stm_environment
+P_radcontrol_CDressingControl_stm_environment = let
+	id__ = 0
+	
+	
+	
+within
+	radcontrol::CDressingControl::stm_environment::O__(
+		id__
+	)
+assert P_radcontrol_CDressingControl_stm_environment :[deadlock-free]	
+assert P_radcontrol_CDressingControl_stm_environment;RUN({r__}) :[deadlock-free]
+assert P_radcontrol_CDressingControl_stm_environment :[deterministic]
+assert P_radcontrol_CDressingControl_stm_environment :[divergence-free]
+-- timed deadlock free
+assert prioritise(P_radcontrol_CDressingControl_stm_environment[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_radcontrol_CDressingControl_stm_environment
+-- timed deadlock free
+assert prioritise(P_radcontrol_CDressingControl[[tock<-tock,tock<-tock']],<diff(Events,{tock',tock}),{tock}>)\{tock} :[divergence free [FD]]
+
+-- timelock free
+assert RUN({tock}) ||| CHAOS(diff(Events,{|tock|})) [F= P_radcontrol_CDressingControl
+

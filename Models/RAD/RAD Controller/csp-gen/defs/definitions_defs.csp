@@ -1,0 +1,27 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+-- data definitions used by /RAD Controller/definitions.rct
+datatype definitions_NoiseLevel = definitions_NoiseLevel_High | definitions_NoiseLevel_Medium | definitions_NoiseLevel_Low
+definitions_NoiseLevel_is(definitions_NoiseLevel_High,definitions_NoiseLevel_High) = true
+definitions_NoiseLevel_is(_,definitions_NoiseLevel_High) = false
+definitions_NoiseLevel_is(definitions_NoiseLevel_Medium,definitions_NoiseLevel_Medium) = true
+definitions_NoiseLevel_is(_,definitions_NoiseLevel_Medium) = false
+definitions_NoiseLevel_is(definitions_NoiseLevel_Low,definitions_NoiseLevel_Low) = true
+definitions_NoiseLevel_is(_,definitions_NoiseLevel_Low) = false
+
+
+pre_definitions_jointPosition(param_xs,param_i) = true
+pre_definitions_sqrt(param_x) =  (param_x>=0)
+pre_definitions_pow(param_x,param_i) =  (param_i>=0)
+pre_definitions_norm(param_v) = true
+pre_definitions_scalarMul(param_s,param_v) = true
+pre_definitions_targetForces(param_current,param_target,param_targetTotalForce) = true
+pre_definitions_dist(param_v1,param_v2) = true
+	

@@ -1,0 +1,3737 @@
+
+--
+-- RoboChart generator version 3.0.0.202209090727
+-- Automatically generated on 18-11-2022 19:31:55
+--
+-- Iterated compression status: true
+-- Assertions compression status: false
+--
+
+module movement_MovementControl
+exports
+	transparent diamond
+	transparent sbisim
+	transparent dbisim
+	transparent chase
+
+	-- Transition identifiers
+	-- declaring identifiers of transitions
+	datatype NIDS = 
+	              NID_i0|
+	              NID_NotEngaged|
+	              NID_FreeMovement|
+	              NID_ForceApplication
+	
+	channel internal__ : NIDS
+	
+	-- Flow channels		
+	channel interrupt
+	channel exited
+	channel exit
+	channel terminate
+	
+	-- Variable channels
+	channel get_arrivedAtTarget, set_arrivedAtTarget, setL_arrivedAtTarget, setR_arrivedAtTarget: core_boolean
+	channel get_vtarget, set_vtarget, setL_vtarget, setR_vtarget: vector_real_3
+	channel get_vcurrent, set_vcurrent, setL_vcurrent, setR_vcurrent: vector_real_3
+	channel get_ftarget, set_ftarget, setL_ftarget, setR_ftarget: vector_real_3
+	channel get_fcurrent, set_fcurrent, setL_fcurrent, setR_fcurrent: vector_real_3
+	channel get_p, set_p, setL_p, setR_p: vector_real_3
+	channel get_d, set_d, setL_d, setR_d: vector_real_3
+	channel get_i, set_i, setL_i, setR_i: vector_real_3
+	channel get_e, set_e, setL_e, setR_e: vector_real_3
+	channel get_e_old, set_e_old, setL_e_old, setR_e_old: vector_real_3
+	channel get_t, set_t, setL_t, setR_t: vector_real_3
+	channel get_t_old, set_t_old, setL_t_old, setR_t_old: vector_real_3
+	channel get_o, set_o, setL_o, setR_o: vector_real_3
+	
+	-- Shared variable channels
+	channel set_EXT_p: vector_real_3
+	channel set_EXT_d: vector_real_3
+	channel set_EXT_i: vector_real_3
+	channel set_EXT_e: vector_real_3
+	channel set_EXT_e_old: vector_real_3
+	channel set_EXT_t: vector_real_3
+	channel set_EXT_t_old: vector_real_3
+	channel set_EXT_o: vector_real_3
+	
+	-- Local variable channels for defined operations that are required by the state machine
+	
+	-- Declaring state machine events
+	channel allowMovement__: NIDS.InOut
+	channel allowMovement: InOut
+	channel movementOccurred__: NIDS.InOut
+	channel movementOccurred: InOut
+	channel stepMoved__: NIDS.InOut
+	channel stepMoved: InOut
+	channel movementInitiated__: NIDS.InOut
+	channel movementInitiated: InOut
+	channel movementWasAllowed__: NIDS.InOut
+	channel movementWasAllowed: InOut
+	channel forceWasAllowed__: NIDS.InOut
+	channel forceWasAllowed: InOut
+	channel forceInitiated__: NIDS.InOut
+	channel forceInitiated: InOut
+	channel resetMovement__: NIDS.InOut
+	channel resetMovement: InOut
+	channel forceApplied__: NIDS.InOut
+	channel forceApplied: InOut
+	channel movementStart__: NIDS.InOut.vector_real_3
+	channel movementStart: InOut.vector_real_3
+	channel movementEnd__: NIDS.InOut
+	channel movementEnd: InOut
+	channel endEffectorPosition__: NIDS.InOut.vector_real_3
+	channel endEffectorPosition: InOut.vector_real_3
+	channel forceEndEffector__: NIDS.InOut.vector_real_3
+	channel forceEndEffector: InOut.vector_real_3
+	channel forceStart__: NIDS.InOut.vector_real_3
+	channel forceStart: InOut.vector_real_3
+	channel forceEnd__: NIDS.InOut
+	channel forceEnd: InOut
+	
+	-- Declaring call and ret events for undefined operations
+	channel reorientGarmentCall
+	channel gripCall
+	channel PIDInitializeCall: vector_real_3
+	channel checkCorrectHandlingCall
+	channel checkUserDressedCall
+	channel pushTowardsCall: vector_real_3.core_real
+	channel setEEForcesCall: vector_real_3
+	channel setEEPosCall: vector_real_3
+	channel checkMovementCall
+	channel PIDUpdateCall: vector_real_3
+	channel stepTowardsCall: vector_real_3.core_real
+	channel releaseGripCall
+	
+	enterSS = {|
+	i0::enter,
+	NotEngaged::enter,
+	FreeMovement::enter,
+	ForceApplication::enter
+	|}
+	
+	enteredSS = 	{|
+	NotEngaged::entered,
+	FreeMovement::entered,
+	ForceApplication::entered
+	|}
+	
+	internal_events = union(enteredSS,union(enterSS,{|interrupt,exited|}))
+	
+	shared_variable_events = {|
+		set_EXT_p,
+		set_EXT_d,
+		set_EXT_i,
+		set_EXT_e,
+		set_EXT_e_old,
+		set_EXT_t,
+		set_EXT_t_old,
+		set_EXT_o
+	|}
+	
+	-- channel set with all visible events
+	sem__events = {|
+		terminate
+	,	set_EXT_p, set_p,
+		set_EXT_d, set_d,
+		set_EXT_i, set_i,
+		set_EXT_e, set_e,
+		set_EXT_e_old, set_e_old,
+		set_EXT_t, set_t,
+		set_EXT_t_old, set_t_old,
+		set_EXT_o, set_o
+	,	allowMovement,
+		movementOccurred,
+		stepMoved,
+		movementInitiated,
+		movementWasAllowed,
+		forceWasAllowed,
+		forceInitiated,
+		resetMovement,
+		forceApplied,
+		movementStart,
+		movementEnd,
+		endEffectorPosition,
+		forceEndEffector,
+		forceStart,
+		forceEnd
+	,	reorientGarmentCall,
+		gripCall,
+		PIDInitializeCall,
+		checkCorrectHandlingCall,
+		checkUserDressedCall,
+		pushTowardsCall,
+		setEEForcesCall,
+		setEEPosCall,
+		checkMovementCall,
+		PIDUpdateCall,
+		stepTowardsCall,
+		releaseGripCall
+		|}
+	
+	channel clockReset, clockResetL, clockResetR 
+	
+	localClockResets = {||}
+	
+	
+	channel get_CLID_FreeMovement : core_clock_type 
+	channel get_CLID_ForceApplication : core_clock_type 
+	channel get_CLID_NotEngaged : core_clock_type 
+	--channel increment__
+	
+	CLID_FreeMovement_clock_type(id__,
+			          const_movement_MovementControl_Kp,
+			          const_movement_MovementControl_Ki,
+			          const_movement_MovementControl_Kd,
+			          const_movement_MovementControl_step,
+			          const_movement_MovementControl_EPSILON,
+			          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+		let
+			max = (clock_type_max(Union({
+	{}
+	}))+1)
+		ctype = {0..max}
+	within
+		if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+	
+	CLID_ForceApplication_clock_type(id__,
+			          const_movement_MovementControl_Kp,
+			          const_movement_MovementControl_Ki,
+			          const_movement_MovementControl_Kd,
+			          const_movement_MovementControl_step,
+			          const_movement_MovementControl_EPSILON,
+			          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+		let
+			max = (clock_type_max(Union({
+	{}
+	}))+1)
+		ctype = {0..max}
+	within
+		if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+	
+	CLID_NotEngaged_clock_type(id__,
+			          const_movement_MovementControl_Kp,
+			          const_movement_MovementControl_Ki,
+			          const_movement_MovementControl_Kd,
+			          const_movement_MovementControl_step,
+			          const_movement_MovementControl_EPSILON,
+			          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+		let
+			max = (clock_type_max(Union({
+	{}
+	}))+1)
+		ctype = {0..max}
+	within
+		if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+	
+	
+
+		-- Nodes --
+		-- declaring all nodes
+		
+		----------------------------------------------------------------------
+		-- Initial: i0
+		module i0
+		exports
+		
+			channel enter, interrupt
+			
+			Timed(OneStep) {
+				D__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= share__choice(interrupt -> SKIP) ; Inactive
+					within
+						Inactive [| {terminate} |> SKIP)
+				
+				VS_O__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = D__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+			}
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: NotEngaged
+		module NotEngaged
+		
+		enterSS = {}
+		
+		enteredSS = {}
+		
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			
+			--channel increment__
+			
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			
+			Timed(OneStep) {
+				--	Rule: behaviours(Node)
+				--  Note that FDR has problems with efficiently compiling the process below
+				-- 	if using a different recursion pattern.
+				D__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				dbisim(let
+					-- IMPLEMENTATION NOTE: 
+					-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+					-- however FDR struggles with that form in certain cases. So we use the exception operator
+					-- instead to 'terminate'.
+					
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= SKIP ; 
+							 	  Behaviour ; 
+							 	  share__choice(exit -> SKIP) ; SKIP ; 
+							 	  share__choice(exited -> SKIP) ; Inactive
+				
+					Behaviour 	= entered -> During
+					During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+				within
+					Inactive [| {terminate} |> SKIP)
+					
+				VS_O__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= SKIP ; 
+							 	  Behaviour ; 
+							 	  share__choice(exit -> SKIP) ; SKIP ; 
+							 	  share__choice(exited -> SKIP) ; Inactive
+				
+					Behaviour 	= entered -> During
+					During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+				
+				-- Clocks
+				
+				StateClocks(id__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = terminate -> SKIP
+				
+				stateClockSync = {||}
+			}
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: FreeMovement
+		module FreeMovement
+		
+		enterSS = 
+				{|			i0::enter,
+					Move::enter,
+					SensePosition::enter,
+					s0::enter
+				|}
+		enteredSS = 
+				{|			Move::entered,
+					SensePosition::entered,
+					s0::entered
+				|}
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			-- declaring identifiers of transitions
+			datatype NIDS = 
+			              NID_i0|
+			              NID_Move|
+			              NID_SensePosition|
+			              NID_s0
+			
+			channel internal__ : NIDS
+			channel allowMovement__: NIDS.InOut
+			channel movementOccurred__: NIDS.InOut
+			channel stepMoved__: NIDS.InOut
+			channel movementInitiated__: NIDS.InOut
+			channel movementWasAllowed__: NIDS.InOut
+			channel forceWasAllowed__: NIDS.InOut
+			channel forceInitiated__: NIDS.InOut
+			channel resetMovement__: NIDS.InOut
+			channel forceApplied__: NIDS.InOut
+			channel movementStart__: NIDS.InOut.vector_real_3
+			channel movementEnd__: NIDS.InOut
+			channel endEffectorPosition__: NIDS.InOut.vector_real_3
+			channel forceEndEffector__: NIDS.InOut.vector_real_3
+			channel forceStart__: NIDS.InOut.vector_real_3
+			channel forceEnd__: NIDS.InOut
+			
+			channel get_CLID_SensePosition : core_clock_type 
+			channel get_CLID_s0 : core_clock_type 
+			channel get_CLID_Move : core_clock_type 
+			--channel increment__
+			
+			CLID_SensePosition_clock_type(id__,
+					          const_movement_MovementControl_Kp,
+					          const_movement_MovementControl_Ki,
+					          const_movement_MovementControl_Kd,
+					          const_movement_MovementControl_step,
+					          const_movement_MovementControl_EPSILON,
+					          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				let
+					max = (clock_type_max(Union({
+			{}
+			}))+1)
+				ctype = {0..max}
+			within
+				if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+			
+			CLID_s0_clock_type(id__,
+					          const_movement_MovementControl_Kp,
+					          const_movement_MovementControl_Ki,
+					          const_movement_MovementControl_Kd,
+					          const_movement_MovementControl_step,
+					          const_movement_MovementControl_EPSILON,
+					          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				let
+					max = (clock_type_max(Union({
+			{}
+			}))+1)
+				ctype = {0..max}
+			within
+				if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+			
+			CLID_Move_clock_type(id__,
+					          const_movement_MovementControl_Kp,
+					          const_movement_MovementControl_Ki,
+					          const_movement_MovementControl_Kd,
+					          const_movement_MovementControl_step,
+					          const_movement_MovementControl_EPSILON,
+					          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				let
+					max = (clock_type_max(Union({
+			{}
+			}))+1)
+				ctype = {0..max}
+			within
+				if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+			
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			----------------------------------------------------------------------
+			-- Initial: i0
+			module i0
+			exports
+			
+				channel enter, interrupt
+				
+				Timed(OneStep) {
+					D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+						dbisim(let
+							Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+							
+							Termination = terminate -> SKIP
+							
+							Active 		= share__choice(interrupt -> SKIP) ; Inactive
+						within
+							Inactive [| {terminate} |> SKIP)
+					
+					VS_O__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				}
+			
+			endmodule
+			----------------------------------------------------------------------
+			
+			
+			----------------------------------------------------------------------
+			-- State: Move
+			module Move
+			
+			enterSS = {}
+			
+			enteredSS = {}
+			
+			exports
+			
+				--  Declarations
+				
+				channel enter, entered, interrupt
+				channel enteredL, enteredR
+				
+								
+				
+				--channel increment__
+				
+				
+				--	Nodes
+				-- declaring all nodes
+				
+				
+				Timed(OneStep) {
+					--	Rule: behaviours(Node)
+					--  Note that FDR has problems with efficiently compiling the process below
+					-- 	if using a different recursion pattern.
+					D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						-- IMPLEMENTATION NOTE: 
+						-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+						-- however FDR struggles with that form in certain cases. So we use the exception operator
+						-- instead to 'terminate'.
+						
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= share__choice(get_o?o -> true&CALL__setEEPos(
+									id__,
+								    const_movement_MovementControl_Kp,
+								    const_movement_MovementControl_Ki,
+								    const_movement_MovementControl_Kd,
+								    const_movement_MovementControl_step,
+								    const_movement_MovementControl_EPSILON,
+								    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+									o
+								)) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+						
+					VS_O__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= share__choice(get_o?o -> true&CALL__setEEPos(
+									id__,
+								    const_movement_MovementControl_Kp,
+								    const_movement_MovementControl_Ki,
+								    const_movement_MovementControl_Kd,
+								    const_movement_MovementControl_step,
+								    const_movement_MovementControl_EPSILON,
+								    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+									o
+								)) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+					
+					
+					-- Clocks
+					
+					StateClocks(id__,
+							          const_movement_MovementControl_Kp,
+							          const_movement_MovementControl_Ki,
+							          const_movement_MovementControl_Kd,
+							          const_movement_MovementControl_step,
+							          const_movement_MovementControl_EPSILON,
+							          const_movement_MovementControl_TARGET_TOTAL_FORCE) = terminate -> SKIP
+					
+					stateClockSync = {||}
+				}
+			
+			endmodule
+			----------------------------------------------------------------------
+			
+			
+			----------------------------------------------------------------------
+			-- State: SensePosition
+			module SensePosition
+			
+			enterSS = {}
+			
+			enteredSS = {}
+			
+			exports
+			
+				--  Declarations
+				
+				channel enter, entered, interrupt
+				channel enteredL, enteredR
+				
+								
+				
+				--channel increment__
+				
+				
+				--	Nodes
+				-- declaring all nodes
+				
+				
+				Timed(OneStep) {
+					--	Rule: behaviours(Node)
+					--  Note that FDR has problems with efficiently compiling the process below
+					-- 	if using a different recursion pattern.
+					D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						-- IMPLEMENTATION NOTE: 
+						-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+						-- however FDR struggles with that form in certain cases. So we use the exception operator
+						-- instead to 'terminate'.
+						
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= true&(share__choice(endEffectorPosition.in?vcurrent -> (SStop /\ set_vcurrent!vcurrent -> SKIP)));share__choice(get_vcurrent?vcurrent -> true&CALL__PIDUpdate(
+									id__,
+								    const_movement_MovementControl_Kp,
+								    const_movement_MovementControl_Ki,
+								    const_movement_MovementControl_Kd,
+								    const_movement_MovementControl_step,
+								    const_movement_MovementControl_EPSILON,
+								    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+									vcurrent
+								)) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+						
+					VS_O__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= true&(share__choice(endEffectorPosition.in?vcurrent -> (SStop /\ set_vcurrent!vcurrent -> SKIP)));share__choice(get_vcurrent?vcurrent -> true&CALL__PIDUpdate(
+									id__,
+								    const_movement_MovementControl_Kp,
+								    const_movement_MovementControl_Ki,
+								    const_movement_MovementControl_Kd,
+								    const_movement_MovementControl_step,
+								    const_movement_MovementControl_EPSILON,
+								    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+									vcurrent
+								)) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+					
+					
+					-- Clocks
+					
+					StateClocks(id__,
+							          const_movement_MovementControl_Kp,
+							          const_movement_MovementControl_Ki,
+							          const_movement_MovementControl_Kd,
+							          const_movement_MovementControl_step,
+							          const_movement_MovementControl_EPSILON,
+							          const_movement_MovementControl_TARGET_TOTAL_FORCE) = terminate -> SKIP
+					
+					stateClockSync = {||}
+				}
+			
+			endmodule
+			----------------------------------------------------------------------
+			
+			
+			----------------------------------------------------------------------
+			-- State: s0
+			module s0
+			
+			enterSS = {}
+			
+			enteredSS = {}
+			
+			exports
+			
+				--  Declarations
+				
+				channel enter, entered, interrupt
+				channel enteredL, enteredR
+				
+								
+				
+				--channel increment__
+				
+				
+				--	Nodes
+				-- declaring all nodes
+				
+				
+				Timed(OneStep) {
+					--	Rule: behaviours(Node)
+					--  Note that FDR has problems with efficiently compiling the process below
+					-- 	if using a different recursion pattern.
+					D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						-- IMPLEMENTATION NOTE: 
+						-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+						-- however FDR struggles with that form in certain cases. So we use the exception operator
+						-- instead to 'terminate'.
+						
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= SHARE_WAIT(const_movement_MovementControl_step);true&(share__choice(stepMoved.out -> SKIP));share__choice(share__choice(get_vcurrent?vcurrent -> share__choice(get_vtarget?vtarget -> true & (share__choice(set_arrivedAtTarget!(definitions_dist(vtarget,vcurrent)<=const_movement_MovementControl_EPSILON) -> SKIP))))) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+						
+					VS_O__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= SHARE_WAIT(const_movement_MovementControl_step);true&(share__choice(stepMoved.out -> SKIP));share__choice(share__choice(get_vcurrent?vcurrent -> share__choice(get_vtarget?vtarget -> true & (share__choice(set_arrivedAtTarget!(definitions_dist(vtarget,vcurrent)<=const_movement_MovementControl_EPSILON) -> SKIP))))) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+					
+					
+					-- Clocks
+					
+					StateClocks(id__,
+							          const_movement_MovementControl_Kp,
+							          const_movement_MovementControl_Ki,
+							          const_movement_MovementControl_Kd,
+							          const_movement_MovementControl_step,
+							          const_movement_MovementControl_EPSILON,
+							          const_movement_MovementControl_TARGET_TOTAL_FORCE) = terminate -> SKIP
+					
+					stateClockSync = {||}
+				}
+			
+			endmodule
+			----------------------------------------------------------------------
+			
+			
+			
+			Timed(OneStep) {
+				--	Rule: behaviours(Node)
+				--  Note that FDR has problems with efficiently compiling the process below
+				-- 	if using a different recursion pattern.
+				D__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				dbisim(let
+					-- IMPLEMENTATION NOTE: 
+					-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+					-- however FDR struggles with that form in certain cases. So we use the exception operator
+					-- instead to 'terminate'.
+					
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= share__choice(get_vtarget?vtarget -> true&CALL__PIDInitialize(
+								id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+								vtarget
+							)) ; 
+							 	  Behaviour ; 
+							 	  share__choice(exit -> SKIP) ; SKIP ; 
+							 	  share__choice(exited -> SKIP) ; Inactive
+				
+				
+					Behaviour 	= dbisim(
+						((
+						 (((dbisim(
+						 	sbisim(
+						 		dbisim(
+						 			sbisim(
+						 				dbisim(
+						 					sbisim(
+						 						(let
+						 							-- IMPLEMENTATION NOTE:
+						 							-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+						 							-- modules for defining the semantics of each node.
+						 							enterSS = {|
+						 							i0::enter,
+						 							Move::enter,
+						 							SensePosition::enter,
+						 							s0::enter
+						 							|}
+						 							hideSet = union(enterSS,{|exit,exited,internal__|})
+						 						within 
+						 							((let
+						 								-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+						 								-- because CSPM modules are used for the semantics of Node.
+						 								flowevts = union(enterSS,{|exit,exited,interrupt|})
+						 								transSync = {|allowMovement__.NID_SensePosition.in,endEffectorPosition__.NID_Move.in,internal__.NID_s0,internal__.NID_i0,resetMovement__.NID_SensePosition.in|}
+						 							within
+						 								((
+						 								 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+						 								   i0::D__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   Move::D__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   SensePosition::D__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   s0::D__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   )
+						 								   )
+						 								   )
+						 								 )
+						 								 [[Move::interrupt <- x__ | x__ <- {|interrupt,endEffectorPosition__.NID_Move.in|}]]
+						 								 [[SensePosition::interrupt <- x__ | x__ <- {|interrupt,allowMovement__.NID_SensePosition.in,resetMovement__.NID_SensePosition.in|}]]
+						 								 [[s0::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_s0|}]]
+						 								 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+						 								 )
+						 								  [[ share__ <- x__ | x__ <- {| share__,setR_vcurrent |} ]] 
+						 								  [[set_arrivedAtTarget <- setL_arrivedAtTarget]]
+						 								 )
+						 								 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+						 								 			,setL_arrivedAtTarget
+						 								 			,setR_vcurrent
+						 								 			|}) |]
+						 								 ((i0::enter -> Transitions(id__,
+						 								 		    const_movement_MovementControl_Kp,
+						 								 		    const_movement_MovementControl_Ki,
+						 								 		    const_movement_MovementControl_Kd,
+						 								 		    const_movement_MovementControl_step,
+						 								 		    const_movement_MovementControl_EPSILON,
+						 								 		    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 								  [[ share__ <- x__ | x__ <- {| share__,setL_arrivedAtTarget |} ]]
+						 								  [[set_vcurrent <- setR_vcurrent]]
+						 								 )
+						 								)[[setL_arrivedAtTarget <- set_arrivedAtTarget]]
+						 								 [[setR_vcurrent <- set_vcurrent]]
+						 								)
+						 							)
+						 							 \ hideSet)
+						 							[[
+						 								allowMovement__.x____ <- allowMovement,
+						 								movementOccurred__.x____ <- movementOccurred,
+						 								stepMoved__.x____ <- stepMoved,
+						 								movementInitiated__.x____ <- movementInitiated,
+						 								movementWasAllowed__.x____ <- movementWasAllowed,
+						 								forceWasAllowed__.x____ <- forceWasAllowed,
+						 								forceInitiated__.x____ <- forceInitiated,
+						 								resetMovement__.x____ <- resetMovement,
+						 								forceApplied__.x____ <- forceApplied,
+						 								movementStart__.x____ <- movementStart,
+						 								movementEnd__.x____ <- movementEnd,
+						 								endEffectorPosition__.x____ <- endEffectorPosition,
+						 								forceEndEffector__.x____ <- forceEndEffector,
+						 								forceStart__.x____ <- forceStart,
+						 								forceEnd__.x____ <- forceEnd
+						 								| x____ <- NIDS
+						 							]]
+						 						)
+						 						[| {|get_CLID_Move,Move::entered,terminate|} |]
+						 						dbisim(Clock_CLID_Move(id__,0,
+						 								          const_movement_MovementControl_Kp,
+						 								          const_movement_MovementControl_Ki,
+						 								          const_movement_MovementControl_Kd,
+						 								          const_movement_MovementControl_step,
+						 								          const_movement_MovementControl_EPSILON,
+						 								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 					)\{|get_CLID_Move|}
+						 				)
+						 				[| {|get_CLID_s0,s0::entered,terminate|} |]
+						 				dbisim(Clock_CLID_s0(id__,0,
+						 						          const_movement_MovementControl_Kp,
+						 						          const_movement_MovementControl_Ki,
+						 						          const_movement_MovementControl_Kd,
+						 						          const_movement_MovementControl_step,
+						 						          const_movement_MovementControl_EPSILON,
+						 						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 			)\{|get_CLID_s0|}
+						 		)
+						 		[| {|get_CLID_SensePosition,SensePosition::entered,terminate|} |]
+						 		dbisim(Clock_CLID_SensePosition(id__,0,
+						 				          const_movement_MovementControl_Kp,
+						 				          const_movement_MovementControl_Ki,
+						 				          const_movement_MovementControl_Kd,
+						 				          const_movement_MovementControl_step,
+						 				          const_movement_MovementControl_EPSILON,
+						 				          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 	)\{|get_CLID_SensePosition|}
+						 )
+						 ))
+						  [[ share__ <- x__ | x__ <- {| share__,setR_fcurrent,setR_vcurrent,setR_p,setR_vtarget,setR_t_old,setR_e,setR_t,setR_arrivedAtTarget,setR_d,setR_ftarget,setR_o,setR_i,setR_e_old |} ]] 
+						  [[set_fcurrent <- setL_fcurrent,set_vcurrent <- setL_vcurrent,set_p <- setL_p,set_vtarget <- setL_vtarget,set_t_old <- setL_t_old,set_e <- setL_e,set_t <- setL_t,set_arrivedAtTarget <- setL_arrivedAtTarget,set_d <- setL_d,set_ftarget <- setL_ftarget,set_o <- setL_o,set_i <- setL_i,set_e_old <- setL_e_old]]
+						 )
+						 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+						 			,setL_fcurrent
+						 			,setL_vcurrent
+						 			,setL_p
+						 			,setL_vtarget
+						 			,setL_t_old
+						 			,setL_e
+						 			,setL_t
+						 			,setL_arrivedAtTarget
+						 			,setL_d
+						 			,setL_ftarget
+						 			,setL_o
+						 			,setL_i
+						 			,setL_e_old
+						 			,setR_fcurrent
+						 			 			,setR_vcurrent
+						 			 			,setR_p
+						 			 			,setR_vtarget
+						 			 			,setR_t_old
+						 			 			,setR_e
+						 			 			,setR_t
+						 			 			,setR_arrivedAtTarget
+						 			 			,setR_d
+						 			 			,setR_ftarget
+						 			 			,setR_o
+						 			 			,setR_i
+						 			 			,setR_e_old
+						 			|}) |]
+						 ((During)
+						  [[ share__ <- x__ | x__ <- {| share__,setL_fcurrent,setL_vcurrent,setL_p,setL_vtarget,setL_t_old,setL_e,setL_t,setL_arrivedAtTarget,setL_d,setL_ftarget,setL_o,setL_i,setL_e_old |} ]]
+						  [[set_fcurrent <- setR_fcurrent,set_vcurrent <- setR_vcurrent,set_p <- setR_p,set_vtarget <- setR_vtarget,set_t_old <- setR_t_old,set_e <- setR_e,set_t <- setR_t,set_arrivedAtTarget <- setR_arrivedAtTarget,set_d <- setR_d,set_ftarget <- setR_ftarget,set_o <- setR_o,set_i <- setR_i,set_e_old <- setR_e_old]]
+						 )
+						)[[setL_fcurrent <- set_fcurrent,setL_vcurrent <- set_vcurrent,setL_p <- set_p,setL_vtarget <- set_vtarget,setL_t_old <- set_t_old,setL_e <- set_e,setL_t <- set_t,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_d <- set_d,setL_ftarget <- set_ftarget,setL_o <- set_o,setL_i <- set_i,setL_e_old <- set_e_old]]
+						 [[setR_fcurrent <- set_fcurrent,setR_vcurrent <- set_vcurrent,setR_p <- set_p,setR_vtarget <- set_vtarget,setR_t_old <- set_t_old,setR_e <- set_e,setR_t <- set_t,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_d <- set_d,setR_ftarget <- set_ftarget,setR_o <- set_o,setR_i <- set_i,setR_e_old <- set_e_old]]
+						)\union(enteredSS,{terminate}) 
+					)
+					During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+							 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+				within
+					Inactive [| {terminate} |> SKIP)
+					
+				VS_O__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= share__choice(get_vtarget?vtarget -> true&CALL__PIDInitialize(
+								id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+								vtarget
+							)) ; 
+							 	  Behaviour ; 
+							 	  share__choice(exit -> SKIP) ; SKIP ; 
+							 	  share__choice(exited -> SKIP) ; Inactive
+				
+				
+					Behaviour 	= dbisim(
+						((
+						 (((dbisim(
+						 	sbisim(
+						 		dbisim(
+						 			sbisim(
+						 				dbisim(
+						 					sbisim(
+						 						(let
+						 							-- IMPLEMENTATION NOTE:
+						 							-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+						 							-- modules for defining the semantics of each node.
+						 							enterSS = {|
+						 							i0::enter,
+						 							Move::enter,
+						 							SensePosition::enter,
+						 							s0::enter
+						 							|}
+						 							hideSet = union(enterSS,{|exit,exited,internal__|})
+						 						within 
+						 							((let
+						 								-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+						 								-- because CSPM modules are used for the semantics of Node.
+						 								flowevts = union(enterSS,{|exit,exited,interrupt|})
+						 								transSync = {|allowMovement__.NID_SensePosition.in,endEffectorPosition__.NID_Move.in,internal__.NID_s0,internal__.NID_i0,resetMovement__.NID_SensePosition.in|}
+						 							within
+						 								((
+						 								 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+						 								   i0::VS_O__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   Move::VS_O__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   SensePosition::VS_O__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   s0::VS_O__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   )
+						 								   )
+						 								   )
+						 								 )
+						 								 [[Move::interrupt <- x__ | x__ <- {|interrupt,endEffectorPosition__.NID_Move.in|}]]
+						 								 [[SensePosition::interrupt <- x__ | x__ <- {|interrupt,allowMovement__.NID_SensePosition.in,resetMovement__.NID_SensePosition.in|}]]
+						 								 [[s0::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_s0|}]]
+						 								 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+						 								 )
+						 								  [[ share__ <- x__ | x__ <- {| share__,setR_vcurrent |} ]] 
+						 								  [[set_arrivedAtTarget <- setL_arrivedAtTarget]]
+						 								 )
+						 								 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+						 								 			,setL_arrivedAtTarget
+						 								 			,setR_vcurrent
+						 								 			|}) |]
+						 								 ((i0::enter -> Transitions(id__,
+						 								 		    const_movement_MovementControl_Kp,
+						 								 		    const_movement_MovementControl_Ki,
+						 								 		    const_movement_MovementControl_Kd,
+						 								 		    const_movement_MovementControl_step,
+						 								 		    const_movement_MovementControl_EPSILON,
+						 								 		    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 								  [[ share__ <- x__ | x__ <- {| share__,setL_arrivedAtTarget |} ]]
+						 								  [[set_vcurrent <- setR_vcurrent]]
+						 								 )
+						 								)[[setL_arrivedAtTarget <- set_arrivedAtTarget]]
+						 								 [[setR_vcurrent <- set_vcurrent]]
+						 								)
+						 							)
+						 							 \ hideSet)
+						 							[[
+						 								allowMovement__.x____ <- allowMovement,
+						 								movementOccurred__.x____ <- movementOccurred,
+						 								stepMoved__.x____ <- stepMoved,
+						 								movementInitiated__.x____ <- movementInitiated,
+						 								movementWasAllowed__.x____ <- movementWasAllowed,
+						 								forceWasAllowed__.x____ <- forceWasAllowed,
+						 								forceInitiated__.x____ <- forceInitiated,
+						 								resetMovement__.x____ <- resetMovement,
+						 								forceApplied__.x____ <- forceApplied,
+						 								movementStart__.x____ <- movementStart,
+						 								movementEnd__.x____ <- movementEnd,
+						 								endEffectorPosition__.x____ <- endEffectorPosition,
+						 								forceEndEffector__.x____ <- forceEndEffector,
+						 								forceStart__.x____ <- forceStart,
+						 								forceEnd__.x____ <- forceEnd
+						 								| x____ <- NIDS
+						 							]]
+						 						)
+						 						[| {|get_CLID_Move,Move::entered,terminate|} |]
+						 						dbisim(Clock_CLID_Move(id__,0,
+						 								          const_movement_MovementControl_Kp,
+						 								          const_movement_MovementControl_Ki,
+						 								          const_movement_MovementControl_Kd,
+						 								          const_movement_MovementControl_step,
+						 								          const_movement_MovementControl_EPSILON,
+						 								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 					)\{|get_CLID_Move|}
+						 				)
+						 				[| {|get_CLID_s0,s0::entered,terminate|} |]
+						 				dbisim(Clock_CLID_s0(id__,0,
+						 						          const_movement_MovementControl_Kp,
+						 						          const_movement_MovementControl_Ki,
+						 						          const_movement_MovementControl_Kd,
+						 						          const_movement_MovementControl_step,
+						 						          const_movement_MovementControl_EPSILON,
+						 						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 			)\{|get_CLID_s0|}
+						 		)
+						 		[| {|get_CLID_SensePosition,SensePosition::entered,terminate|} |]
+						 		dbisim(Clock_CLID_SensePosition(id__,0,
+						 				          const_movement_MovementControl_Kp,
+						 				          const_movement_MovementControl_Ki,
+						 				          const_movement_MovementControl_Kd,
+						 				          const_movement_MovementControl_step,
+						 				          const_movement_MovementControl_EPSILON,
+						 				          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 	)\{|get_CLID_SensePosition|}
+						 )
+						 ))
+						  [[ share__ <- x__ | x__ <- {| share__,setR_fcurrent,setR_vcurrent,setR_p,setR_vtarget,setR_t_old,setR_e,setR_t,setR_arrivedAtTarget,setR_d,setR_ftarget,setR_o,setR_i,setR_e_old |} ]] 
+						  [[set_fcurrent <- setL_fcurrent,set_vcurrent <- setL_vcurrent,set_p <- setL_p,set_vtarget <- setL_vtarget,set_t_old <- setL_t_old,set_e <- setL_e,set_t <- setL_t,set_arrivedAtTarget <- setL_arrivedAtTarget,set_d <- setL_d,set_ftarget <- setL_ftarget,set_o <- setL_o,set_i <- setL_i,set_e_old <- setL_e_old]]
+						 )
+						 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+						 			,setL_fcurrent
+						 			,setL_vcurrent
+						 			,setL_p
+						 			,setL_vtarget
+						 			,setL_t_old
+						 			,setL_e
+						 			,setL_t
+						 			,setL_arrivedAtTarget
+						 			,setL_d
+						 			,setL_ftarget
+						 			,setL_o
+						 			,setL_i
+						 			,setL_e_old
+						 			,setR_fcurrent
+						 			 			,setR_vcurrent
+						 			 			,setR_p
+						 			 			,setR_vtarget
+						 			 			,setR_t_old
+						 			 			,setR_e
+						 			 			,setR_t
+						 			 			,setR_arrivedAtTarget
+						 			 			,setR_d
+						 			 			,setR_ftarget
+						 			 			,setR_o
+						 			 			,setR_i
+						 			 			,setR_e_old
+						 			|}) |]
+						 ((During)
+						  [[ share__ <- x__ | x__ <- {| share__,setL_fcurrent,setL_vcurrent,setL_p,setL_vtarget,setL_t_old,setL_e,setL_t,setL_arrivedAtTarget,setL_d,setL_ftarget,setL_o,setL_i,setL_e_old |} ]]
+						  [[set_fcurrent <- setR_fcurrent,set_vcurrent <- setR_vcurrent,set_p <- setR_p,set_vtarget <- setR_vtarget,set_t_old <- setR_t_old,set_e <- setR_e,set_t <- setR_t,set_arrivedAtTarget <- setR_arrivedAtTarget,set_d <- setR_d,set_ftarget <- setR_ftarget,set_o <- setR_o,set_i <- setR_i,set_e_old <- setR_e_old]]
+						 )
+						)[[setL_fcurrent <- set_fcurrent,setL_vcurrent <- set_vcurrent,setL_p <- set_p,setL_vtarget <- set_vtarget,setL_t_old <- set_t_old,setL_e <- set_e,setL_t <- set_t,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_d <- set_d,setL_ftarget <- set_ftarget,setL_o <- set_o,setL_i <- set_i,setL_e_old <- set_e_old]]
+						 [[setR_fcurrent <- set_fcurrent,setR_vcurrent <- set_vcurrent,setR_p <- set_p,setR_vtarget <- set_vtarget,setR_t_old <- set_t_old,setR_e <- set_e,setR_t <- set_t,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_d <- set_d,setR_ftarget <- set_ftarget,setR_o <- set_o,setR_i <- set_i,setR_e_old <- set_e_old]]
+						)\{terminate} 
+					)
+					During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+							 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+				Transitions(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = ((let
+					Trans = share__choice(get_arrivedAtTarget?arrivedAtTarget -> TimeOut_1(
+						 (share__ -> SKIP
+						 [] dbisim((true)&(allowMovement__!NID_SensePosition.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(movementWasAllowed.out -> SKIP)) ; Move::enter -> SKIP)))
+						 [] dbisim((true)&(endEffectorPosition__!NID_Move.in?vcurrent:{vcurrent|vcurrent <- vector_real_3, true} -> share__choice(set_vcurrent!vcurrent -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(movementOccurred.out -> SKIP)) ; s0::enter -> SKIP)))
+						 [] dbisim(((not (arrivedAtTarget)))&(internal__!NID_s0 -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; SensePosition::enter -> SKIP)))
+						 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; SensePosition::enter -> SKIP))))
+						 [] dbisim((true)&(resetMovement__!NID_SensePosition.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; SensePosition::enter -> SKIP)))
+						 []
+						 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+						 []
+						 terminate -> SKIP
+						 )
+					,SKIP);Trans
+					)
+				within
+					Trans [|{terminate}|> SKIP
+				)
+				)
+				
+				
+				-- Clocks
+				Clock_CLID_SensePosition(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					TimeOut_1(
+						SensePosition::entered -> Clock_CLID_SensePosition(id__,0,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						get_CLID_SensePosition!x__ -> Clock_CLID_SensePosition(id__,x__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						terminate -> SKIP,Clock_CLID_SensePosition(id__,clock_type_plus(x__,1,CLID_SensePosition_clock_type(id__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				Clock_CLID_s0(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					TimeOut_1(
+						s0::entered -> Clock_CLID_s0(id__,0,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						get_CLID_s0!x__ -> Clock_CLID_s0(id__,x__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						terminate -> SKIP,Clock_CLID_s0(id__,clock_type_plus(x__,1,CLID_s0_clock_type(id__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				Clock_CLID_Move(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					TimeOut_1(
+						Move::entered -> Clock_CLID_Move(id__,0,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						get_CLID_Move!x__ -> Clock_CLID_Move(id__,x__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						terminate -> SKIP,Clock_CLID_Move(id__,clock_type_plus(x__,1,CLID_Move_clock_type(id__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				
+				StateClocks(id__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = dbisim(Clock_CLID_SensePosition(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				[| { terminate } |] (
+				dbisim(Clock_CLID_s0(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				[| { terminate } |] (
+				dbisim(Clock_CLID_Move(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				)
+				)
+				
+				stateClockSync = {|get_CLID_SensePosition,SensePosition::entered,get_CLID_s0,s0::entered,get_CLID_Move,Move::entered|}
+			}
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		
+		----------------------------------------------------------------------
+		-- State: ForceApplication
+		module ForceApplication
+		
+		enterSS = 
+				{|			i0::enter,
+					CheckForce::enter,
+					Move::enter,
+					s0::enter
+				|}
+		enteredSS = 
+				{|			CheckForce::entered,
+					Move::entered,
+					s0::entered
+				|}
+		exports
+		
+			--  Declarations
+			
+			channel enter, entered, interrupt
+			channel enteredL, enteredR
+			
+							
+			-- declaring identifiers of transitions
+			datatype NIDS = 
+			              NID_i0|
+			              NID_CheckForce|
+			              NID_Move|
+			              NID_s0
+			
+			channel internal__ : NIDS
+			channel allowMovement__: NIDS.InOut
+			channel movementOccurred__: NIDS.InOut
+			channel stepMoved__: NIDS.InOut
+			channel movementInitiated__: NIDS.InOut
+			channel movementWasAllowed__: NIDS.InOut
+			channel forceWasAllowed__: NIDS.InOut
+			channel forceInitiated__: NIDS.InOut
+			channel resetMovement__: NIDS.InOut
+			channel forceApplied__: NIDS.InOut
+			channel movementStart__: NIDS.InOut.vector_real_3
+			channel movementEnd__: NIDS.InOut
+			channel endEffectorPosition__: NIDS.InOut.vector_real_3
+			channel forceEndEffector__: NIDS.InOut.vector_real_3
+			channel forceStart__: NIDS.InOut.vector_real_3
+			channel forceEnd__: NIDS.InOut
+			
+			channel get_CLID_s0 : core_clock_type 
+			channel get_CLID_Move : core_clock_type 
+			channel get_CLID_CheckForce : core_clock_type 
+			--channel increment__
+			
+			CLID_s0_clock_type(id__,
+					          const_movement_MovementControl_Kp,
+					          const_movement_MovementControl_Ki,
+					          const_movement_MovementControl_Kd,
+					          const_movement_MovementControl_step,
+					          const_movement_MovementControl_EPSILON,
+					          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				let
+					max = (clock_type_max(Union({
+			{}
+			}))+1)
+				ctype = {0..max}
+			within
+				if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+			
+			CLID_Move_clock_type(id__,
+					          const_movement_MovementControl_Kp,
+					          const_movement_MovementControl_Ki,
+					          const_movement_MovementControl_Kd,
+					          const_movement_MovementControl_step,
+					          const_movement_MovementControl_EPSILON,
+					          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				let
+					max = (clock_type_max(Union({
+			{}
+			}))+1)
+				ctype = {0..max}
+			within
+				if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+			
+			CLID_CheckForce_clock_type(id__,
+					          const_movement_MovementControl_Kp,
+					          const_movement_MovementControl_Ki,
+					          const_movement_MovementControl_Kd,
+					          const_movement_MovementControl_step,
+					          const_movement_MovementControl_EPSILON,
+					          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				let
+					max = (clock_type_max(Union({
+			{}
+			}))+1)
+				ctype = {0..max}
+			within
+				if member(max,core_clock_type) then ctype else error("core_clock_type is not wide enough")
+			
+			
+			--	Nodes
+			-- declaring all nodes
+			
+			----------------------------------------------------------------------
+			-- Initial: i0
+			module i0
+			exports
+			
+				channel enter, interrupt
+				
+				Timed(OneStep) {
+					D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+						dbisim(let
+							Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+							
+							Termination = terminate -> SKIP
+							
+							Active 		= share__choice(interrupt -> SKIP) ; Inactive
+						within
+							Inactive [| {terminate} |> SKIP)
+					
+					VS_O__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				}
+			
+			endmodule
+			----------------------------------------------------------------------
+			
+			
+			----------------------------------------------------------------------
+			-- State: CheckForce
+			module CheckForce
+			
+			enterSS = {}
+			
+			enteredSS = {}
+			
+			exports
+			
+				--  Declarations
+				
+				channel enter, entered, interrupt
+				channel enteredL, enteredR
+				
+								
+				
+				--channel increment__
+				
+				
+				--	Nodes
+				-- declaring all nodes
+				
+				
+				Timed(OneStep) {
+					--	Rule: behaviours(Node)
+					--  Note that FDR has problems with efficiently compiling the process below
+					-- 	if using a different recursion pattern.
+					D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						-- IMPLEMENTATION NOTE: 
+						-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+						-- however FDR struggles with that form in certain cases. So we use the exception operator
+						-- instead to 'terminate'.
+						
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= true&(share__choice(forceEndEffector.in?fcurrent -> (SStop /\ set_fcurrent!fcurrent -> SKIP)));share__choice(get_fcurrent?fcurrent -> true&CALL__PIDUpdate(
+									id__,
+								    const_movement_MovementControl_Kp,
+								    const_movement_MovementControl_Ki,
+								    const_movement_MovementControl_Kd,
+								    const_movement_MovementControl_step,
+								    const_movement_MovementControl_EPSILON,
+								    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+									fcurrent
+								)) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+						
+					VS_O__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= true&(share__choice(forceEndEffector.in?fcurrent -> (SStop /\ set_fcurrent!fcurrent -> SKIP)));share__choice(get_fcurrent?fcurrent -> true&CALL__PIDUpdate(
+									id__,
+								    const_movement_MovementControl_Kp,
+								    const_movement_MovementControl_Ki,
+								    const_movement_MovementControl_Kd,
+								    const_movement_MovementControl_step,
+								    const_movement_MovementControl_EPSILON,
+								    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+									fcurrent
+								)) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+					
+					
+					-- Clocks
+					
+					StateClocks(id__,
+							          const_movement_MovementControl_Kp,
+							          const_movement_MovementControl_Ki,
+							          const_movement_MovementControl_Kd,
+							          const_movement_MovementControl_step,
+							          const_movement_MovementControl_EPSILON,
+							          const_movement_MovementControl_TARGET_TOTAL_FORCE) = terminate -> SKIP
+					
+					stateClockSync = {||}
+				}
+			
+			endmodule
+			----------------------------------------------------------------------
+			
+			
+			----------------------------------------------------------------------
+			-- State: Move
+			module Move
+			
+			enterSS = {}
+			
+			enteredSS = {}
+			
+			exports
+			
+				--  Declarations
+				
+				channel enter, entered, interrupt
+				channel enteredL, enteredR
+				
+								
+				
+				--channel increment__
+				
+				
+				--	Nodes
+				-- declaring all nodes
+				
+				
+				Timed(OneStep) {
+					--	Rule: behaviours(Node)
+					--  Note that FDR has problems with efficiently compiling the process below
+					-- 	if using a different recursion pattern.
+					D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						-- IMPLEMENTATION NOTE: 
+						-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+						-- however FDR struggles with that form in certain cases. So we use the exception operator
+						-- instead to 'terminate'.
+						
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= share__choice(get_o?o -> true&CALL__setEEForces(
+									id__,
+								    const_movement_MovementControl_Kp,
+								    const_movement_MovementControl_Ki,
+								    const_movement_MovementControl_Kd,
+								    const_movement_MovementControl_step,
+								    const_movement_MovementControl_EPSILON,
+								    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+									o
+								)) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+						
+					VS_O__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= share__choice(get_o?o -> true&CALL__setEEForces(
+									id__,
+								    const_movement_MovementControl_Kp,
+								    const_movement_MovementControl_Ki,
+								    const_movement_MovementControl_Kd,
+								    const_movement_MovementControl_step,
+								    const_movement_MovementControl_EPSILON,
+								    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+									o
+								)) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+					
+					
+					-- Clocks
+					
+					StateClocks(id__,
+							          const_movement_MovementControl_Kp,
+							          const_movement_MovementControl_Ki,
+							          const_movement_MovementControl_Kd,
+							          const_movement_MovementControl_step,
+							          const_movement_MovementControl_EPSILON,
+							          const_movement_MovementControl_TARGET_TOTAL_FORCE) = terminate -> SKIP
+					
+					stateClockSync = {||}
+				}
+			
+			endmodule
+			----------------------------------------------------------------------
+			
+			
+			----------------------------------------------------------------------
+			-- State: s0
+			module s0
+			
+			enterSS = {}
+			
+			enteredSS = {}
+			
+			exports
+			
+				--  Declarations
+				
+				channel enter, entered, interrupt
+				channel enteredL, enteredR
+				
+								
+				
+				--channel increment__
+				
+				
+				--	Nodes
+				-- declaring all nodes
+				
+				
+				Timed(OneStep) {
+					--	Rule: behaviours(Node)
+					--  Note that FDR has problems with efficiently compiling the process below
+					-- 	if using a different recursion pattern.
+					D__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						-- IMPLEMENTATION NOTE: 
+						-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+						-- however FDR struggles with that form in certain cases. So we use the exception operator
+						-- instead to 'terminate'.
+						
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= SHARE_WAIT(const_movement_MovementControl_step);true&(share__choice(forceApplied.out -> SKIP));share__choice(share__choice(get_vcurrent?vcurrent -> share__choice(get_vtarget?vtarget -> true & (share__choice(set_arrivedAtTarget!(definitions_dist(vtarget,vcurrent)<=const_movement_MovementControl_EPSILON) -> SKIP))))) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+						
+					VS_O__(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					dbisim(let
+						Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+						
+						Termination = terminate -> SKIP
+						
+						Active 		= SHARE_WAIT(const_movement_MovementControl_step);true&(share__choice(forceApplied.out -> SKIP));share__choice(share__choice(get_vcurrent?vcurrent -> share__choice(get_vtarget?vtarget -> true & (share__choice(set_arrivedAtTarget!(definitions_dist(vtarget,vcurrent)<=const_movement_MovementControl_EPSILON) -> SKIP))))) ; 
+								 	  Behaviour ; 
+								 	  share__choice(exit -> SKIP) ; SKIP ; 
+								 	  share__choice(exited -> SKIP) ; Inactive
+					
+						Behaviour 	= entered -> During
+						During 		= ((SKIP ; SStop) /\ interrupt -> SKIP)
+					within
+						Inactive [| {terminate} |> SKIP)
+					
+					
+					-- Clocks
+					
+					StateClocks(id__,
+							          const_movement_MovementControl_Kp,
+							          const_movement_MovementControl_Ki,
+							          const_movement_MovementControl_Kd,
+							          const_movement_MovementControl_step,
+							          const_movement_MovementControl_EPSILON,
+							          const_movement_MovementControl_TARGET_TOTAL_FORCE) = terminate -> SKIP
+					
+					stateClockSync = {||}
+				}
+			
+			endmodule
+			----------------------------------------------------------------------
+			
+			
+			
+			Timed(OneStep) {
+				--	Rule: behaviours(Node)
+				--  Note that FDR has problems with efficiently compiling the process below
+				-- 	if using a different recursion pattern.
+				D__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				dbisim(let
+					-- IMPLEMENTATION NOTE: 
+					-- The following should be defined as: Inactive = share__choice(Activation [] Termination),
+					-- however FDR struggles with that form in certain cases. So we use the exception operator
+					-- instead to 'terminate'.
+					
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= share__choice(share__choice(get_vcurrent?vcurrent -> share__choice(get_vtarget?vtarget -> true & (share__choice(set_ftarget!definitions_targetForces(vcurrent,vtarget,const_movement_MovementControl_TARGET_TOTAL_FORCE) -> SKIP)))));share__choice(get_ftarget?ftarget -> true&CALL__PIDInitialize(
+								id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+								ftarget
+							)) ; 
+							 	  Behaviour ; 
+							 	  share__choice(exit -> SKIP) ; SKIP ; 
+							 	  share__choice(exited -> SKIP) ; Inactive
+				
+				
+					Behaviour 	= dbisim(
+						((
+						 (((dbisim(
+						 	sbisim(
+						 		dbisim(
+						 			sbisim(
+						 				dbisim(
+						 					sbisim(
+						 						(let
+						 							-- IMPLEMENTATION NOTE:
+						 							-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+						 							-- modules for defining the semantics of each node.
+						 							enterSS = {|
+						 							i0::enter,
+						 							CheckForce::enter,
+						 							Move::enter,
+						 							s0::enter
+						 							|}
+						 							hideSet = union(enterSS,{|exit,exited,internal__|})
+						 						within 
+						 							((let
+						 								-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+						 								-- because CSPM modules are used for the semantics of Node.
+						 								flowevts = union(enterSS,{|exit,exited,interrupt|})
+						 								transSync = {|allowMovement__.NID_CheckForce.in,internal__.NID_s0,internal__.NID_i0,endEffectorPosition__.NID_Move.in,resetMovement__.NID_CheckForce.in|}
+						 							within
+						 								((
+						 								 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+						 								   i0::D__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   CheckForce::D__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   Move::D__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   s0::D__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   )
+						 								   )
+						 								   )
+						 								 )
+						 								 [[CheckForce::interrupt <- x__ | x__ <- {|interrupt,allowMovement__.NID_CheckForce.in,resetMovement__.NID_CheckForce.in|}]]
+						 								 [[Move::interrupt <- x__ | x__ <- {|interrupt,endEffectorPosition__.NID_Move.in|}]]
+						 								 [[s0::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_s0|}]]
+						 								 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+						 								 )
+						 								  [[ share__ <- x__ | x__ <- {| share__,setR_vcurrent |} ]] 
+						 								  [[set_arrivedAtTarget <- setL_arrivedAtTarget]]
+						 								 )
+						 								 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+						 								 			,setL_arrivedAtTarget
+						 								 			,setR_vcurrent
+						 								 			|}) |]
+						 								 ((i0::enter -> Transitions(id__,
+						 								 		    const_movement_MovementControl_Kp,
+						 								 		    const_movement_MovementControl_Ki,
+						 								 		    const_movement_MovementControl_Kd,
+						 								 		    const_movement_MovementControl_step,
+						 								 		    const_movement_MovementControl_EPSILON,
+						 								 		    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 								  [[ share__ <- x__ | x__ <- {| share__,setL_arrivedAtTarget |} ]]
+						 								  [[set_vcurrent <- setR_vcurrent]]
+						 								 )
+						 								)[[setL_arrivedAtTarget <- set_arrivedAtTarget]]
+						 								 [[setR_vcurrent <- set_vcurrent]]
+						 								)
+						 							)
+						 							 \ hideSet)
+						 							[[
+						 								allowMovement__.x____ <- allowMovement,
+						 								movementOccurred__.x____ <- movementOccurred,
+						 								stepMoved__.x____ <- stepMoved,
+						 								movementInitiated__.x____ <- movementInitiated,
+						 								movementWasAllowed__.x____ <- movementWasAllowed,
+						 								forceWasAllowed__.x____ <- forceWasAllowed,
+						 								forceInitiated__.x____ <- forceInitiated,
+						 								resetMovement__.x____ <- resetMovement,
+						 								forceApplied__.x____ <- forceApplied,
+						 								movementStart__.x____ <- movementStart,
+						 								movementEnd__.x____ <- movementEnd,
+						 								endEffectorPosition__.x____ <- endEffectorPosition,
+						 								forceEndEffector__.x____ <- forceEndEffector,
+						 								forceStart__.x____ <- forceStart,
+						 								forceEnd__.x____ <- forceEnd
+						 								| x____ <- NIDS
+						 							]]
+						 						)
+						 						[| {|get_CLID_CheckForce,CheckForce::entered,terminate|} |]
+						 						dbisim(Clock_CLID_CheckForce(id__,0,
+						 								          const_movement_MovementControl_Kp,
+						 								          const_movement_MovementControl_Ki,
+						 								          const_movement_MovementControl_Kd,
+						 								          const_movement_MovementControl_step,
+						 								          const_movement_MovementControl_EPSILON,
+						 								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 					)\{|get_CLID_CheckForce|}
+						 				)
+						 				[| {|get_CLID_Move,Move::entered,terminate|} |]
+						 				dbisim(Clock_CLID_Move(id__,0,
+						 						          const_movement_MovementControl_Kp,
+						 						          const_movement_MovementControl_Ki,
+						 						          const_movement_MovementControl_Kd,
+						 						          const_movement_MovementControl_step,
+						 						          const_movement_MovementControl_EPSILON,
+						 						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 			)\{|get_CLID_Move|}
+						 		)
+						 		[| {|get_CLID_s0,s0::entered,terminate|} |]
+						 		dbisim(Clock_CLID_s0(id__,0,
+						 				          const_movement_MovementControl_Kp,
+						 				          const_movement_MovementControl_Ki,
+						 				          const_movement_MovementControl_Kd,
+						 				          const_movement_MovementControl_step,
+						 				          const_movement_MovementControl_EPSILON,
+						 				          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 	)\{|get_CLID_s0|}
+						 )
+						 ))
+						  [[ share__ <- x__ | x__ <- {| share__,setR_fcurrent,setR_vcurrent,setR_p,setR_vtarget,setR_t_old,setR_e,setR_t,setR_arrivedAtTarget,setR_d,setR_ftarget,setR_o,setR_i,setR_e_old |} ]] 
+						  [[set_fcurrent <- setL_fcurrent,set_vcurrent <- setL_vcurrent,set_p <- setL_p,set_vtarget <- setL_vtarget,set_t_old <- setL_t_old,set_e <- setL_e,set_t <- setL_t,set_arrivedAtTarget <- setL_arrivedAtTarget,set_d <- setL_d,set_ftarget <- setL_ftarget,set_o <- setL_o,set_i <- setL_i,set_e_old <- setL_e_old]]
+						 )
+						 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+						 			,setL_fcurrent
+						 			,setL_vcurrent
+						 			,setL_p
+						 			,setL_vtarget
+						 			,setL_t_old
+						 			,setL_e
+						 			,setL_t
+						 			,setL_arrivedAtTarget
+						 			,setL_d
+						 			,setL_ftarget
+						 			,setL_o
+						 			,setL_i
+						 			,setL_e_old
+						 			,setR_fcurrent
+						 			 			,setR_vcurrent
+						 			 			,setR_p
+						 			 			,setR_vtarget
+						 			 			,setR_t_old
+						 			 			,setR_e
+						 			 			,setR_t
+						 			 			,setR_arrivedAtTarget
+						 			 			,setR_d
+						 			 			,setR_ftarget
+						 			 			,setR_o
+						 			 			,setR_i
+						 			 			,setR_e_old
+						 			|}) |]
+						 ((During)
+						  [[ share__ <- x__ | x__ <- {| share__,setL_fcurrent,setL_vcurrent,setL_p,setL_vtarget,setL_t_old,setL_e,setL_t,setL_arrivedAtTarget,setL_d,setL_ftarget,setL_o,setL_i,setL_e_old |} ]]
+						  [[set_fcurrent <- setR_fcurrent,set_vcurrent <- setR_vcurrent,set_p <- setR_p,set_vtarget <- setR_vtarget,set_t_old <- setR_t_old,set_e <- setR_e,set_t <- setR_t,set_arrivedAtTarget <- setR_arrivedAtTarget,set_d <- setR_d,set_ftarget <- setR_ftarget,set_o <- setR_o,set_i <- setR_i,set_e_old <- setR_e_old]]
+						 )
+						)[[setL_fcurrent <- set_fcurrent,setL_vcurrent <- set_vcurrent,setL_p <- set_p,setL_vtarget <- set_vtarget,setL_t_old <- set_t_old,setL_e <- set_e,setL_t <- set_t,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_d <- set_d,setL_ftarget <- set_ftarget,setL_o <- set_o,setL_i <- set_i,setL_e_old <- set_e_old]]
+						 [[setR_fcurrent <- set_fcurrent,setR_vcurrent <- set_vcurrent,setR_p <- set_p,setR_vtarget <- set_vtarget,setR_t_old <- set_t_old,setR_e <- set_e,setR_t <- set_t,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_d <- set_d,setR_ftarget <- set_ftarget,setR_o <- set_o,setR_i <- set_i,setR_e_old <- set_e_old]]
+						)\union(enteredSS,{terminate}) 
+					)
+					During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+							 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+				within
+					Inactive [| {terminate} |> SKIP)
+					
+				VS_O__(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+				dbisim(let
+					Inactive 	= share__choice(enter -> SKIP [] terminate -> SKIP) ; Active
+					
+					Termination = terminate -> SKIP
+					
+					Active 		= share__choice(share__choice(get_vcurrent?vcurrent -> share__choice(get_vtarget?vtarget -> true & (share__choice(set_ftarget!definitions_targetForces(vcurrent,vtarget,const_movement_MovementControl_TARGET_TOTAL_FORCE) -> SKIP)))));share__choice(get_ftarget?ftarget -> true&CALL__PIDInitialize(
+								id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+								ftarget
+							)) ; 
+							 	  Behaviour ; 
+							 	  share__choice(exit -> SKIP) ; SKIP ; 
+							 	  share__choice(exited -> SKIP) ; Inactive
+				
+				
+					Behaviour 	= dbisim(
+						((
+						 (((dbisim(
+						 	sbisim(
+						 		dbisim(
+						 			sbisim(
+						 				dbisim(
+						 					sbisim(
+						 						(let
+						 							-- IMPLEMENTATION NOTE:
+						 							-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+						 							-- modules for defining the semantics of each node.
+						 							enterSS = {|
+						 							i0::enter,
+						 							CheckForce::enter,
+						 							Move::enter,
+						 							s0::enter
+						 							|}
+						 							hideSet = union(enterSS,{|exit,exited,internal__|})
+						 						within 
+						 							((let
+						 								-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+						 								-- because CSPM modules are used for the semantics of Node.
+						 								flowevts = union(enterSS,{|exit,exited,interrupt|})
+						 								transSync = {|allowMovement__.NID_CheckForce.in,internal__.NID_s0,internal__.NID_i0,endEffectorPosition__.NID_Move.in,resetMovement__.NID_CheckForce.in|}
+						 							within
+						 								((
+						 								 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+						 								   i0::VS_O__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   CheckForce::VS_O__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   Move::VS_O__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   [| { share__, terminate } |] (
+						 								   s0::VS_O__(id__,
+						 								   		    const_movement_MovementControl_Kp,
+						 								   		    const_movement_MovementControl_Ki,
+						 								   		    const_movement_MovementControl_Kd,
+						 								   		    const_movement_MovementControl_step,
+						 								   		    const_movement_MovementControl_EPSILON,
+						 								   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						 								   )
+						 								   )
+						 								   )
+						 								 )
+						 								 [[CheckForce::interrupt <- x__ | x__ <- {|interrupt,allowMovement__.NID_CheckForce.in,resetMovement__.NID_CheckForce.in|}]]
+						 								 [[Move::interrupt <- x__ | x__ <- {|interrupt,endEffectorPosition__.NID_Move.in|}]]
+						 								 [[s0::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_s0|}]]
+						 								 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+						 								 )
+						 								  [[ share__ <- x__ | x__ <- {| share__,setR_vcurrent |} ]] 
+						 								  [[set_arrivedAtTarget <- setL_arrivedAtTarget]]
+						 								 )
+						 								 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+						 								 			,setL_arrivedAtTarget
+						 								 			,setR_vcurrent
+						 								 			|}) |]
+						 								 ((i0::enter -> Transitions(id__,
+						 								 		    const_movement_MovementControl_Kp,
+						 								 		    const_movement_MovementControl_Ki,
+						 								 		    const_movement_MovementControl_Kd,
+						 								 		    const_movement_MovementControl_step,
+						 								 		    const_movement_MovementControl_EPSILON,
+						 								 		    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 								  [[ share__ <- x__ | x__ <- {| share__,setL_arrivedAtTarget |} ]]
+						 								  [[set_vcurrent <- setR_vcurrent]]
+						 								 )
+						 								)[[setL_arrivedAtTarget <- set_arrivedAtTarget]]
+						 								 [[setR_vcurrent <- set_vcurrent]]
+						 								)
+						 							)
+						 							 \ hideSet)
+						 							[[
+						 								allowMovement__.x____ <- allowMovement,
+						 								movementOccurred__.x____ <- movementOccurred,
+						 								stepMoved__.x____ <- stepMoved,
+						 								movementInitiated__.x____ <- movementInitiated,
+						 								movementWasAllowed__.x____ <- movementWasAllowed,
+						 								forceWasAllowed__.x____ <- forceWasAllowed,
+						 								forceInitiated__.x____ <- forceInitiated,
+						 								resetMovement__.x____ <- resetMovement,
+						 								forceApplied__.x____ <- forceApplied,
+						 								movementStart__.x____ <- movementStart,
+						 								movementEnd__.x____ <- movementEnd,
+						 								endEffectorPosition__.x____ <- endEffectorPosition,
+						 								forceEndEffector__.x____ <- forceEndEffector,
+						 								forceStart__.x____ <- forceStart,
+						 								forceEnd__.x____ <- forceEnd
+						 								| x____ <- NIDS
+						 							]]
+						 						)
+						 						[| {|get_CLID_CheckForce,CheckForce::entered,terminate|} |]
+						 						dbisim(Clock_CLID_CheckForce(id__,0,
+						 								          const_movement_MovementControl_Kp,
+						 								          const_movement_MovementControl_Ki,
+						 								          const_movement_MovementControl_Kd,
+						 								          const_movement_MovementControl_step,
+						 								          const_movement_MovementControl_EPSILON,
+						 								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 					)\{|get_CLID_CheckForce|}
+						 				)
+						 				[| {|get_CLID_Move,Move::entered,terminate|} |]
+						 				dbisim(Clock_CLID_Move(id__,0,
+						 						          const_movement_MovementControl_Kp,
+						 						          const_movement_MovementControl_Ki,
+						 						          const_movement_MovementControl_Kd,
+						 						          const_movement_MovementControl_step,
+						 						          const_movement_MovementControl_EPSILON,
+						 						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 			)\{|get_CLID_Move|}
+						 		)
+						 		[| {|get_CLID_s0,s0::entered,terminate|} |]
+						 		dbisim(Clock_CLID_s0(id__,0,
+						 				          const_movement_MovementControl_Kp,
+						 				          const_movement_MovementControl_Ki,
+						 				          const_movement_MovementControl_Kd,
+						 				          const_movement_MovementControl_step,
+						 				          const_movement_MovementControl_EPSILON,
+						 				          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						 	)\{|get_CLID_s0|}
+						 )
+						 ))
+						  [[ share__ <- x__ | x__ <- {| share__,setR_fcurrent,setR_vcurrent,setR_p,setR_vtarget,setR_t_old,setR_e,setR_t,setR_arrivedAtTarget,setR_d,setR_ftarget,setR_o,setR_i,setR_e_old |} ]] 
+						  [[set_fcurrent <- setL_fcurrent,set_vcurrent <- setL_vcurrent,set_p <- setL_p,set_vtarget <- setL_vtarget,set_t_old <- setL_t_old,set_e <- setL_e,set_t <- setL_t,set_arrivedAtTarget <- setL_arrivedAtTarget,set_d <- setL_d,set_ftarget <- setL_ftarget,set_o <- setL_o,set_i <- setL_i,set_e_old <- setL_e_old]]
+						 )
+						 [| union(union(enteredSS,{| interrupt, terminate |}),{|share__
+						 			,setL_fcurrent
+						 			,setL_vcurrent
+						 			,setL_p
+						 			,setL_vtarget
+						 			,setL_t_old
+						 			,setL_e
+						 			,setL_t
+						 			,setL_arrivedAtTarget
+						 			,setL_d
+						 			,setL_ftarget
+						 			,setL_o
+						 			,setL_i
+						 			,setL_e_old
+						 			,setR_fcurrent
+						 			 			,setR_vcurrent
+						 			 			,setR_p
+						 			 			,setR_vtarget
+						 			 			,setR_t_old
+						 			 			,setR_e
+						 			 			,setR_t
+						 			 			,setR_arrivedAtTarget
+						 			 			,setR_d
+						 			 			,setR_ftarget
+						 			 			,setR_o
+						 			 			,setR_i
+						 			 			,setR_e_old
+						 			|}) |]
+						 ((During)
+						  [[ share__ <- x__ | x__ <- {| share__,setL_fcurrent,setL_vcurrent,setL_p,setL_vtarget,setL_t_old,setL_e,setL_t,setL_arrivedAtTarget,setL_d,setL_ftarget,setL_o,setL_i,setL_e_old |} ]]
+						  [[set_fcurrent <- setR_fcurrent,set_vcurrent <- setR_vcurrent,set_p <- setR_p,set_vtarget <- setR_vtarget,set_t_old <- setR_t_old,set_e <- setR_e,set_t <- setR_t,set_arrivedAtTarget <- setR_arrivedAtTarget,set_d <- setR_d,set_ftarget <- setR_ftarget,set_o <- setR_o,set_i <- setR_i,set_e_old <- setR_e_old]]
+						 )
+						)[[setL_fcurrent <- set_fcurrent,setL_vcurrent <- set_vcurrent,setL_p <- set_p,setL_vtarget <- set_vtarget,setL_t_old <- set_t_old,setL_e <- set_e,setL_t <- set_t,setL_arrivedAtTarget <- set_arrivedAtTarget,setL_d <- set_d,setL_ftarget <- set_ftarget,setL_o <- set_o,setL_i <- set_i,setL_e_old <- set_e_old]]
+						 [[setR_fcurrent <- set_fcurrent,setR_vcurrent <- set_vcurrent,setR_p <- set_p,setR_vtarget <- set_vtarget,setR_t_old <- set_t_old,setR_e <- set_e,setR_t <- set_t,setR_arrivedAtTarget <- set_arrivedAtTarget,setR_d <- set_d,setR_ftarget <- set_ftarget,setR_o <- set_o,setR_i <- set_i,setR_e_old <- set_e_old]]
+						)\{terminate} 
+					)
+					During 		= share__choice(([] e__ : enteredSS @ e__ -> SKIP))
+							 	  ; entered -> ((CRUN(enteredSS) ||| SKIP ; SStop) /\ interrupt -> share__choice(terminate -> SKIP))
+				within
+					Inactive [| {terminate} |> SKIP)
+				
+				Transitions(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) = ((let
+					Trans = share__choice(get_arrivedAtTarget?arrivedAtTarget -> TimeOut_1(
+						 (share__ -> SKIP
+						 [] dbisim((true)&(allowMovement__!NID_CheckForce.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(forceWasAllowed.out -> SKIP)) ; Move::enter -> SKIP)))
+						 [] dbisim(((not (arrivedAtTarget)))&(internal__!NID_s0 -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; CheckForce::enter -> SKIP)))
+						 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; CheckForce::enter -> SKIP))))
+						 [] dbisim((true)&(endEffectorPosition__!NID_Move.in?vcurrent:{vcurrent|vcurrent <- vector_real_3, true} -> share__choice(set_vcurrent!vcurrent -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(movementOccurred.out -> SKIP)) ; s0::enter -> SKIP)))
+						 [] dbisim((true)&(resetMovement__!NID_CheckForce.in -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; SKIP ; CheckForce::enter -> SKIP)))
+						 []
+						 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+						 []
+						 terminate -> SKIP
+						 )
+					,SKIP);Trans
+					)
+				within
+					Trans [|{terminate}|> SKIP
+				)
+				)
+				
+				
+				-- Clocks
+				Clock_CLID_s0(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					TimeOut_1(
+						s0::entered -> Clock_CLID_s0(id__,0,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						get_CLID_s0!x__ -> Clock_CLID_s0(id__,x__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						terminate -> SKIP,Clock_CLID_s0(id__,clock_type_plus(x__,1,CLID_s0_clock_type(id__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				Clock_CLID_Move(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					TimeOut_1(
+						Move::entered -> Clock_CLID_Move(id__,0,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						get_CLID_Move!x__ -> Clock_CLID_Move(id__,x__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						terminate -> SKIP,Clock_CLID_Move(id__,clock_type_plus(x__,1,CLID_Move_clock_type(id__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				Clock_CLID_CheckForce(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+					TimeOut_1(
+						CheckForce::entered -> Clock_CLID_CheckForce(id__,0,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						get_CLID_CheckForce!x__ -> Clock_CLID_CheckForce(id__,x__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						[]
+						terminate -> SKIP,Clock_CLID_CheckForce(id__,clock_type_plus(x__,1,CLID_CheckForce_clock_type(id__,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				
+				StateClocks(id__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE) = dbisim(Clock_CLID_s0(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				[| { terminate } |] (
+				dbisim(Clock_CLID_Move(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				[| { terminate } |] (
+				dbisim(Clock_CLID_CheckForce(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+				)
+				)
+				
+				stateClockSync = {|get_CLID_s0,s0::entered,get_CLID_Move,Move::entered,get_CLID_CheckForce,CheckForce::entered|}
+			}
+		
+		endmodule
+		----------------------------------------------------------------------
+		
+		-- END of Nodes --
+		
+		Timed(OneStep) {
+		-- Operation calls --
+		-- Only the undefined operations are declared here.
+		-- If the state machine is in isolation, all required operations will be undefined.
+		-- If it is in the context of a controller, the required operations not provided by the
+		-- controller will be declared here, and the defined operations will be defined in the
+		-- context of the Controller module, and therefore within scope of the state machine module.
+		CALL__reorientGarment(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = EDeadline(reorientGarmentCall,0)
+		CALL__grip(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = EDeadline(gripCall,0)
+		CALL__PIDInitialize(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+					param_target) = EDeadline(PIDInitializeCall.param_target,0)
+		CALL__checkCorrectHandling(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = EDeadline(checkCorrectHandlingCall,0)
+		CALL__checkUserDressed(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = EDeadline(checkUserDressedCall,0)
+		CALL__pushTowards(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+					param_target,
+					param_force) = EDeadline(pushTowardsCall.param_target.param_force,0)
+		CALL__setEEForces(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+					param_v) = EDeadline(setEEForcesCall.param_v,0)
+		CALL__setEEPos(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+					param_v) = EDeadline(setEEPosCall.param_v,0)
+		CALL__checkMovement(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = EDeadline(checkMovementCall,0)
+		CALL__PIDUpdate(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+					param_current) = EDeadline(PIDUpdateCall.param_current,0)
+		CALL__stepTowards(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE,
+					param_target,
+					param_speed) = EDeadline(stepTowardsCall.param_target.param_speed,0)
+		CALL__releaseGrip(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = EDeadline(releaseGripCall,0)
+		
+		-- END of Operation calls --
+	
+		-- STM processes
+		STM(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = prioritise(-- RULE: [[stm:StateMachineDef]]_STM^nops : CSPProcess
+		( 
+			(
+				(
+					(IteratedStateful(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) \ {terminate} ; share__choice(terminate -> SKIP))
+				 	[[ share__ <- x__ | x__ <- {|set_EXT_p,set_EXT_d,set_EXT_i,set_EXT_e,set_EXT_e_old,set_EXT_t,set_EXT_t_old,set_EXT_o|} ]]
+				)
+			[| {share__} |]
+			SKIP
+			)
+			[| union(sharedVarSync,{terminate}) |]
+			dbisim(sharedVarMemory(id__,
+					    const_movement_MovementControl_Kp,
+					    const_movement_MovementControl_Ki,
+					    const_movement_MovementControl_Kd,
+					    const_movement_MovementControl_step,
+					    const_movement_MovementControl_EPSILON,
+					    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		)\sharedVarHide
+		,<{terminate},{tock}>)
+		
+		STM_VS_O(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = prioritise(-- RULE: [[stm:StateMachineDef]]_STM^nops : CSPProcess
+		( 
+			(
+				(
+					(IteratedStateful_VS_O(id__,
+							    const_movement_MovementControl_Kp,
+							    const_movement_MovementControl_Ki,
+							    const_movement_MovementControl_Kd,
+							    const_movement_MovementControl_step,
+							    const_movement_MovementControl_EPSILON,
+							    const_movement_MovementControl_TARGET_TOTAL_FORCE) \ {terminate} ; share__choice(terminate -> SKIP))
+				 	[[ share__ <- x__ | x__ <- {|set_EXT_p,set_EXT_d,set_EXT_i,set_EXT_e,set_EXT_e_old,set_EXT_t,set_EXT_t_old,set_EXT_o|} ]]
+				)
+			[| {share__} |]
+			SKIP
+			)
+			[| union(sharedVarSync,{terminate}) |]
+			dbisim(sharedVarMemory(id__,
+					    const_movement_MovementControl_Kp,
+					    const_movement_MovementControl_Ki,
+					    const_movement_MovementControl_Kd,
+					    const_movement_MovementControl_step,
+					    const_movement_MovementControl_EPSILON,
+					    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		)\sharedVarHide
+		,<{terminate},{tock}>)
+		
+		-- Transitions
+		Transitions(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = ((let
+			Trans = share__choice(get_arrivedAtTarget?arrivedAtTarget -> TimeOut_1(
+				 (share__ -> SKIP
+				 [] dbisim((true)&(internal__!NID_i0 -> SKIP ;  ((SKIP ; NotEngaged::enter -> SKIP))))
+				 [] dbisim((true)&(movementStart__!NID_NotEngaged.in?vtarget:{vtarget|vtarget <- vector_real_3, true} -> share__choice(set_vtarget!vtarget -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_arrivedAtTarget!false -> SKIP)));true&(share__choice(movementInitiated.out -> SKIP)) ; FreeMovement::enter -> SKIP)))
+				 [] dbisim((true)&(forceStart__!NID_NotEngaged.in?vtarget:{vtarget|vtarget <- vector_real_3, true} -> share__choice(set_vtarget!vtarget -> SKIP) ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; share__choice(true & (share__choice(set_arrivedAtTarget!false -> SKIP)));true&(share__choice(forceInitiated.out -> SKIP)) ; ForceApplication::enter -> SKIP)))
+				 [] dbisim((arrivedAtTarget)&(internal__!NID_FreeMovement -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(movementEnd.out -> SKIP)) ; NotEngaged::enter -> SKIP)))
+				 [] dbisim((arrivedAtTarget)&(internal__!NID_ForceApplication -> SKIP ;  share__choice(exit -> SKIP) ; (share__choice(exited -> SKIP) ; true&(share__choice(forceEnd.out -> SKIP)) ; NotEngaged::enter -> SKIP)))
+				 []
+				 (interrupt -> share__choice(exit -> SKIP) ; share__choice(exited -> terminate -> SKIP))
+				 []
+				 terminate -> SKIP
+				 )
+			,SKIP);Trans
+			)
+		within
+			Trans [|{terminate}|> SKIP
+		)
+		)
+		
+		-- Stateful
+		-- RULE: Stateful(stm:StateMachineBody) : CSPProcess
+		
+		-- Named process definitions
+		MachineBody(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			dbisim((
+			let
+				finalNodesEntered = {||}
+			within
+				(dbisim((dbisim((let
+					-- IMPLEMENTATION NOTE:
+					-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+					-- modules for defining the semantics of each node.
+					enterSS = {|
+					i0::enter,
+					NotEngaged::enter,
+					FreeMovement::enter,
+					ForceApplication::enter
+					|}
+					hideSet = union(enterSS,{|exit,exited,internal__|})
+				within 
+					((let
+						-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+						-- because CSPM modules are used for the semantics of Node.
+						flowevts = union(enterSS,{|exit,exited,interrupt|})
+						transSync = {|internal__.NID_i0,movementStart__.NID_NotEngaged.in,forceStart__.NID_NotEngaged.in,internal__.NID_FreeMovement,internal__.NID_ForceApplication|}
+					within
+						((
+						 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+						   i0::D__(id__,
+						   		    const_movement_MovementControl_Kp,
+						   		    const_movement_MovementControl_Ki,
+						   		    const_movement_MovementControl_Kd,
+						   		    const_movement_MovementControl_step,
+						   		    const_movement_MovementControl_EPSILON,
+						   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						   [| { share__, terminate } |] (
+						   NotEngaged::D__(id__,
+						   		    const_movement_MovementControl_Kp,
+						   		    const_movement_MovementControl_Ki,
+						   		    const_movement_MovementControl_Kd,
+						   		    const_movement_MovementControl_step,
+						   		    const_movement_MovementControl_EPSILON,
+						   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						   [| { share__, terminate } |] (
+						   FreeMovement::D__(id__,
+						   		    const_movement_MovementControl_Kp,
+						   		    const_movement_MovementControl_Ki,
+						   		    const_movement_MovementControl_Kd,
+						   		    const_movement_MovementControl_step,
+						   		    const_movement_MovementControl_EPSILON,
+						   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						   [| { share__, terminate } |] (
+						   ForceApplication::D__(id__,
+						   		    const_movement_MovementControl_Kp,
+						   		    const_movement_MovementControl_Ki,
+						   		    const_movement_MovementControl_Kd,
+						   		    const_movement_MovementControl_step,
+						   		    const_movement_MovementControl_EPSILON,
+						   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						   )
+						   )
+						   )
+						 )
+						 [[NotEngaged::interrupt <- x__ | x__ <- {|interrupt,movementStart__.NID_NotEngaged.in,forceStart__.NID_NotEngaged.in|}]]
+						 [[FreeMovement::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_FreeMovement|}]]
+						 [[ForceApplication::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_ForceApplication|}]]
+						 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+						 )
+						  [[ share__ <- x__ | x__ <- {| share__,setR_vtarget |} ]] 
+						  [[set_arrivedAtTarget <- setL_arrivedAtTarget]]
+						 )
+						 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+						 			,setL_arrivedAtTarget
+						 			,setR_vtarget
+						 			|}) |]
+						 ((i0::enter -> Transitions(id__,
+						 		    const_movement_MovementControl_Kp,
+						 		    const_movement_MovementControl_Ki,
+						 		    const_movement_MovementControl_Kd,
+						 		    const_movement_MovementControl_step,
+						 		    const_movement_MovementControl_EPSILON,
+						 		    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						  [[ share__ <- x__ | x__ <- {| share__,setL_arrivedAtTarget |} ]]
+						  [[set_vtarget <- setR_vtarget]]
+						 )
+						)[[setL_arrivedAtTarget <- set_arrivedAtTarget]]
+						 [[setR_vtarget <- set_vtarget]]
+						)
+					)
+					 \ hideSet)
+					[[
+						allowMovement__.x____ <- allowMovement,
+						movementOccurred__.x____ <- movementOccurred,
+						stepMoved__.x____ <- stepMoved,
+						movementInitiated__.x____ <- movementInitiated,
+						movementWasAllowed__.x____ <- movementWasAllowed,
+						forceWasAllowed__.x____ <- forceWasAllowed,
+						forceInitiated__.x____ <- forceInitiated,
+						resetMovement__.x____ <- resetMovement,
+						forceApplied__.x____ <- forceApplied,
+						movementStart__.x____ <- movementStart,
+						movementEnd__.x____ <- movementEnd,
+						endEffectorPosition__.x____ <- endEffectorPosition,
+						forceEndEffector__.x____ <- forceEndEffector,
+						forceStart__.x____ <- forceStart,
+						forceEnd__.x____ <- forceEnd
+						| x____ <- NIDS
+					]]
+				)
+				)
+				 [| union(stateClockSync,{terminate}) |]
+				 StateClocks(id__,
+				 		          const_movement_MovementControl_Kp,
+				 		          const_movement_MovementControl_Ki,
+				 		          const_movement_MovementControl_Kd,
+				 		          const_movement_MovementControl_step,
+				 		          const_movement_MovementControl_EPSILON,
+				 		          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				)\diff(stateClockSync,enteredSS))
+				 [| {| interrupt |} |] SKIP)
+			)
+			)
+		
+		Behaviour(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			dbisim((let
+				stateClockSync = {|get_CLID_FreeMovement,FreeMovement::entered,get_CLID_ForceApplication,ForceApplication::entered,get_CLID_NotEngaged,NotEngaged::entered|}
+			 within
+				(MachineBody(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) [| union(stateClockSync,{terminate}) |] StateClocks(id__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)) \ union(stateClockSync,enteredSS)
+			)
+			)
+		
+		IteratedBehaviour(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			dbisim((let
+				stateClockSync = {|get_CLID_FreeMovement,FreeMovement::entered,get_CLID_ForceApplication,ForceApplication::entered,get_CLID_NotEngaged,NotEngaged::entered|}
+			 within
+				(dbisim(
+					sbisim(
+						dbisim(
+							sbisim(
+								dbisim(
+									sbisim(
+										MachineBody(id__,
+												    const_movement_MovementControl_Kp,
+												    const_movement_MovementControl_Ki,
+												    const_movement_MovementControl_Kd,
+												    const_movement_MovementControl_step,
+												    const_movement_MovementControl_EPSILON,
+												    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+										[| {|get_CLID_NotEngaged,NotEngaged::entered,terminate|} |]
+										dbisim(Clock_CLID_NotEngaged(id__,0,
+												          const_movement_MovementControl_Kp,
+												          const_movement_MovementControl_Ki,
+												          const_movement_MovementControl_Kd,
+												          const_movement_MovementControl_step,
+												          const_movement_MovementControl_EPSILON,
+												          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+									)\{|get_CLID_NotEngaged|}
+								)
+								[| {|get_CLID_ForceApplication,ForceApplication::entered,terminate|} |]
+								dbisim(Clock_CLID_ForceApplication(id__,0,
+										          const_movement_MovementControl_Kp,
+										          const_movement_MovementControl_Ki,
+										          const_movement_MovementControl_Kd,
+										          const_movement_MovementControl_step,
+										          const_movement_MovementControl_EPSILON,
+										          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+							)\{|get_CLID_ForceApplication|}
+						)
+						[| {|get_CLID_FreeMovement,FreeMovement::entered,terminate|} |]
+						dbisim(Clock_CLID_FreeMovement(id__,0,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+					)\{|get_CLID_FreeMovement|}
+				)
+				) \ union(stateClockSync,enteredSS)
+			)
+			)
+		
+		Stateful(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			((let
+				getsetLocalChannels = {|get_arrivedAtTarget,set_arrivedAtTarget,
+				get_vtarget,set_vtarget,
+				get_vcurrent,set_vcurrent,
+				get_ftarget,set_ftarget,
+				get_fcurrent,set_fcurrent|}
+				clockSync = {||}
+			within
+				(Behaviour(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) 
+				 [| union(union(getsetLocalChannels,clockSync),{terminate}) |] 
+				 (varMemory(id__,
+				 		    const_movement_MovementControl_Kp,
+				 		    const_movement_MovementControl_Ki,
+				 		    const_movement_MovementControl_Kd,
+				 		    const_movement_MovementControl_step,
+				 		    const_movement_MovementControl_EPSILON,
+				 		    const_movement_MovementControl_TARGET_TOTAL_FORCE) [| {terminate} |] Clocks(id__,
+				 		          const_movement_MovementControl_Kp,
+				 		          const_movement_MovementControl_Ki,
+				 		          const_movement_MovementControl_Kd,
+				 		          const_movement_MovementControl_step,
+				 		          const_movement_MovementControl_EPSILON,
+				 		          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+			 	)\union(getsetLocalChannels,clockSync)
+			)
+			)
+		
+		IteratedStateful(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) =
+			(dbisim(
+				sbisim(
+					dbisim(
+						sbisim(
+							dbisim(
+								sbisim(
+									dbisim(
+										sbisim(
+											dbisim(
+												sbisim(
+													IteratedBehaviour(id__,
+															    const_movement_MovementControl_Kp,
+															    const_movement_MovementControl_Ki,
+															    const_movement_MovementControl_Kd,
+															    const_movement_MovementControl_step,
+															    const_movement_MovementControl_EPSILON,
+															    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+													[| {|get_fcurrent,set_fcurrent,terminate|} |]
+													Memory_fcurrent((0, 0, 0))
+												)\{|get_fcurrent,set_fcurrent|}
+											)
+											[| {|get_ftarget,set_ftarget,terminate|} |]
+											Memory_ftarget((0, 0, 0))
+										)\{|get_ftarget,set_ftarget|}
+									)
+									[| {|get_vcurrent,set_vcurrent,terminate|} |]
+									Memory_vcurrent((0, 0, 0))
+								)\{|get_vcurrent,set_vcurrent|}
+							)
+							[| {|get_vtarget,set_vtarget,terminate|} |]
+							Memory_vtarget((0, 0, 0))
+						)\{|get_vtarget,set_vtarget|}
+					)
+					[| {|get_arrivedAtTarget,set_arrivedAtTarget,terminate|} |]
+					Memory_arrivedAtTarget(false)
+				)\{|get_arrivedAtTarget,set_arrivedAtTarget|}
+			)
+			)
+		
+		-- Visible counterparts
+		MachineBody_VS_O(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			dbisim((
+			let
+				finalNodesEntered = {||}
+			within
+				(dbisim((dbisim((let
+					-- IMPLEMENTATION NOTE:
+					-- Here the 'enter' channel set is calculated explicitly because of the use of CSPM 
+					-- modules for defining the semantics of each node.
+					enterSS = {|
+					i0::enter,
+					NotEngaged::enter,
+					FreeMovement::enter,
+					ForceApplication::enter
+					|}
+					hideSet = union(enterSS,{|exit,exited,internal__|})
+				within 
+					((let
+						-- IMPLEMENTATION NOTE: the channel set 'enter' is calculated explicitly
+						-- because CSPM modules are used for the semantics of Node.
+						flowevts = union(enterSS,{|exit,exited,interrupt|})
+						transSync = {|internal__.NID_i0,movementStart__.NID_NotEngaged.in,forceStart__.NID_NotEngaged.in,internal__.NID_FreeMovement,internal__.NID_ForceApplication|}
+					within
+						((
+						 (((-- RULE composeNodes(nc:NodeContainer)^nops : CSPProcess
+						   i0::VS_O__(id__,
+						   		    const_movement_MovementControl_Kp,
+						   		    const_movement_MovementControl_Ki,
+						   		    const_movement_MovementControl_Kd,
+						   		    const_movement_MovementControl_step,
+						   		    const_movement_MovementControl_EPSILON,
+						   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						   [| { share__, terminate } |] (
+						   NotEngaged::VS_O__(id__,
+						   		    const_movement_MovementControl_Kp,
+						   		    const_movement_MovementControl_Ki,
+						   		    const_movement_MovementControl_Kd,
+						   		    const_movement_MovementControl_step,
+						   		    const_movement_MovementControl_EPSILON,
+						   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						   [| { share__, terminate } |] (
+						   FreeMovement::VS_O__(id__,
+						   		    const_movement_MovementControl_Kp,
+						   		    const_movement_MovementControl_Ki,
+						   		    const_movement_MovementControl_Kd,
+						   		    const_movement_MovementControl_step,
+						   		    const_movement_MovementControl_EPSILON,
+						   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						   [| { share__, terminate } |] (
+						   ForceApplication::VS_O__(id__,
+						   		    const_movement_MovementControl_Kp,
+						   		    const_movement_MovementControl_Ki,
+						   		    const_movement_MovementControl_Kd,
+						   		    const_movement_MovementControl_step,
+						   		    const_movement_MovementControl_EPSILON,
+						   		    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+						   )
+						   )
+						   )
+						 )
+						 [[NotEngaged::interrupt <- x__ | x__ <- {|interrupt,movementStart__.NID_NotEngaged.in,forceStart__.NID_NotEngaged.in|}]]
+						 [[FreeMovement::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_FreeMovement|}]]
+						 [[ForceApplication::interrupt <- x__ | x__ <- {|interrupt,internal__.NID_ForceApplication|}]]
+						 [[i0::interrupt <- x__ | x__ <- {|internal__.NID_i0|}]]
+						 )
+						  [[ share__ <- x__ | x__ <- {| share__,setR_vtarget |} ]] 
+						  [[set_arrivedAtTarget <- setL_arrivedAtTarget]]
+						 )
+						 [| union(union(union(flowevts,transSync),{terminate}),{|share__
+						 			,setL_arrivedAtTarget
+						 			,setR_vtarget
+						 			|}) |]
+						 ((i0::enter -> Transitions(id__,
+						 		    const_movement_MovementControl_Kp,
+						 		    const_movement_MovementControl_Ki,
+						 		    const_movement_MovementControl_Kd,
+						 		    const_movement_MovementControl_step,
+						 		    const_movement_MovementControl_EPSILON,
+						 		    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+						  [[ share__ <- x__ | x__ <- {| share__,setL_arrivedAtTarget |} ]]
+						  [[set_vtarget <- setR_vtarget]]
+						 )
+						)[[setL_arrivedAtTarget <- set_arrivedAtTarget]]
+						 [[setR_vtarget <- set_vtarget]]
+						)
+					)
+					 \ hideSet)
+					[[
+						allowMovement__.x____ <- allowMovement,
+						movementOccurred__.x____ <- movementOccurred,
+						stepMoved__.x____ <- stepMoved,
+						movementInitiated__.x____ <- movementInitiated,
+						movementWasAllowed__.x____ <- movementWasAllowed,
+						forceWasAllowed__.x____ <- forceWasAllowed,
+						forceInitiated__.x____ <- forceInitiated,
+						resetMovement__.x____ <- resetMovement,
+						forceApplied__.x____ <- forceApplied,
+						movementStart__.x____ <- movementStart,
+						movementEnd__.x____ <- movementEnd,
+						endEffectorPosition__.x____ <- endEffectorPosition,
+						forceEndEffector__.x____ <- forceEndEffector,
+						forceStart__.x____ <- forceStart,
+						forceEnd__.x____ <- forceEnd
+						| x____ <- NIDS
+					]]
+				)
+				)
+				 [| union(stateClockSync,{terminate}) |]
+				 StateClocks(id__,
+				 		          const_movement_MovementControl_Kp,
+				 		          const_movement_MovementControl_Ki,
+				 		          const_movement_MovementControl_Kd,
+				 		          const_movement_MovementControl_step,
+				 		          const_movement_MovementControl_EPSILON,
+				 		          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				)\diff(stateClockSync,enteredSS))
+				 [| {| interrupt |} |] SKIP)
+			)
+			)
+		
+		Behaviour_VS_O(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			dbisim((let
+				stateClockSync = {|get_CLID_FreeMovement,FreeMovement::entered,get_CLID_ForceApplication,ForceApplication::entered,get_CLID_NotEngaged,NotEngaged::entered|}
+			 within
+				(MachineBody_VS_O(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) [| union(stateClockSync,{terminate}) |] StateClocks(id__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)) \ diff(union(stateClockSync,enteredSS),enteredSS)
+			)
+			)
+		
+		IteratedBehaviour_VS_O(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			dbisim((let
+				stateClockSync = {|get_CLID_FreeMovement,FreeMovement::entered,get_CLID_ForceApplication,ForceApplication::entered,get_CLID_NotEngaged,NotEngaged::entered|}
+			 within
+				(dbisim(
+					sbisim(
+						dbisim(
+							sbisim(
+								dbisim(
+									sbisim(
+										MachineBody_VS_O(id__,
+												    const_movement_MovementControl_Kp,
+												    const_movement_MovementControl_Ki,
+												    const_movement_MovementControl_Kd,
+												    const_movement_MovementControl_step,
+												    const_movement_MovementControl_EPSILON,
+												    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+										[| {|get_CLID_NotEngaged,NotEngaged::entered,terminate|} |]
+										dbisim(Clock_CLID_NotEngaged(id__,0,
+												          const_movement_MovementControl_Kp,
+												          const_movement_MovementControl_Ki,
+												          const_movement_MovementControl_Kd,
+												          const_movement_MovementControl_step,
+												          const_movement_MovementControl_EPSILON,
+												          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+									)\{|get_CLID_NotEngaged|}
+								)
+								[| {|get_CLID_ForceApplication,ForceApplication::entered,terminate|} |]
+								dbisim(Clock_CLID_ForceApplication(id__,0,
+										          const_movement_MovementControl_Kp,
+										          const_movement_MovementControl_Ki,
+										          const_movement_MovementControl_Kd,
+										          const_movement_MovementControl_step,
+										          const_movement_MovementControl_EPSILON,
+										          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+							)\{|get_CLID_ForceApplication|}
+						)
+						[| {|get_CLID_FreeMovement,FreeMovement::entered,terminate|} |]
+						dbisim(Clock_CLID_FreeMovement(id__,0,
+								          const_movement_MovementControl_Kp,
+								          const_movement_MovementControl_Ki,
+								          const_movement_MovementControl_Kd,
+								          const_movement_MovementControl_step,
+								          const_movement_MovementControl_EPSILON,
+								          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+					)\{|get_CLID_FreeMovement|}
+				)
+				) \ diff(union(stateClockSync,enteredSS),enteredSS)
+			)
+			)
+		
+		Stateful_VS_O(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			dbisim((let
+				getsetLocalChannels = {|get_arrivedAtTarget,set_arrivedAtTarget,
+				get_vtarget,set_vtarget,
+				get_vcurrent,set_vcurrent,
+				get_ftarget,set_ftarget,
+				get_fcurrent,set_fcurrent|}
+				clockSync = {||}
+			within
+				(Behaviour_VS_O(id__,
+						    const_movement_MovementControl_Kp,
+						    const_movement_MovementControl_Ki,
+						    const_movement_MovementControl_Kd,
+						    const_movement_MovementControl_step,
+						    const_movement_MovementControl_EPSILON,
+						    const_movement_MovementControl_TARGET_TOTAL_FORCE) 
+				 [| union(union(getsetLocalChannels,clockSync),{terminate}) |] 
+				 (varMemory(id__,
+				 		    const_movement_MovementControl_Kp,
+				 		    const_movement_MovementControl_Ki,
+				 		    const_movement_MovementControl_Kd,
+				 		    const_movement_MovementControl_step,
+				 		    const_movement_MovementControl_EPSILON,
+				 		    const_movement_MovementControl_TARGET_TOTAL_FORCE) [| {terminate} |] Clocks(id__,
+				 		          const_movement_MovementControl_Kp,
+				 		          const_movement_MovementControl_Ki,
+				 		          const_movement_MovementControl_Kd,
+				 		          const_movement_MovementControl_step,
+				 		          const_movement_MovementControl_EPSILON,
+				 		          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+			 	)\union(getsetLocalChannels,clockSync)
+			)
+			)
+		
+		IteratedStateful_VS_O(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) =
+			(dbisim(
+				sbisim(
+					dbisim(
+						sbisim(
+							dbisim(
+								sbisim(
+									dbisim(
+										sbisim(
+											dbisim(
+												sbisim(
+													IteratedBehaviour_VS_O(id__,
+															    const_movement_MovementControl_Kp,
+															    const_movement_MovementControl_Ki,
+															    const_movement_MovementControl_Kd,
+															    const_movement_MovementControl_step,
+															    const_movement_MovementControl_EPSILON,
+															    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+													[| {|get_fcurrent,set_fcurrent,terminate|} |]
+													Memory_fcurrent((0, 0, 0))
+												)\{|get_fcurrent,set_fcurrent|}
+											)
+											[| {|get_ftarget,set_ftarget,terminate|} |]
+											Memory_ftarget((0, 0, 0))
+										)\{|get_ftarget,set_ftarget|}
+									)
+									[| {|get_vcurrent,set_vcurrent,terminate|} |]
+									Memory_vcurrent((0, 0, 0))
+								)\{|get_vcurrent,set_vcurrent|}
+							)
+							[| {|get_vtarget,set_vtarget,terminate|} |]
+							Memory_vtarget((0, 0, 0))
+						)\{|get_vtarget,set_vtarget|}
+					)
+					[| {|get_arrivedAtTarget,set_arrivedAtTarget,terminate|} |]
+					Memory_arrivedAtTarget(false)
+				)\{|get_arrivedAtTarget,set_arrivedAtTarget|}
+			)
+			)
+		
+		-- END
+		
+		-- Memory
+		-- Memory variables
+		Memory_arrivedAtTarget(arrivedAtTarget) =
+			get_arrivedAtTarget!arrivedAtTarget -> Memory_arrivedAtTarget(arrivedAtTarget)
+			[]
+			set_arrivedAtTarget?x__ -> Memory_arrivedAtTarget(x__)
+			[]
+			terminate -> SKIP
+		Memory_vtarget(vtarget) =
+			get_vtarget!vtarget -> Memory_vtarget(vtarget)
+			[]
+			set_vtarget?x__ -> Memory_vtarget(x__)
+			[]
+			terminate -> SKIP
+		Memory_vcurrent(vcurrent) =
+			get_vcurrent!vcurrent -> Memory_vcurrent(vcurrent)
+			[]
+			set_vcurrent?x__ -> Memory_vcurrent(x__)
+			[]
+			terminate -> SKIP
+		Memory_ftarget(ftarget) =
+			get_ftarget!ftarget -> Memory_ftarget(ftarget)
+			[]
+			set_ftarget?x__ -> Memory_ftarget(x__)
+			[]
+			terminate -> SKIP
+		Memory_fcurrent(fcurrent) =
+			get_fcurrent!fcurrent -> Memory_fcurrent(fcurrent)
+			[]
+			set_fcurrent?x__ -> Memory_fcurrent(x__)
+			[]
+			terminate -> SKIP
+		
+		-- varMemory process
+		varMemory(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = Memory_arrivedAtTarget(false)
+		[| { terminate } |] (
+		Memory_vtarget((0, 0, 0))
+		[| { terminate } |] (
+		Memory_vcurrent((0, 0, 0))
+		[| { terminate } |] (
+		Memory_ftarget((0, 0, 0))
+		[| { terminate } |] (
+		Memory_fcurrent((0, 0, 0))
+		)
+		)
+		)
+		)
+		
+		getsetLocalChannels = {|get_arrivedAtTarget,set_arrivedAtTarget,get_vtarget,set_vtarget,get_vcurrent,set_vcurrent,get_ftarget,set_ftarget,get_fcurrent,set_fcurrent|}
+		
+		-- Definition of the behaviour of state machines (default, optimised, visible, visible and optimised)
+		FVS__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = STM_VS_O(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) \ localClockResets
+		D__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = timed_priority(STM(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) \ union(internal_events,localClockResets))
+		O__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = dbisim(D__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		VS__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = FVS__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE)
+		VS_O__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = dbisim(FVS__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		HEXT__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = O__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) [|shared_variable_events|] SKIP
+		FVS_C__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = dbisim(timed_priority(STM(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) \ internal_events))
+		HUP__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = timed_priority(O__(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) [|{share__}|] SKIP)
+		
+		-- Clocks
+		
+		Clocks(id__,
+				          const_movement_MovementControl_Kp,
+				          const_movement_MovementControl_Ki,
+				          const_movement_MovementControl_Kd,
+				          const_movement_MovementControl_step,
+				          const_movement_MovementControl_EPSILON,
+				          const_movement_MovementControl_TARGET_TOTAL_FORCE) = terminate -> SKIP
+		
+		clockSync = {||}
+		
+		Clock_CLID_FreeMovement(id__,x__,
+				          const_movement_MovementControl_Kp,
+				          const_movement_MovementControl_Ki,
+				          const_movement_MovementControl_Kd,
+				          const_movement_MovementControl_step,
+				          const_movement_MovementControl_EPSILON,
+				          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			TimeOut_1(
+				FreeMovement::entered -> Clock_CLID_FreeMovement(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				[]
+				get_CLID_FreeMovement!x__ -> Clock_CLID_FreeMovement(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				[]
+				terminate -> SKIP,Clock_CLID_FreeMovement(id__,clock_type_plus(x__,1,CLID_FreeMovement_clock_type(id__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		Clock_CLID_ForceApplication(id__,x__,
+				          const_movement_MovementControl_Kp,
+				          const_movement_MovementControl_Ki,
+				          const_movement_MovementControl_Kd,
+				          const_movement_MovementControl_step,
+				          const_movement_MovementControl_EPSILON,
+				          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			TimeOut_1(
+				ForceApplication::entered -> Clock_CLID_ForceApplication(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				[]
+				get_CLID_ForceApplication!x__ -> Clock_CLID_ForceApplication(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				[]
+				terminate -> SKIP,Clock_CLID_ForceApplication(id__,clock_type_plus(x__,1,CLID_ForceApplication_clock_type(id__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		Clock_CLID_NotEngaged(id__,x__,
+				          const_movement_MovementControl_Kp,
+				          const_movement_MovementControl_Ki,
+				          const_movement_MovementControl_Kd,
+				          const_movement_MovementControl_step,
+				          const_movement_MovementControl_EPSILON,
+				          const_movement_MovementControl_TARGET_TOTAL_FORCE) = 
+			TimeOut_1(
+				NotEngaged::entered -> Clock_CLID_NotEngaged(id__,0,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				[]
+				get_CLID_NotEngaged!x__ -> Clock_CLID_NotEngaged(id__,x__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)
+				[]
+				terminate -> SKIP,Clock_CLID_NotEngaged(id__,clock_type_plus(x__,1,CLID_NotEngaged_clock_type(id__,
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE)),
+						          const_movement_MovementControl_Kp,
+						          const_movement_MovementControl_Ki,
+						          const_movement_MovementControl_Kd,
+						          const_movement_MovementControl_step,
+						          const_movement_MovementControl_EPSILON,
+						          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		
+		StateClocks(id__,
+				          const_movement_MovementControl_Kp,
+				          const_movement_MovementControl_Ki,
+				          const_movement_MovementControl_Kd,
+				          const_movement_MovementControl_step,
+				          const_movement_MovementControl_EPSILON,
+				          const_movement_MovementControl_TARGET_TOTAL_FORCE) = dbisim(Clock_CLID_FreeMovement(id__,0,
+				          const_movement_MovementControl_Kp,
+				          const_movement_MovementControl_Ki,
+				          const_movement_MovementControl_Kd,
+				          const_movement_MovementControl_step,
+				          const_movement_MovementControl_EPSILON,
+				          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		[| { terminate } |] (
+		dbisim(Clock_CLID_ForceApplication(id__,0,
+				          const_movement_MovementControl_Kp,
+				          const_movement_MovementControl_Ki,
+				          const_movement_MovementControl_Kd,
+				          const_movement_MovementControl_step,
+				          const_movement_MovementControl_EPSILON,
+				          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		[| { terminate } |] (
+		dbisim(Clock_CLID_NotEngaged(id__,0,
+				          const_movement_MovementControl_Kp,
+				          const_movement_MovementControl_Ki,
+				          const_movement_MovementControl_Kd,
+				          const_movement_MovementControl_step,
+				          const_movement_MovementControl_EPSILON,
+				          const_movement_MovementControl_TARGET_TOTAL_FORCE))
+		)
+		)
+		
+		stateClockSync = {|get_CLID_FreeMovement,FreeMovement::entered,get_CLID_ForceApplication,ForceApplication::entered,get_CLID_NotEngaged,NotEngaged::entered|}
+		
+		-- Shared memory
+		-- Shared memory variables
+		Memory_p(p) =
+			get_p!p -> Memory_p(p)
+			[]
+			set_p?x__ -> Memory_p(x__)
+			[]
+			set_EXT_p?x__ -> Memory_p(x__)
+			[]
+			terminate -> SKIP
+		Memory_d(d) =
+			get_d!d -> Memory_d(d)
+			[]
+			set_d?x__ -> Memory_d(x__)
+			[]
+			set_EXT_d?x__ -> Memory_d(x__)
+			[]
+			terminate -> SKIP
+		Memory_i(i) =
+			get_i!i -> Memory_i(i)
+			[]
+			set_i?x__ -> Memory_i(x__)
+			[]
+			set_EXT_i?x__ -> Memory_i(x__)
+			[]
+			terminate -> SKIP
+		Memory_e(e) =
+			get_e!e -> Memory_e(e)
+			[]
+			set_e?x__ -> Memory_e(x__)
+			[]
+			set_EXT_e?x__ -> Memory_e(x__)
+			[]
+			terminate -> SKIP
+		Memory_e_old(e_old) =
+			get_e_old!e_old -> Memory_e_old(e_old)
+			[]
+			set_e_old?x__ -> Memory_e_old(x__)
+			[]
+			set_EXT_e_old?x__ -> Memory_e_old(x__)
+			[]
+			terminate -> SKIP
+		Memory_t(t) =
+			get_t!t -> Memory_t(t)
+			[]
+			set_t?x__ -> Memory_t(x__)
+			[]
+			set_EXT_t?x__ -> Memory_t(x__)
+			[]
+			terminate -> SKIP
+		Memory_t_old(t_old) =
+			get_t_old!t_old -> Memory_t_old(t_old)
+			[]
+			set_t_old?x__ -> Memory_t_old(x__)
+			[]
+			set_EXT_t_old?x__ -> Memory_t_old(x__)
+			[]
+			terminate -> SKIP
+		Memory_o(o) =
+			get_o!o -> Memory_o(o)
+			[]
+			set_o?x__ -> Memory_o(x__)
+			[]
+			set_EXT_o?x__ -> Memory_o(x__)
+			[]
+			terminate -> SKIP
+		
+		-- sharedVarMemory process
+		sharedVarMemory(id__,
+				    const_movement_MovementControl_Kp,
+				    const_movement_MovementControl_Ki,
+				    const_movement_MovementControl_Kd,
+				    const_movement_MovementControl_step,
+				    const_movement_MovementControl_EPSILON,
+				    const_movement_MovementControl_TARGET_TOTAL_FORCE) = Memory_p((0, 0, 0))
+		[| { terminate } |] (
+		Memory_d((0, 0, 0))
+		[| { terminate } |] (
+		Memory_i((0, 0, 0))
+		[| { terminate } |] (
+		Memory_e((0, 0, 0))
+		[| { terminate } |] (
+		Memory_e_old((0, 0, 0))
+		[| { terminate } |] (
+		Memory_t((0, 0, 0))
+		[| { terminate } |] (
+		Memory_t_old((0, 0, 0))
+		[| { terminate } |] (
+		Memory_o((0, 0, 0))
+		)
+		)
+		)
+		)
+		)
+		)
+		)
+		
+		sharedVarSync = {|get_p,set_p,set_EXT_p,get_d,set_d,set_EXT_d,get_i,set_i,set_EXT_i,get_e,set_e,set_EXT_e,get_e_old,set_e_old,set_EXT_e_old,get_t,set_t,set_EXT_t,get_t_old,set_t_old,set_EXT_t_old,get_o,set_o,set_EXT_o|}
+		
+		sharedVarHide = {|get_p,get_d,get_i,get_e,get_e_old,get_t,get_t_old,get_o|}
+		}
+endmodule

@@ -1,0 +1,74 @@
+[
+{ "name": "dressingcontrol::SDressingControl::GarmentAcquisition is reachable in radcontrol::CDressingControl (R1)",
+  "type": "reachable",
+  "negated": false 
+},
+{ "name": "dressingcontrol::SDressingControl is deadlock free (R2) [failures divergences model]",
+  "type": "deadlock-free",
+  "negated": false 
+},
+{ "name": "dressingcontrol::SDressingControl is deterministic (R3) [failures divergences model]",
+  "type": "deterministic",
+  "negated": false 
+},
+{ "name": "EmergencyStopControl is deadlock free (ES1) [failures divergences model]",
+  "type": "deadlock-free",
+  "negated": false 
+},
+{ "name": "EmergencyStopControl is divergence free (ES2) [failures divergences model]",
+  "type": "divergence-free",
+  "negated": false 
+},
+{ "name": "EmergencyStopControl is deterministic (ES3) [failures divergences model]",
+  "type": "deterministic",
+  "negated": false 
+},
+{ "name": "SpecES4 is deadlock free (ES4) [failures divergences model]",
+  "type": "deadlock-free",
+  "negated": false 
+},
+{ "name": "SpecES5 is deadlock free (ES5) [failures divergences model]",
+  "type": "deadlock-free",
+  "negated": false 
+},
+{ "name": "SpecES5 refines SpecAlwaysAllowMovement (ES6a) [traces model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "SpecES5 refines SpecAlwaysAllowMovement (ES6b) [failures model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "SpecES5 refines SpecAlwaysAllowMovement (ES6c) [failures divergences model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "ESChaoticMovement refines ESHiddenStops (ES7) [failures divergences model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "ESHiddenStops refines ESChaoticMovement (ES8) [traces model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "ESHiddenStops refines ESChaoticMovement (ES9) [failures model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "ESHiddenStops refines ESChaoticMovement (ES10) [failures divergences model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "dressingcontrol::SDressingControl refines GANothingUntilRequest (GA1t) [traces model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "dressingcontrol::SDressingControl refines GANothingUntilRequest (GA1f) [failures model]",
+  "type": "refines",
+  "negated": false 
+},
+{ "name": "dressingcontrol::SDressingControl refines GANothingUntilRequest (GA1fd) [failures divergences model]",
+  "type": "refines",
+  "negated": false 
+}
+			]
