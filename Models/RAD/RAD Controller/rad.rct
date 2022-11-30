@@ -11,7 +11,7 @@ connection Franka on snaggingDetected to ctrl_radcontrol on snaggingDetected ( _
 	connection Franka on invalidTrajectory to ctrl_radcontrol on invalidTrajectory ( _async )
 	connection Franka on armConfig to ctrl_radcontrol on armConfig ( _async )
 	robotic platform Franka {
-		uses DressingEvents provides FrankaArmControl uses EmergencyStopEvents provides SensorOperations uses EnvironmentalEvents provides HRIOperations 
+		uses DressingEvents provides FrankaArmControl uses StopEvents provides SensorOperations uses EnvironmentalEvents provides HRIOperations 
 		event dressedJoint : int
 		uses FrankaArmEvents
 	event stepMoved
@@ -22,6 +22,7 @@ connection Franka on snaggingDetected to ctrl_radcontrol on snaggingDetected ( _
 	event forceInitiated
 		event forceWasAllowed
 
+	event forceApplied
 	}
 
 	cref ctrl_radcontrol = CDressingControl
@@ -54,5 +55,6 @@ connection ctrl_radcontrol on garmentAtHand to Franka on garmentAtHand ( _async 
 	connection ctrl_radcontrol on arrivedAtGarment to Franka on arrivedAtGarment ( _async )
 	connection ctrl_radcontrol on garmentGripped to Franka on garmentGripped ( _async )
 	connection ctrl_radcontrol on orientedGarment to Franka on orientedGarment ( _async )
+connection ctrl_radcontrol on forceApplied to Franka on forceApplied ( _async )
 }
 

@@ -1,7 +1,7 @@
 package radcontrol
 
 import definitions::*
-import emergencystop::*
+import stop::*
 import movement::*
 import dressingcontrol::*
 import PID::*
@@ -15,7 +15,7 @@ controller CDressingControl {
 	
 	uses DressingEvents
 	uses FrankaArmEvents
-	uses EmergencyStopEvents 
+	uses StopEvents 
 	uses EnvironmentalEvents 
 	uses PIDState
 	uses PIDParams
@@ -23,7 +23,7 @@ controller CDressingControl {
 	
 	sref stm_dressing = SDressingControl
 	sref stm_movement = MovementControl
-	sref stm_stop = EmergencyStopControl
+	sref stm_stop = StopControl
 	sref stm_environment = EnvironmentalMonitor
 
 	connection CDressingControl on snaggingDetected to stm_dressing on snaggingDetected ( _async )
@@ -43,7 +43,7 @@ controller CDressingControl {
 	connection CDressingControl on backgroundNoiseLevel to stm_environment on backgroundNoiseLevel ( _async )
 	connection CDressingControl on otherAgentDetected to stm_environment on otherAgentDetected ( _async )
 	connection stm_dressing on dressedJoint to CDressingControl on dressedJoint ( _async )
-	connection stm_stop on allowMovement to stm_movement on allowMovement ( _async ) connection stm_movement on movementEnd to stm_dressing on movementEnd ( _async )
+	connection stm_movement on movementEnd to stm_dressing on movementEnd ( _async )
 
 	connection CDressingControl on armConfig to stm_dressing on armConfig ( _async )
 	connection stm_dressing on movementStart to stm_movement on movementStart ( _async )
@@ -76,8 +76,6 @@ connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged 
 	opref op_ref0 = PIDInitialize
 	opref op_ref1 = PIDUpdate
 
-	connection stm_movement on movementOccurred to stm_stop on movementOccurred ( _async )
-
 	connection stm_movement on movementInitiated to CDressingControl on movementInitiated ( _async )
 	connection stm_movement on stepMoved to CDressingControl on stepMoved ( _async )
 	connection stm_movement on movementWasAllowed to CDressingControl on movementWasAllowed ( _async )
@@ -87,9 +85,7 @@ connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged 
 	connection stm_movement on forceWasAllowed to CDressingControl on forceWasAllowed ( _async )
 	connection stm_movement on forceInitiated to CDressingControl on forceInitiated ( _async )
 
-	connection stm_stop on resetMovement to stm_movement on resetMovement
-( _async )
-connection stm_movement on forceApplied to CDressingControl on forceApplied ( _async )
+	connection stm_movement on forceApplied to CDressingControl on forceApplied ( _async )
 
 	connection CDressingControl on userMoved to stm_dressing on userMoved ( _async )
 connection CDressingControl on handlingCorrect to stm_dressing on handlingCorrect ( _async )
@@ -97,5 +93,10 @@ connection stm_dressing on garmentAtHand to CDressingControl on garmentAtHand ( 
 	connection stm_dressing on arrivedAtGarment to CDressingControl on arrivedAtGarment ( _async )
 	connection stm_dressing on garmentGripped to CDressingControl on garmentGripped ( _async )
 	connection stm_dressing on orientedGarment to CDressingControl on orientedGarment ( _async )
+connection stm_movement on movementStarted to stm_stop on movementStarted ( _async )
+	connection stm_movement on movementEnded to stm_stop on movementEnded ( _async )
+	connection stm_stop on resetMovement to stm_movement on resetMovement ( _async )
+	connection stm_movement on movementOccurred to stm_stop on movementOccurred ( _async )
+	connection stm_stop on allowMovement to stm_movement on allowMovement ( _async )
 }
 

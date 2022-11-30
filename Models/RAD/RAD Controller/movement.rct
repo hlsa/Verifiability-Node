@@ -11,15 +11,72 @@ stm MovementControl {
 	var vtarget : vector ( real , 3 )
 	var vcurrent : vector ( real , 3 )
 	const EPSILON: nat = 1
-	event allowMovement
-	requires PIDState
+
+	event stepMoved
+	event movementInitiated
+	event movementWasAllowed
+event forceWasAllowed
+	event forceInitiated
+
+	event forceApplied
+uses FrankaArmEvents uses ForceEvents 
+	
+	transition t0 {
+		from i0
+		to NotEngaged
+	}
+	transition t1 {
+		from NotEngaged
+		to FreeMovement
+		trigger 
+		
+	
+	
+		
+		
+		
+		
+		
+		movementStart ? vtarget
+		action 
+	arrivedAtTarget = false
+	}
+	transition t6 {
+		from NotEngaged
+		to ForceApplication
+		trigger 
+	
+		
+		
+		
+		
+		
+		
+		forceStart ? vtarget
+		action 
+	
+	arrivedAtTarget = false
+	}
+	transition t2 {
+		from FreeMovement
+		to NotEngaged
+		condition arrivedAtTarget
+		action movementEnded ; movementEnd
+	}
+	transition t3 {
+		from ForceApplication
+		to NotEngaged
+		condition arrivedAtTarget
+		action movementEnded ; forceEnd
+	}
+requires PIDState
 
 	initial i0
 	state NotEngaged {
 	}
 
 	state FreeMovement {
-		entry PIDInitialize ( vtarget )
+		entry movementInitiated ; PIDInitialize ( vtarget )
 		
 		initial i0
 
@@ -39,19 +96,22 @@ stm MovementControl {
 			trigger 
 		
 			
+			
 			allowMovement
 			action movementWasAllowed
 		}
 		transition t6 {
 			from Move
 			to s0
-			trigger endEffectorPosition ? vcurrent
-			action movementOccurred
+			trigger 
+			endEffectorPosition ? vcurrent
 		}
 		transition t0 {
 			from s0
 			to SensePosition
-			condition not arrivedAtTarget
+			condition 
+		not arrivedAtTarget
+			action movementOccurred
 		}
 		transition t2 {
 			from i0
@@ -60,7 +120,8 @@ stm MovementControl {
 	transition t3 {
 			from SensePosition
 			to SensePosition
-			trigger resetMovement
+			trigger 
+		resetMovement
 		}
 	}
 
@@ -72,7 +133,8 @@ stm MovementControl {
 		state Move {
 			entry setEEForces ( o )
 		}
-	entry ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ); PIDInitialize(ftarget)
+
+		entry forceInitiated ; ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ) ; PIDInitialize ( ftarget )
 	state s0 {
 			entry wait ( step ) ; forceApplied ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
 		}
@@ -83,13 +145,16 @@ stm MovementControl {
 			trigger 
 		
 			
+			
 			allowMovement
 			action forceWasAllowed
 		}
 		transition t3 {
 			from s0
 			to CheckForce
-			condition not arrivedAtTarget
+			condition 
+		not arrivedAtTarget
+			action movementOccurred
 		}
 		transition t4 {
 			from i0
@@ -98,72 +163,18 @@ stm MovementControl {
 		transition t2 {
 			from Move
 			to s0
-			trigger endEffectorPosition ? vcurrent
-			action movementOccurred
+			trigger 
+			endEffectorPosition ? vcurrent
 		}
 	transition t0 {
 			from CheckForce
 			to CheckForce
-			trigger resetMovement
+			trigger 
+		resetMovement
 		}
 	}
-	uses FrankaArmEvents uses ForceEvents 
-	
-	transition t0 {
-		from i0
-		to NotEngaged
-	}
-	transition t1 {
-		from NotEngaged
-		to FreeMovement
-		trigger 
-		
-	
-	
-		
-		
-		
-		
-		movementStart ? vtarget
-		action arrivedAtTarget = false ; movementInitiated
-	}
-	transition t6 {
-		from NotEngaged
-		to ForceApplication
-		trigger 
-	
-		
-		
-		
-		
-		
-		forceStart ? vtarget
-		action 
-	arrivedAtTarget = false ; forceInitiated
-	}
-	transition t2 {
-		from FreeMovement
-		to NotEngaged
-		condition arrivedAtTarget
-		action movementEnd
-	}
-	transition t3 {
-		from ForceApplication
-		to NotEngaged
-		condition arrivedAtTarget
-		action forceEnd
-	}
-requires PIDParams var ftarget : vector ( real , 3 )
+	uses MovementCoordination requires PIDParams var ftarget : vector ( real , 3 )
 	const TARGET_TOTAL_FORCE : real = 1
 	var fcurrent : vector ( real , 3 )
-event movementOccurred
-event stepMoved
-	event movementInitiated
-	event movementWasAllowed
-event forceWasAllowed
-	event forceInitiated
-
-	event resetMovement
-event forceApplied
 }
 

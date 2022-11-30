@@ -1,9 +1,7 @@
 specification group RAD {
-	target = module RobotAssistedDressing
-    
-    actors = { target as T, world as W }
-    
-    message set MStops = {
+	target = module RobotAssistedDressing	
+    actors = { target as T } actors = { world as W }
+	message set MStops = {
         W->>T: event emergencyStop,
         W->>T: event resumeDressing,
         W->>T: event collisionStop,
@@ -92,7 +90,6 @@ specification group RAD {
         T->>W: op detectGarment()
     }
     
-
     sequence DressingRequest {
     	actors T and W
         any in MStops until
@@ -108,14 +105,11 @@ specification group RAD {
         any until
             T->>W: op detectGarment()
             any in MStops until
-                W->>T: event garmentDetected(any)
-            end
+                W->>T: event garmentDetected(any) end
             any in set MMovementOrGripOrStop until
-               W->>T: event gripCorrect(true)
-            end 
+               W->>T: event gripCorrect(true) end 
             any in MStops until
-                T->>W: event garmentGripped()
-            end
+                T->>W: event garmentGripped() end
         end
         any until
             deadlock (on T)
@@ -129,8 +123,7 @@ specification group RAD {
                 T->>W: op detectGarment()
                 W->>T: event garmentDetected(any)
                 any in set MMovementOrGrip until
-                   W->>T: event gripCorrect(true)
-                end 
+                   W->>T: event gripCorrect(true) end 
                 T->>W: event garmentGripped()
                 any until
                     deadlock (on T)
@@ -153,8 +146,7 @@ specification group RAD {
                 loop (at least 0 times)
                     W->>T: event handlingCorrect(false) (hot)
                     T->>W: op reorientGarment()
-                    T->>W: op checkCorrectHandling()
-                end
+                    T->>W: op checkCorrectHandling() end
                 W->>T: event handlingCorrect(true)
                 any until
                     deadlock (on T)
@@ -285,14 +277,9 @@ specification group RAD {
     
 //	    
 //// , MC->>W: event forceApplied
+/*
 specification group RADInternal {
     target = components of controller radcontrol::CDressingControl
-    actors = {
-        component radcontrol::CDressingControl::stm_dressing as DC,
-        component radcontrol::CDressingControl::stm_movement as MC,
-        component radcontrol::CDressingControl::stm_stop     as ES,
-        world as W
-    }
     message set MRelevant = {
         DC->>MC: event movementStart(any),
         ES->>MC: event allowMovement,
@@ -304,31 +291,31 @@ specification group RADInternal {
         MC->>W: event stepMoved,
         MC->>ES: event movementOccurred
     }
-
+    actors = {
+        component radcontrol::CDressingControl::stm_dressing as DC,
+        component radcontrol::CDressingControl::stm_movement as MC,
+        component radcontrol::CDressingControl::stm_stop     as ES,
+        world as W
+    }
+    
     sequence DressingSequence {
         actors DC, MC, ES and W
         loop
             any except MRelevant until
-                DC->>MC: event movementStart(any)
-            end
+                DC->>MC: event movementStart(any) end
             loop
                 any except MRelevant until
-                    ES->>MC: event allowMovement
-                end
+                    ES->>MC: event allowMovement end
                 any except MRelevant until
                     alt
-                        MC->>W: event stepMoved
-                    else
-                        MC->>W: event forceApplied
-                    end
+                        MC->>W: event stepMoved else
+                        MC->>W: event forceApplied end
                 end
                 any except MRelevant until
-                    MC->>ES: event movementOccurred
-                end
+                    MC->>ES: event movementOccurred end
             end
             any except MRelevant until
-                MC->>DC: event movementEnd
-            end
+                MC->>DC: event movementEnd end
         end
     }
     
@@ -337,26 +324,20 @@ specification group RADInternal {
         loop (at least 0)
             par
                 any except MRelevant until
-                    ES->>MC: event allowMovement
-                end
+                    ES->>MC: event allowMovement end
             and
                 any except MRelevant until
-                    DC->>MC: event movementStart(any)
-                end
+                    DC->>MC: event movementStart(any) end
             end
             any except MRelevant until
                 alt
-                    MC->>W: event stepMoved
-                else
-                    MC->>W: event forceApplied
-                end
+                    MC->>W: event stepMoved else
+                    MC->>W: event forceApplied end
             end
             any except MRelevant until
-                MC->>ES: event movementOccurred
-            end
+                MC->>ES: event movementOccurred end
             any except MRelevant until
-                MC->>DC: event movementEnd
-            end
+                MC->>DC: event movementEnd end
         end
     }
     
@@ -366,30 +347,24 @@ specification group RADInternal {
             any except MRelevant until
                 ES->>MC: event allowMovement
                 any except MRelevant until
-                    DC->>MC: event movementStart(any)
-                end
+                    DC->>MC: event movementStart(any) end
             end
         else
             any except MRelevant until
                 DC->>MC: event movementStart(any)
                 any except MRelevant until
-                    ES->>MC: event allowMovement
-                end
+                    ES->>MC: event allowMovement end
             end
         end
         any except MRelevant until
             alt
-                MC->>W: event stepMoved
-            else
-                MC->>W: event forceApplied
-            end
+                MC->>W: event stepMoved else
+                MC->>W: event forceApplied end
         end
         any except MRelevant until
-            MC->>ES: event movementOccurred
-        end
+            MC->>ES: event movementOccurred end
         any except MMCtoES until
-            MC->>DC: event movementEnd
-        end
+            MC->>DC: event movementEnd end
         any until
             deadlock (on DC)
         end
@@ -399,63 +374,49 @@ specification group RADInternal {
         actors DC, MC, ES and W
         par
             any except MRelevant until
-                ES->>MC: event allowMovement
-            end
+                ES->>MC: event allowMovement end
         and
             any except MRelevant until
-                DC->>MC: event movementStart(any)
-            end
+                DC->>MC: event movementStart(any) end
         end
         any except MRelevant until
             alt
-                MC->>W: event stepMoved
-            else
-                MC->>W: event forceApplied
-            end
+                MC->>W: event stepMoved else
+                MC->>W: event forceApplied end
         end
         any except MRelevant until
-            MC->>ES: event movementOccurred
-        end
+            MC->>ES: event movementOccurred end
         any except MRelevant until
             alt
-                MC->>W: event stepMoved
-            else
-                MC->>W: event forceApplied
-            end
+                MC->>W: event stepMoved else
+                MC->>W: event forceApplied end
         end
         any except MRelevant until
-            MC->>ES: event movementOccurred
-        end
+            MC->>ES: event movementOccurred end
         loop (at least 0)
             any except MRelevant until
-                ES->>W: event allowMovement
-            end
+                ES->>W: event allowMovement end
             any except MRelevant until
                 alt
-                    MC->>W: event stepMoved
-                else
-                    MC->>W: event forceApplied
-                end
+                    MC->>W: event stepMoved else
+                    MC->>W: event forceApplied end
             end
             any except MRelevant until
-                MC->>ES: event movementOccurred
-            end
+                MC->>ES: event movementOccurred end
         end
         loop (at least 0)
             par
                 any except MRelevant until
-                    MC->>DC: event movementEnd
-                end
+                    MC->>DC: event movementEnd end
                 any except MRelevant until
-                    DC->>MC: event movementStart(any)
-                    end
+                    DC->>MC: event movementStart(any) end
             and
-                ES->>MC: event allowMovement
-            end
+                ES->>MC: event allowMovement end
         end
                 
     }
 }
+*/
    	    	     
 assertion D1: RAD::DressingRequest holds in the traces model
 // Currently vacuously true since we do not get this far
@@ -469,6 +430,8 @@ assertion D8: RAD::MovementToGripGarment holds in the traces model
 assertion D9: RAD::MovementToGripGarmentPar holds in the traces model
 assertion D10: RAD::CorrectHandling holds in the traces model
 assertion D10t: RAD::CorrectHandling holds in the timed model
+/*
 assertion D11: RADInternal::DressingSequence holds in the traces model
 assertion D12a: RADInternal::DressingSequence2a holds in the traces model
 assertion D12b: RADInternal::DressingSequence2b holds in the traces model
+ */

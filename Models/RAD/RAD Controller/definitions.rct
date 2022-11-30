@@ -50,7 +50,7 @@ detectSecondArm ( )
 getEEPos ( )
 }
 
-interface EmergencyStopEvents {
+interface StopEvents {
 	event emergencyStop
 
 	event resumeDressing
@@ -85,6 +85,14 @@ checkUserDressed ( )
 interface FrankaArmEvents {
 	event endEffectorPosition : vector(real, 3)
 	event forceEndEffector: vector(real, 3)
+}
+
+interface MovementCoordination {
+	event allowMovement
+	event movementOccurred
+	event resetMovement
+	event movementStarted
+	event movementEnded
 }
 
 function jointPosition(xs: vector(vector(real, 3), 3), i: int): vector(real, 3) {
