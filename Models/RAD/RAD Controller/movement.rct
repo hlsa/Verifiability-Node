@@ -76,7 +76,7 @@ requires PIDState
 	}
 
 	state FreeMovement {
-		entry movementInitiated ; PIDInitialize ( vtarget )
+		entry movementInitiated ; movementStarted ; PIDInitialize ( vtarget )
 		
 		initial i0
 
@@ -134,7 +134,7 @@ requires PIDState
 			entry setEEForces ( o )
 		}
 
-		entry forceInitiated ; ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ) ; PIDInitialize ( ftarget )
+		entry forceInitiated ; movementStarted ; ftarget = targetForces ( vcurrent , vtarget , TARGET_TOTAL_FORCE ) ; PIDInitialize ( ftarget )
 	state s0 {
 			entry wait ( step ) ; forceApplied ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
 		}
