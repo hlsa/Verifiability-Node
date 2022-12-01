@@ -223,6 +223,7 @@ transition t16 {
 	transition t23 {
 		from Allowing
 		to NotStarted
+	trigger movementEnded
 	}
 }
 
