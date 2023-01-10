@@ -38,16 +38,11 @@ controller CDressingControl {
 	connection CDressingControl on emergencyStop to stm_stop on emergencyStop ( _async )
 	connection CDressingControl on resumeDressing to stm_stop on resumeDressing ( _async )
 
-	connection stm_environment on environmentalResume to stm_stop on environmentalResume ( _async )
-	connection stm_environment on environmentalStop to stm_stop on environmentalStop ( _async )
-	connection CDressingControl on backgroundNoiseLevel to stm_environment on backgroundNoiseLevel ( _async )
+	connection stm_environment on environmentalResume to stm_stop on environmentalResume connection stm_environment on environmentalStop to stm_stop on environmentalStop connection CDressingControl on backgroundNoiseLevel to stm_environment on backgroundNoiseLevel ( _async )
 	connection CDressingControl on otherAgentDetected to stm_environment on otherAgentDetected ( _async )
 	connection stm_dressing on dressedJoint to CDressingControl on dressedJoint ( _async )
-	connection stm_movement on movementEnd to stm_dressing on movementEnd ( _async )
-
-	connection CDressingControl on armConfig to stm_dressing on armConfig ( _async )
-	connection stm_dressing on movementStart to stm_movement on movementStart ( _async )
-	connection CDressingControl on gripCorrect to stm_dressing on gripCorrect ( _async )
+	connection stm_movement on movementEnd to stm_dressing on movementEnd connection CDressingControl on armConfig to stm_dressing on armConfig ( _async )
+	connection stm_dressing on movementStart to stm_movement on movementStart connection CDressingControl on gripCorrect to stm_dressing on gripCorrect ( _async )
 
 	connection CDressingControl on secondHandDetected to stm_dressing on secondHandDetected ( _async )
 	connection CDressingControl on endEffectorPosition to stm_movement on endEffectorPosition ( _async )
@@ -59,10 +54,7 @@ connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged 
 
 	connection CDressingControl on forceEndEffector to stm_movement on forceEndEffector ( _async )
 
-	connection stm_dressing on forceStart to stm_movement on forceStart ( _async )
-
-	connection stm_movement on forceEnd to stm_dressing on forceEnd ( _async )
-	connection CDressingControl on collisionStop to stm_stop on collisionStop ( _async )
+	connection stm_dressing on forceStart to stm_movement on forceStart connection stm_movement on forceEnd to stm_dressing on forceEnd connection CDressingControl on collisionStop to stm_stop on collisionStop ( _async )
 	connection CDressingControl on collisionResume to stm_stop on collisionResume ( _async )
 	event stepMoved
 	event movementInitiated
@@ -73,6 +65,7 @@ connection CDressingControl on gripperEngaged to stm_dressing on gripperEngaged 
 	event forceWasAllowed
 	event forceInitiated
 	event forceApplied
+	requires SafetyModeControl
 	opref op_ref0 = PIDInitialize
 	opref op_ref1 = PIDUpdate
 
@@ -93,10 +86,8 @@ connection stm_dressing on garmentAtHand to CDressingControl on garmentAtHand ( 
 	connection stm_dressing on arrivedAtGarment to CDressingControl on arrivedAtGarment ( _async )
 	connection stm_dressing on garmentGripped to CDressingControl on garmentGripped ( _async )
 	connection stm_dressing on orientedGarment to CDressingControl on orientedGarment ( _async )
-connection stm_movement on movementStarted to stm_stop on movementStarted ( _async )
-	connection stm_movement on movementEnded to stm_stop on movementEnded ( _async )
-	connection stm_stop on resetMovement to stm_movement on resetMovement ( _async )
-	connection stm_movement on movementOccurred to stm_stop on movementOccurred ( _async )
-	connection stm_stop on allowMovement to stm_movement on allowMovement ( _async )
+connection stm_movement on movementStarted to stm_stop on movementStarted connection stm_movement on movementEnded to stm_stop on movementEnded connection stm_stop on resetMovement to stm_movement on resetMovement connection stm_movement on movementOccurred to stm_stop on movementOccurred connection stm_stop on allowMovement to stm_movement on allowMovement connection stm_dressing on checkHRI to stm_stop on checkHRI
+	connection stm_stop on allowHRI to stm_dressing on allowHRI
+connection CDressingControl on userPresent to stm_environment on userPresent ( _async )
 }
 

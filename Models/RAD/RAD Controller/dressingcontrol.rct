@@ -216,7 +216,7 @@ state Start {
 	}
 transition t0 {
 		from i0
-		to Start
+		to HRICheck
 	}
 	transition t3 {
 		from Start
@@ -280,5 +280,13 @@ var firstArmDressed : boolean = false
 	}
 var userPose : vector ( vector(real, 3) , 3 )
 	var garmentPosition : vector(real, 3)
-uses ForceEvents }
+uses ForceEvents uses HRICoordination requires SafetyModeControl state HRICheck {
+		entry checkHRI
+	}
+	transition t5 {
+		from HRICheck
+		to Start
+		trigger allowHRI
+	}
+}
 

@@ -17,7 +17,8 @@ interface PIDParams {
 	const Kd : real = 0
 	const 
 
-step : int = 0
+
+step : int = 1
 }
 
 interface PIDOps {
@@ -29,7 +30,7 @@ operation PIDInitialize ( target: vector(real, 3) ) {
 	requires PIDState requires PIDParams initial i0
 	final f0
 	state Init {
-		entry p = (|0,0,0|); d = (|0,0,0|); e = (|0,0,0|); e_old = (|0,0,0|); t = target; t_old = (|0,0,0|); o = (|0,0,0|)
+		entry p = (| 0 , 0 , 0 |) ; d = (| 0 , 0 , 0 |) ; e = (| 0 , 0 , 0 |) ; e_old = (| 0 , 0 , 0 |) ; t = target ; t_old = (| 0 , 0 , 0 |) ; o = (| 0 , 0 , 0 |)
 	}
 	transition t0 {
 		from i0

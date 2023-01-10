@@ -20,11 +20,13 @@ stm StopControl {
 		to Allowing
 		trigger 
 		
+		
 		emergencyStop
 		condition 
 		
+		
 		not emergencyStopped
-		action emergencyStopped = true
+		action ( emergencyStopped = true ; compliantMode = true ; enableCompliantMode ( ) )
 	}
 	transition t3 {
 		from Allowing
@@ -32,13 +34,16 @@ stm StopControl {
 		trigger 
 		
 		
+		
 		environmentalStop
 		condition 
 		
 		
+		
 		not environmentallyStopped
 		action 
-	resetMovement ; environmentallyStopped = true
+	
+	compliantMode = true ; environmentallyStopped = true ; enableCompliantMode ( )
 	}
 	transition t4 {
 		from Allowing
@@ -46,9 +51,11 @@ stm StopControl {
 		trigger 
 		
 		
+		
 		resumeDressing
 		condition emergencyStopped
 		action 
+	
 	resetMovement ; emergencyStopped = false
 	}
 	transition t5 {
@@ -57,9 +64,11 @@ stm StopControl {
 		trigger 
 		
 		
+		
 		environmentalResume
 		condition environmentallyStopped
 		action 
+	
 	resetMovement ; environmentallyStopped = false
 	}
 var collisionStopped : boolean = false
@@ -69,12 +78,14 @@ var collisionStopped : boolean = false
 		trigger 
 		
 		
+		
 		collisionStop
 		condition 
 		
 		
+		
 		not collisionStopped
-		action collisionStopped = true
+		action compliantMode = true ; collisionStopped = true ; collisionHRIInteraction ( ) ; enableCompliantMode ( )
 	}
 	event allowedMovement
 	event noticedMovementOccurred
@@ -85,7 +96,7 @@ state Awaiting {
 	transition t1 {
 		from Allowing
 		to Awaiting
-		condition not emergencyStopped /\ not environmentallyStopped /\ not collisionStopped
+		condition not emergencyStopped /\ not collisionStopped /\ not environmentallyStopped
 		action allowMovement
 	}
 	transition t7 {
@@ -101,6 +112,7 @@ state NotStarted {
 		from Awaiting
 		to Awaiting
 		trigger 
+		
 		environmentalResume
 		condition environmentallyStopped
 		action environmentallyStopped = false
@@ -109,32 +121,29 @@ state NotStarted {
 		from Awaiting
 		to Awaiting
 		trigger 
+		
 		emergencyStop
 		condition 
+		
 		not emergencyStopped
-		action emergencyStopped = true
+		action compliantMode = true ; emergencyStopped = true ; enableCompliantMode ( )
 	}
 	transition t10 {
 		from Awaiting
 		to Awaiting
 		trigger 
+		
 		environmentalStop
 		condition 
+		
 		not environmentallyStopped
-		action environmentallyStopped = true
+		action compliantMode = true ; environmentallyStopped = true ; enableCompliantMode ( )
 	}
 	transition t11 {
 		from Awaiting
 		to Awaiting
 		trigger 
 		resumeDressing
-		condition emergencyStopped
-		action emergencyStopped = false
-	}
-	transition t12 {
-		from Awaiting
-		to Awaiting
-		trigger resumeDressing
 		condition emergencyStopped
 		action emergencyStopped = false
 	}
@@ -152,9 +161,11 @@ state NotStarted {
 	transition t14 {
 		from Awaiting
 		to Awaiting
-		trigger collisionStop
-		condition not collisionStopped
-		action collisionStopped = true
+		trigger 
+		collisionStop
+		condition 
+		not collisionStopped
+		action compliantMode = true ; collisionStopped = true ; collisionHRIInteraction ( ) ; enableCompliantMode ( )
 	}
 	transition t15 {
 		from Awaiting
@@ -168,108 +179,186 @@ transition t16 {
 		from NotStarted
 		to NotStarted
 		trigger 
+		
 		environmentalResume
 		condition environmentallyStopped
-		action 
-	environmentallyStopped = false
+		action environmentallyStopped = false
 	}
 	transition t17 {
 		from NotStarted
 		to NotStarted
-		trigger emergencyStop
-		condition not emergencyStopped
+		trigger 
+		emergencyStop
+		condition 
+		not emergencyStopped
 		action emergencyStopped = true
 	}
 	transition t18 {
 		from NotStarted
 		to NotStarted
 		trigger 
+		
 		environmentalStop
 		condition 
+		
 		not environmentallyStopped
-		action 
-	environmentallyStopped = true
+		action environmentallyStopped = true
 	}
 	transition t19 {
 		from NotStarted
 		to NotStarted
 		trigger 
+		
 		resumeDressing
 		condition emergencyStopped
-		action 
-	emergencyStopped = false
+		action emergencyStopped = false
 	}
 	transition t20 {
 		from NotStarted
 		to NotStarted
-		trigger collisionStop
-		condition not collisionStopped
+		trigger 
+		collisionStop
+		condition 
+		not collisionStopped
 		action collisionStopped = true
 	}
 	transition t21 {
 		from NotStarted
 		to NotStarted
 		trigger 
+		
 		collisionResume
 		condition collisionStopped
-		action 
-	collisionStopped = false
+		action collisionStopped = false
 	}
 	transition t22 {
 		from NotStarted
 		to Allowing
-	trigger movementStarted
+	trigger 
+	movementStarted
+		condition not environmentallyStopped /\ not collisionStopped /\ not emergencyStopped
+		action disableStoppedMode ( )
 	}
 	transition t23 {
 		from Allowing
 		to NotStarted
-	trigger movementEnded
+	trigger 
+	movementEnded
+		action enableStoppedMode ( )
+	}
+	uses HRICoordination requires SafetyModeControl requires HRIOperations var compliantMode : boolean = false
+	state CheckingHRI {
+	}
+	transition t24 {
+		from NotStarted
+		to CheckingHRI
+		trigger checkHRI
+	}
+	transition t25 {
+		from CheckingHRI
+		to NotStarted
+		condition not environmentallyStopped /\ not emergencyStopped /\ not collisionStopped
+		action allowHRI
+	}
+	transition t26 {
+		from CheckingHRI
+		to CheckingHRI
+		trigger environmentalResume
+		condition environmentallyStopped
+		action environmentallyStopped = false
+	}
+	transition t27 {
+		from CheckingHRI
+		to CheckingHRI
+		trigger emergencyStop
+		condition not emergencyStopped
+		action emergencyStopped = true
+	}
+	transition t28 {
+		from CheckingHRI
+		to CheckingHRI
+		trigger environmentalStop
+		condition not environmentallyStopped
+		action environmentallyStopped = true
+	}
+	transition t29 {
+		from CheckingHRI
+		to CheckingHRI
+		trigger resumeDressing
+		condition emergencyStopped
+		action emergencyStopped = false
+	}
+	transition t30 {
+		from CheckingHRI
+		to CheckingHRI
+		trigger collisionStop
+		condition not collisionStopped
+		action collisionStopped = true
+	}
+	transition t31 {
+		from CheckingHRI
+		to CheckingHRI
+		trigger collisionResume
+		condition collisionStopped
+		action collisionStopped = false
+	}
+	transition t12 {
+		from Allowing
+		to Allowing
+		condition compliantMode /\ not emergencyStopped /\ not collisionStopped /\ not environmentallyStopped
+		action disableCompliantMode ( ) ; compliantMode = false
 	}
 }
 
 stm EnvironmentalMonitor {
 	uses EnvironmentalEvents 
 	var otherAgent : boolean
+	var present: boolean
 	event environmentalStop
 	event environmentalResume
 	initial i0
-	state SensingHazard {
+
+	state Monitoring {
+		state Enabled {
+		}
+		state Stopped {
+		}
+		initial i0
+		transition t0 {
+			from i0
+			to Enabled
+		}
+		transition t1 {
+			from Stopped
+			to Enabled
+			condition not otherAgent /\ level != NoiseLevel :: High /\ present
+		}
+		transition t2 {
+			from Enabled
+			to Stopped
+			condition otherAgent \/ level == NoiseLevel :: High \/ not present
+		}
 	}
-	state OtherAgent {
-	}
-	state BackgroundNoise {
-	}
+	var level : NoiseLevel
+
 	transition t0 {
 		from i0
-		to SensingHazard
+		to Monitoring
 	}
-	transition t1 {
-		from SensingHazard
-		to OtherAgent
-		trigger 
-		otherAgentDetected ? otherAgent
-		condition not otherAgent
-		action environmentalResume
+	transition t9 {
+		from Monitoring
+		to Monitoring
+		trigger backgroundNoiseLevel ? level
 	}
-	transition t2 {
-		from OtherAgent
-		to SensingHazard
-		trigger 
-		otherAgentDetected ? otherAgent
-		condition otherAgent
-		action environmentalResume
+	transition t10 {
+		from Monitoring
+		to Monitoring
+		trigger userPresent ? present
 	}
-	transition t3 {
-		from SensingHazard
-		to BackgroundNoise
-		condition level == NoiseLevel :: High
-		action environmentalStop
+	transition t11 {
+		from Monitoring
+		to Monitoring
+		trigger otherAgentDetected ? otherAgent
 	}
-	transition t4 {
-		from BackgroundNoise
-		to SensingHazard
-		condition level != NoiseLevel :: High
-		action environmentalResume
-	}
-var level : NoiseLevel
 }
+

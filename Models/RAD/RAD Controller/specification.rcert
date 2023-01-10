@@ -1,5 +1,123 @@
 specification group RAD {
 	target = module RobotAssistedDressing	
+	
+	// HLR1: Initiation given high noise
+	// Trace should not occur
+	// Broken by https://github.com/UoY-RoboStar/robocert-textual/issues/134
+//	sequence InitiationInHighNoise {
+//	    actors T and W
+//	    any until
+//	       W->>T: event backgroundNoiseLevel(NoiseLevel::High)
+//	       any except MNoise until
+//	           W->>T: event dressingRequest
+//	       end
+//	       any until
+//	           deadlock (on T)
+//	       end
+//	    end
+//	}
+
+    // HLR2: Responds to an imminent collision with a user by switching to compliance mode and pausing motion
+    sequence RespondsToCollision {
+        actors T and W
+        loop
+            any until
+                W->>T: event collisionStop
+                par
+                    any except MMovement until
+                        T->>W: op enableCompliantMode() (hot)
+                    end
+                and
+                    any except MMovement until
+                        T->>W: op collisionHRIInteraction()
+                    end
+                and
+                    opt
+                        any except MMovement until
+                            alt
+                                T->>W: op setEEPos(any)
+                            else
+                                T->>W: op setEEForces(any)
+                            end
+                        end
+                    end
+                end
+                any except MMovement until
+                    W->>T: event collisionResume end
+            end
+        end
+        any until
+            deadlock (on T)
+        end
+    }
+
+
+    // HLR4: Detect and respond to other agents entering the working area via a HRI interaction, switching to compliance mode, and pausing motion
+    sequence RespondsToOtherAgent {
+        actors T and W
+        loop
+            any until
+                W->>T: event otherAgentDetected(true)
+                par
+                    any except MMovement until
+                        T->>W: op enableCompliantMode() (hot)
+                    end
+                and
+                    any except MMovement until
+                        T->>W: op otherAgentHRIInteraction()
+                    end
+                and
+                    opt
+                        any except MMovement until
+                            alt
+                                T->>W: op setEEPos(any)
+                            else
+                                T->>W: op setEEForces(any)
+                            end
+                        end
+                    end
+                end
+                any except MMovement until
+                    W->>T: event otherAgentDetected(false)
+                end
+            end
+        end
+        any until
+            deadlock (on T)
+        end
+    }
+	
+	// HLR5: A dressing request is followed by user visible 
+	// movement in furtherance of dressing (in absence of emergency stops)
+    sequence DressingRequestLiveness {
+        actors T and W
+        any in MStops until
+            W->>T: event dressingRequest
+            par
+                T->>W: op detectGarment() (hot)
+                W->>T: event garmentDetected(any) (hot)
+                T->>W: event movementInitiated (hot)
+//                par
+//                    T->>W: op disableStoppedMode() (hot)
+//                and
+//                    W->>T: event endEffectorPosition(any) (hot)
+//                end
+//                T->>W: op setEEPos(any) (hot)
+                any until
+                    deadlock (on T)
+                end
+            and
+                any in MStops until
+                    deadlock (on T)
+                end
+            end
+        end
+    }
+	
+	// HLR6: No dressing (motion) starts without/before the user requesting
+	// “start dressing”
+	// + 
+	// HLR9: The garment should not be picked up before a request has been made
     sequence DressingRequest {
     	actors T and W
         any in MStops until
@@ -10,16 +128,146 @@ specification group RAD {
         end
     }
     
+    // HLR6: No dressing (motion) starts without/before the user requesting
+    // “start dressing”
+    // (not occurs property)
+    sequence DressingRequestMotion {
+        actors T and W
+        any except {W->>T: event dressingRequest} until
+            alt
+                T->>W: op setEEPos(any)
+            else
+                T->>W: op setEEForces(any)
+            end
+        end
+        any until
+            deadlock (on T)
+        end
+    }
+
+    // HLR9: The garment should not be picked up before a request has been made
+    // (not occurs property)
+    sequence DressingRequestPickingUpGarment {
+        actors T and W
+        any except {W->>T: event dressingRequest} until
+            T->>W: event garmentGripped()
+        end
+        any until
+            deadlock (on T)
+        end
+    }
+    
+    // HRL7: The robot responds to the initial dressing request within one second
+    sequence DressingRequestResponseDeadline {
+        actors T and W
+        any in MStops until
+            W->>T: event dressingRequest
+            par
+                deadline (1 units on T)
+                    T->>W: op detectGarment()
+                    W->>T: event garmentDetected(any)
+                    T->>W: event movementInitiated
+                end
+//                par
+//                    T->>W: op disableStoppedMode() (hot)
+//                and
+//                    W->>T: event endEffectorPosition(any) (hot)
+//                end
+//                T->>W: op setEEPos(any) (hot)
+                any until
+                    deadlock (on T)
+                end
+            and
+                any in MStops until
+                    deadlock (on T)
+                end
+            end
+        end
+    }
+    
+    // HLR10: The dressing process only continues whilst a user is present
+    sequence RespondToUserLeft {
+        actors T and W
+        loop
+            any except MUserPresence until
+                W->>T: event userPresent(false) (hot)
+            end
+            opt
+                any except MMovement until
+                    alt
+                        T->>W: op setEEPos(any)
+                    else
+                        T->>W: op setEEForces(any)
+                    end
+                end
+            end
+            any except MMovement until
+                W->>T: event userPresent(true)
+            end
+        end
+    }
+    
+    // HLR11: Movement must not be carried out based on poses detected when a second user is in the environment
+    // (we need to make this property more precise or reformulate the property if too difficult)
+    sequence RespondToOtherAgent2 {
+        actors T and W
+        loop
+            any except MOtherAgent until
+                W->>T: event otherAgentDetected(true) (hot)
+            end
+            opt
+                any except MMovement until
+                    alt
+                        T->>W: op setEEPos(any)
+                    else
+                        T->>W: op setEEForces(any)
+                    end
+                end
+            end
+            any except MMovement until
+                W->>T: event otherAgentDetected(false)
+            end
+        end
+    }
+    
+    // HLR14: Movement must not continue after the completion of dressing (arrival at the destination)
+    sequence NoMovementAfterDressed {
+        actors T and W
+        any until
+            T->>W: event userDressed
+            any except MMovement until
+                deadlock (on T)
+            end
+        end
+    }
+
+    // HLR15: Snagging must be responded to by movement correction (request HRI for user to assist)
+    sequence SnaggingDetection {
+        actors T and W
+        loop    
+            any except {W->>T: event snaggingDetected} until
+                T->>W: op checkFault()
+                opt
+                    W->>T: event snaggingDetected // (hot?)
+                    T->>W: event correctedMovement
+                end
+            end
+        end
+    }
+    
     sequence MovementToGripGarment {
         actors T and W
         any until
             T->>W: op detectGarment()
             any in MStops until
-                W->>T: event garmentDetected(any) end
+                W->>T: event garmentDetected(any)
+            end
             any in set MMovementOrGripOrStop until
-               W->>T: event gripCorrect(true) end 
+               W->>T: event gripCorrect(true)
+            end 
             any in MStops until
-                T->>W: event garmentGripped() end
+                T->>W: event garmentGripped()
+            end
         end
         any until
             deadlock (on T)
@@ -33,14 +281,15 @@ specification group RAD {
                 T->>W: op detectGarment()
                 W->>T: event garmentDetected(any)
                 any in set MMovementOrGrip until
-                   W->>T: event gripCorrect(true) end 
+                   W->>T: event gripCorrect(true)
+                end 
                 T->>W: event garmentGripped()
                 any until
                     deadlock (on T)
                 end
             end
         and
-            any in MStops until
+            any in MStopRelated until
                 deadlock (on T)
             end
         end
@@ -56,7 +305,8 @@ specification group RAD {
                 loop (at least 0 times)
                     W->>T: event handlingCorrect(false) (hot)
                     T->>W: op reorientGarment()
-                    T->>W: op checkCorrectHandling() end
+                    T->>W: op checkCorrectHandling()
+                end
                 W->>T: event handlingCorrect(true)
                 any until
                     deadlock (on T)
@@ -72,11 +322,14 @@ specification group RAD {
     sequence DressesInOrder {
         actors T and W
         any except MJoints until
-            T->>W: event dressedJoint(2) end
+            T->>W: event dressedJoint(2)
+        end
         any except MJoints until
-            T->>W: event dressedJoint(1) end
+            T->>W: event dressedJoint(1)
+        end
         any except MJoints until
-            T->>W: event dressedJoint(0) end
+            T->>W: event dressedJoint(0)
+        end
         any until
             deadlock (on T)
         end
@@ -85,11 +338,14 @@ specification group RAD {
     sequence DressesOutOfOrder {
         actors T and W
         any except MJoints until
-            T->>W: event dressedJoint(1) end
+            T->>W: event dressedJoint(1)
+        end
         any except MJoints until
-            T->>W: event dressedJoint(2) end
+            T->>W: event dressedJoint(2)
+        end
         any except MJoints until
-            T->>W: event dressedJoint(0) end
+            T->>W: event dressedJoint(0)
+        end
         any until
             deadlock (on T)
         end
@@ -109,8 +365,10 @@ specification group RAD {
             opt
                 any except MMovement until
                     alt
-                        T->>W: op setEEPos(any) else
-                        T->>W: op setEEForces(any) end
+                        T->>W: op setEEPos(any)
+                    else
+                        T->>W: op setEEForces(any)
+                    end
                 end
             end
             any except MMovement until
@@ -122,13 +380,16 @@ specification group RAD {
         actors T and W
         loop
             any except set MStop until
-                W->>T: event emergencyStop(hot)
-            end
-            opt
-                any except set MMovement until
-                    alt
-                        T->>W: op setEEPos(any) else
-                        T->>W: op setEEForces(any) end
+                W->>T: event emergencyStop end
+            deadline (1 on T)
+                opt
+                    any except set MMovement until
+                        alt
+                            T->>W: op setEEPos(any)
+                        else
+                            T->>W: op setEEForces(any)
+                        end
+                    end
                 end
             end
             any except set MMovement until
@@ -139,7 +400,6 @@ specification group RAD {
         end
     }
         
-    
     sequence RespondToStopImmediately {
         actors T and W
         loop
@@ -149,19 +409,24 @@ specification group RAD {
             any in MStopMonitoring until
                 opt
                     alt
-                        T->>W: event movementWasAllowed else
-                        T->>W: event forceWasAllowed end
+                        T->>W: event movementWasAllowed
+                    else
+                        T->>W: event forceWasAllowed
+                    end
                 end
             end
             any in MStopMonitoring until
                 opt
                     alt
-                        T->>W: op setEEPos(any) else
-                        T->>W: op setEEForces(any) end
+                        T->>W: op setEEPos(any)
+                    else
+                        T->>W: op setEEForces(any)
+                    end
                 end
             end
             any except MMovement until
-                W->>T: event resumeDressing end
+                W->>T: event resumeDressing
+            end
         end
     }
         
@@ -174,20 +439,47 @@ specification group RAD {
             opt
                 any except MMovement until
                     alt
-                        T->>W: op setEEPos(any) else
-                        T->>W: op setEEForces(any) end
+                        T->>W: op setEEPos(any)
+                    else
+                        T->>W: op setEEForces(any)
+                    end
                 end
             end
             any except MMovement until
-                W->>T: event collisionResume end
+                W->>T: event collisionResume
+            end
+        end
+        any except MCollision until
+            deadlock (on T)
         end
     }
-message set MStops = {
+        
+    message set MNoise = {
+        W->>T: event backgroundNoiseLevel(any)
+    }
+    message set MStops = {
         W->>T: event emergencyStop,
         W->>T: event resumeDressing,
         W->>T: event collisionStop,
         W->>T: event collisionResume,
-        W->>T: event otherAgentDetected(any)
+        W->>T: event otherAgentDetected(any),
+        W->>T: event backgroundNoiseLevel(any),        
+        T->>W: op disableStoppedMode(),
+        T->>W: op collisionHRIInteraction(),
+        T->>W: op enableCompliantMode(),
+        T->>W: op disableCompliantMode()
+    }
+    message set MStopRelated = {
+        W->>T: event emergencyStop,
+        W->>T: event resumeDressing,
+        W->>T: event collisionStop,
+        W->>T: event collisionResume,
+        W->>T: event otherAgentDetected(any),
+        W->>T: event backgroundNoiseLevel(any),
+        T->>W: op disableStoppedMode(),
+        T->>W: op collisionHRIInteraction(),
+        T->>W: op enableCompliantMode(),
+        T->>W: op disableCompliantMode()
     }
     message set MU = universe
     message set MJoints = {
@@ -198,6 +490,12 @@ message set MStops = {
     message set MStop = {
         W->>T: event emergencyStop,
         W->>T: event resumeDressing
+    }
+    message set MUserPresence = {
+        W->>T: event userPresent(any)
+    }
+    message set MOtherAgent = {
+        W->>T: event otherAgentDetected(any)
     }
     message set MCollision = {
         W->>T: event collisionStop,
@@ -268,7 +566,11 @@ message set MStops = {
         T->>W: event movementWasAllowed,
         T->>W: event stepMoved,
         W->>T: event garmentDetected(any),
-        T->>W: op detectGarment()
+        T->>W: op detectGarment(),
+        T->>W: op disableStoppedMode(),
+        T->>W: op collisionHRIInteraction(),
+        T->>W: op enableCompliantMode(),
+        T->>W: op disableCompliantMode()
     }
     actors = { target as T, world as W }
 }
@@ -278,12 +580,43 @@ message set MStops = {
 //// , MC->>W: event forceApplied
 specification group RADInternal {
     target = components of controller radcontrol::CDressingControl
-    actors = {
-        component radcontrol::CDressingControl::stm_dressing as DC,
-        component radcontrol::CDressingControl::stm_movement as MC,
-        component radcontrol::CDressingControl::stm_stop     as ES,
-        world as W
-    } 
+    sequence DressingSequence {
+        actors DC, MC, ES and W
+        loop (at least 0)
+            any except MRelevant until
+                alt
+                    DC->>MC: event movementStart(any)
+                else
+                    DC->>MC: event forceStart(any)
+                end
+            end
+            any except MRelevant until
+                MC->>ES: event movementStarted
+            end
+            loop (at least 0)
+                any except MRelevant until
+                    ES->>MC: event allowMovement
+                end
+                any except MRelevant until
+                    alt
+                        MC->>W: event stepMoved
+                    else
+                        MC->>W: event forceApplied
+                    end
+                end
+                any except MRelevant until
+                    MC->>ES: event movementOccurred
+                end
+            end
+            any except MRelevant until
+                MC->>ES: event movementEnded
+            end
+            any except MRelevant until
+                MC->>DC: event movementEnd
+            end
+        end
+    }
+    
     message set MRelevant = {
         DC->>MC: event movementStart(any),
         ES->>MC: event allowMovement,
@@ -298,147 +631,38 @@ specification group RADInternal {
         MC->>ES: event movementOccurred,
         MC->>ES: event movementStarted,
         MC->>ES: event movementEnded
-    }
-    sequence DressingSequence {
-        actors DC, MC, ES and W
-        loop (at least 0)
-            any except MRelevant until
-                alt
-                    DC->>MC: event movementStart(any)
-                else
-                    DC->>MC: event forceStart(any)
-                end
-            end
-            any except MRelevant until
-                MC->>ES: event movementStarted end
-            loop (at least 0)
-                any except MRelevant until
-                    ES->>MC: event allowMovement end
-                any except MRelevant until
-                    alt
-                        MC->>W: event stepMoved else
-                        MC->>W: event forceApplied end
-                end
-                any except MRelevant until
-                    MC->>ES: event movementOccurred end
-            end
-            any except MRelevant until
-                MC->>ES: event movementEnded end
-            any except MRelevant until
-                MC->>DC: event movementEnd end
-        end
-    }
-    
-    sequence DressingSequence2a {
-        actors DC, MC, ES and W
-        loop (at least 0)
-            par
-                any except MRelevant until
-                    ES->>MC: event allowMovement end
-            and
-                any except MRelevant until
-                    DC->>MC: event movementStart(any) end
-            end
-            any except MRelevant until
-                alt
-                    MC->>W: event stepMoved else
-                    MC->>W: event forceApplied end
-            end
-            any except MRelevant until
-                MC->>ES: event movementOccurred end
-            any except MRelevant until
-                MC->>DC: event movementEnd end
-        end
-    }
-    
-    sequence DressingSequence2b {
-        actors DC, MC, ES and W
-        alt
-            any except MRelevant until
-                ES->>MC: event allowMovement
-                any except MRelevant until
-                    DC->>MC: event movementStart(any) end
-            end
-        else
-            any except MRelevant until
-                DC->>MC: event movementStart(any)
-                any except MRelevant until
-                    ES->>MC: event allowMovement end
-            end
-        end
-        any except MRelevant until
-            alt
-                MC->>W: event stepMoved else
-                MC->>W: event forceApplied end
-        end
-        any except MRelevant until
-            MC->>ES: event movementOccurred end
-        any except MMCtoES until
-            MC->>DC: event movementEnd end
-        any until
-            deadlock (on DC)
-        end
-    }
-    
-    sequence DressingSequence3 {
-        actors DC, MC, ES and W
-        par
-            any except MRelevant until
-                ES->>MC: event allowMovement end
-        and
-            any except MRelevant until
-                DC->>MC: event movementStart(any) end
-        end
-        any except MRelevant until
-            alt
-                MC->>W: event stepMoved else
-                MC->>W: event forceApplied end
-        end
-        any except MRelevant until
-            MC->>ES: event movementOccurred end
-        any except MRelevant until
-            alt
-                MC->>W: event stepMoved else
-                MC->>W: event forceApplied end
-        end
-        any except MRelevant until
-            MC->>ES: event movementOccurred end
-        loop (at least 0)
-            any except MRelevant until
-                ES->>W: event allowMovement end
-            any except MRelevant until
-                alt
-                    MC->>W: event stepMoved else
-                    MC->>W: event forceApplied end
-            end
-            any except MRelevant until
-                MC->>ES: event movementOccurred end
-        end
-        loop (at least 0)
-            par
-                any except MRelevant until
-                    MC->>DC: event movementEnd end
-                any except MRelevant until
-                    DC->>MC: event movementStart(any) end
-            and
-                ES->>MC: event allowMovement end
-        end
-                
-    }
-}
+    } actors = {
+        component radcontrol::CDressingControl::stm_dressing as DC } actors = {
+        component radcontrol::CDressingControl::stm_movement as MC } actors = {
+        component radcontrol::CDressingControl::stm_stop     as ES } actors = {
+        world as W
+    } }
    	    	     
-assertion D1: RAD::DressingRequest holds in the traces model
+assertion PHLR2: RAD::RespondsToCollision holds in the traces model
+assertion PHLR4: RAD::RespondsToOtherAgent holds in the traces model
+assertion PHRL5: RAD::DressingRequestLiveness holds in the timed model
+// Also covers PHLR9
+assertion PHLR69: RAD::DressingRequest holds in the traces model
+assertion PHLR6: RAD::DressingRequestMotion is not observed in the traces model
+assertion PHLR9: RAD::DressingRequestPickingUpGarment is not observed in the traces model
+assertion PHLR7: RAD::DressingRequestResponseDeadline holds in the timed model
+assertion PHLR10: RAD::RespondToUserLeft holds in the traces model
+assertion PHLR14: RAD::NoMovementAfterDressed holds in the traces model
+assertion PHLR15: RAD::SnaggingDetection holds in the traces model
+
 // Currently vacuously true since we do not get this far
 assertion D2: RAD::DressesInOrder holds in the traces model
-assertion D3: RAD::DressesOutOfOrder does not hold in the traces model
+assertion D3: RAD::DressesOutOfOrder is not observed in the traces model
+assertion D3h: RAD::DressesOutOfOrder does not hold in the traces model
+// assertion D2o: RAD::DressesInOrder is observed in the traces model
 assertion D4: RAD::RespondToStop holds in the traces model
+// Too strong so does not hold
 assertion D5: RAD::RespondToStopImmediately holds in the traces model
 assertion D6: RAD::RespondToCollision holds in the traces model
-assertion D7: RAD::RespondToStopQuickly holds in the timed model
+assertion D7: RAD::RespondToStopQuickly holds in the traces model
+assertion D7t: RAD::RespondToStopQuickly holds in the timed model
 assertion D8: RAD::MovementToGripGarment holds in the traces model
 assertion D9: RAD::MovementToGripGarmentPar holds in the traces model
 assertion D10: RAD::CorrectHandling holds in the traces model
 assertion D10t: RAD::CorrectHandling holds in the timed model
 assertion D11: RADInternal::DressingSequence holds in the traces model
-assertion D12a: RADInternal::DressingSequence2a holds in the traces model
-assertion D12b: RADInternal::DressingSequence2b holds in the traces model

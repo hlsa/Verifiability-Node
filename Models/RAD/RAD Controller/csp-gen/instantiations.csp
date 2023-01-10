@@ -75,6 +75,39 @@ definitions_dist(v1,v2) = if v1 == v2 then 0 else 1
 definitions_sqrt(0) = 0
 definitions_sqrt(1) = 1
 
+-- generate string
+nametype core_string = LSeq(Char,2)
+
+-- generate definitions_norm
+definitions_norm(v) = 0
+
+-- generate definitions_targetForces
+definitions_targetForces(current,target,targetTotalForce) = (0, 0, 0)
+
+-- generate pkg254_radcontrol_sqrt
+pkg254_radcontrol_sqrt(x) = 0
+
+-- generate pkg254_radcontrol_scalarMul
+pkg254_radcontrol_scalarMul(s,v) = (0, 0, 0)
+
+-- generate -- OPERATION BOUNDS
+
+-- MODULE CONSTANTS
+
+-- CONTROLLER CONSTANTS
+
+-- STATEMACHINE CONSTANTS
+
+-- OPERATION CONSTANTS
+
+-- BASIC TYPES
+
+-- generate pkg254_radcontrol_pow
+pkg254_radcontrol_pow(x,i) = 0
+
+-- generate Plus
+Plus(e1,e2,T) = if member(e1+e2,T) then e1+e2 else e1
+
 -- generate --
 
 -- MODULE CONSTANTS
@@ -89,43 +122,31 @@ definitions_sqrt(1) = 1
 
 -- generate nat
 nametype core_nat = union({0..2},{calc_type_min(Union(
-			{{1},{0..2},{1},{0..2},{2},{2},{2},{2},{2},{2},{2},{2}}))..calc_type_max(Union({{1},{0..2},{1},{0..2},{2},{2},{2},{2},{2},{2},{2},{2}}))})
+			{{1},{0..2},{1},{0..2},{1},{0..2},{0..2},{0..2},{0..2},{0..2},{1},{0..2},{1},{0..2},{1},{0..2},{0..2},{0..2},{0..2},{0..2},{1},{0..2},{2},{2},{2},{2},{2},{2},{2},{2},{2},{2},{2},{2},{1}}))..calc_type_max(Union({{1},{0..2},{1},{0..2},{1},{0..2},{0..2},{0..2},{0..2},{0..2},{1},{0..2},{1},{0..2},{1},{0..2},{0..2},{0..2},{0..2},{0..2},{1},{0..2},{2},{2},{2},{2},{2},{2},{2},{2},{2},{2},{2},{2},{1}}))})
 
 -- generate core_clock_type
 nametype core_clock_type = {0..10}
 
 -- BASIC FUNCTIONS
 
--- generate string
-nametype core_string = LSeq(Char,2)
+-- generate pkg254_radcontrol_norm
+pkg254_radcontrol_norm(v) = 0
 
--- generate definitions_norm
-definitions_norm(v) = 0
-
--- generate definitions_targetForces
-definitions_targetForces(current,target,targetTotalForce) = (0, 0, 0)
+-- generate pkg254_radcontrol_targetForces
+pkg254_radcontrol_targetForces(current,target,targetTotalForce) = (0, 0, 0)
 
 -- generate int
 nametype core_int = union({ -2..2},{calc_type_min(Union(
-			{{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{ -2..2},{ -2..2},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{currentJoint|currentJoint <- { -2..2}},{2},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{step|step <- { -2..2}},{2},{2},{2},{2},{2},{currentJoint|currentJoint <- { -2..2}},{step|step <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}}}))..calc_type_max(Union({{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{ -2..2},{ -2..2},{0},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{currentJoint|currentJoint <- { -2..2}},{2},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{step|step <- { -2..2}},{2},{2},{2},{2},{2},{currentJoint|currentJoint <- { -2..2}},{step|step <- { -2..2}},{Minus(i, 1, { -2..2})|i <- { -2..2}}}))})
-
--- generate -- OPERATION BOUNDS
-
--- MODULE CONSTANTS
-
--- CONTROLLER CONSTANTS
-
--- STATEMACHINE CONSTANTS
-
--- OPERATION CONSTANTS
-
--- BASIC TYPES
+			{{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{1},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{0},{ -2..2},{0},{ -2..2},{ -2..2},{1},{0..2},{ -2..2},{1},{0..2},{0},{ -2..2},{0},{ -2..2},{ -2..2},{0},{ -2..2},{0..2},{0..2},{0..2},{0..2},{0},{ -2..2},{ -2..2},{1},{0..2},{1},{0..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{0..2},{0..2},{0..2},{0..2},{ -2..2},{ -2..2},{ -2..2},{ -2..2},{1},{ -2..2},{2},{ -2..2},{1},{0..2},{currentJoint|currentJoint <- { -2..2}},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{step|step <- { -2..2}},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2},{2},{currentJoint|currentJoint <- { -2..2}},{2},{step|step <- { -2..2}},{2},{step|step <- { -2..2}},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{currentJoint|currentJoint <- { -2..2}},{2},{1}}))..calc_type_max(Union({{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{currentJoint|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{Minus(currentJoint, 1, { -2..2})|currentJoint <- { -2..2}},{1},{ -2..2},{ -2..2},{ -2..2},{2},{ -2..2},{1},{0..2},{0},{ -2..2},{0},{ -2..2},{ -2..2},{1},{0..2},{ -2..2},{1},{0..2},{0},{ -2..2},{0},{ -2..2},{ -2..2},{0},{ -2..2},{0..2},{0..2},{0..2},{0..2},{0},{ -2..2},{ -2..2},{1},{0..2},{1},{0..2},{0},{ -2..2},{2},{ -2..2},{1},{0..2},{0..2},{0..2},{0..2},{0..2},{ -2..2},{ -2..2},{ -2..2},{ -2..2},{1},{ -2..2},{2},{ -2..2},{1},{0..2},{currentJoint|currentJoint <- { -2..2}},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{step|step <- { -2..2}},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{2},{2},{currentJoint|currentJoint <- { -2..2}},{2},{step|step <- { -2..2}},{2},{step|step <- { -2..2}},{2},{2},{Minus(i, 1, { -2..2})|i <- { -2..2}},{2},{currentJoint|currentJoint <- { -2..2}},{2},{1}}))})
 
 -- generate Div
 Div(e1,e2,T) = if member(e1/e2,T) then e1/e2 else e1
 
 -- generate Neg
 Neg(e1,T) = if member(-e1,T) then -e1 else e1
+
+-- generate pkg254_radcontrol_jointPosition
+pkg254_radcontrol_jointPosition(xs,i) = (0, 0, 0)
 
 -- generate boolean
 nametype core_boolean = Bool
@@ -136,8 +157,8 @@ Mult(e1,e2,T) = if member(e1*e2,T) then e1*e2 else e1
 -- generate Modulus
 Modulus(e1,e2,T) = if member(e1%e2,T) then e1%e2 else e1
 
--- generate Plus
-Plus(e1,e2,T) = if member(e1+e2,T) then e1+e2 else e1
+-- generate pkg254_radcontrol_dist
+pkg254_radcontrol_dist(v1,v2) = 0
 
 -- generate Minus
 Minus(e1,e2,T) = if member(e1-e2,T) then e1-e2 else e1

@@ -23,7 +23,7 @@ connection Franka on snaggingDetected to ctrl_radcontrol on snaggingDetected ( _
 		event forceWasAllowed
 
 	event forceApplied
-	}
+	provides SafetyModeControl }
 
 	cref ctrl_radcontrol = CDressingControl
 connection Franka on resumeDressing to ctrl_radcontrol on resumeDressing ( _async )

@@ -37,9 +37,9 @@ uses FrankaArmEvents uses ForceEvents
 		
 		
 		
+		
 		movementStart ? vtarget
-		action 
-	arrivedAtTarget = false
+		action arrivedAtTarget = false
 	}
 	transition t6 {
 		from NotEngaged
@@ -52,10 +52,9 @@ uses FrankaArmEvents uses ForceEvents
 		
 		
 		
+		
 		forceStart ? vtarget
-		action 
-	
-	arrivedAtTarget = false
+		action arrivedAtTarget = false
 	}
 	transition t2 {
 		from FreeMovement
@@ -104,7 +103,8 @@ requires PIDState
 			from Move
 			to s0
 			trigger 
-			endEffectorPosition ? vcurrent
+			
+		endEffectorPosition ? vcurrent
 		}
 		transition t0 {
 			from s0
@@ -164,7 +164,8 @@ requires PIDState
 			from Move
 			to s0
 			trigger 
-			endEffectorPosition ? vcurrent
+			
+		endEffectorPosition ? vcurrent
 		}
 	transition t0 {
 			from CheckForce
