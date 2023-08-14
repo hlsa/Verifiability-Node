@@ -11,10 +11,9 @@ connection Franka on snaggingDetected to ctrl_radcontrol on snaggingDetected ( _
 	connection Franka on invalidTrajectory to ctrl_radcontrol on invalidTrajectory ( _async )
 	connection Franka on armConfig to ctrl_radcontrol on armConfig ( _async )
 	robotic platform Franka {
-		uses DressingEvents provides FrankaArmControl uses StopEvents provides SensorOperations uses EnvironmentalEvents provides HRIOperations 
-		event dressedJoint : int
-		uses FrankaArmEvents
-	event stepMoved
+		uses DressingEvents provides FrankaArmControl uses StopEvents provides SensorOperations provides HRIOperations 
+		
+		event stepMoved
 		event movementInitiated
 		event allowedMovement
 		event noticedMovementOcurred
@@ -26,20 +25,13 @@ connection Franka on snaggingDetected to ctrl_radcontrol on snaggingDetected ( _
 	provides SafetyModeControl }
 
 	cref ctrl_radcontrol = CDressingControl
-connection Franka on resumeDressing to ctrl_radcontrol on resumeDressing ( _async )
-	connection Franka on emergencyStop to ctrl_radcontrol on emergencyStop ( _async )
 
-	connection Franka on otherAgentDetected to ctrl_radcontrol on otherAgentDetected ( _async )
-	connection Franka on backgroundNoiseLevel to ctrl_radcontrol on backgroundNoiseLevel ( _async )
-connection Franka on gripCorrect to ctrl_radcontrol on gripCorrect ( _async )
+	connection Franka on gripCorrect to ctrl_radcontrol on gripCorrect ( _async )
 	connection Franka on gripperEngaged to ctrl_radcontrol on gripperEngaged ( _async )
-	connection ctrl_radcontrol on dressedJoint to Franka on dressedJoint ( _async )
-connection ctrl_radcontrol on correctedMovement to Franka on correctedMovement ( _async )
+
+	connection ctrl_radcontrol on correctedMovement to Franka on correctedMovement ( _async )
 connection Franka on secondHandDetected to ctrl_radcontrol on secondHandDetected ( _async )
-connection Franka on collisionStop to ctrl_radcontrol on collisionStop ( _async )
-connection Franka on forceEndEffector to ctrl_radcontrol on forceEndEffector ( _async )
-	connection Franka on collisionResume to ctrl_radcontrol on collisionResume ( _async )
-	connection Franka on endEffectorPosition to ctrl_radcontrol on endEffectorPosition ( _async )
+
 	connection Franka on userDressed to ctrl_radcontrol on userDressed ( _async )
 connection Franka on userMoved to ctrl_radcontrol on userMoved ( _async )
 connection ctrl_radcontrol on stepMoved to Franka on stepMoved ( _async )
@@ -50,11 +42,13 @@ connection ctrl_radcontrol on movementInitiated to Franka on movementInitiated (
 connection ctrl_radcontrol on forceInitiated to Franka on forceInitiated ( _async )
 	connection ctrl_radcontrol on forceWasAllowed to Franka on forceWasAllowed ( _async )
 
-	connection Franka on handlingCorrect to ctrl_radcontrol on handlingCorrect ( _async )
-connection ctrl_radcontrol on garmentAtHand to Franka on garmentAtHand ( _async )
+	connection ctrl_radcontrol on garmentAtHand to Franka on garmentAtHand ( _async )
 	connection ctrl_radcontrol on arrivedAtGarment to Franka on arrivedAtGarment ( _async )
 	connection ctrl_radcontrol on garmentGripped to Franka on garmentGripped ( _async )
 	connection ctrl_radcontrol on orientedGarment to Franka on orientedGarment ( _async )
 connection ctrl_radcontrol on forceApplied to Franka on forceApplied ( _async )
+
+connection ctrl_radcontrol on dressedJoint to Franka on dressedJoint ( _async )
+
 }
 

@@ -1,0 +1,78 @@
+package radcontrol_isolated
+
+import definitions::*
+import stop::*
+import movement::*
+import dressingcontrol::*
+import PID::*
+
+
+controller CDressingControlIso {
+	requires FrankaArmControl
+	requires HRIOperations
+	requires SensorOperations 
+	
+	
+	uses DressingEvents
+	uses PIDState
+	uses PIDParams 
+	uses HRICoordination 
+	uses MovementEvents
+	uses ForceEvents
+	requires SafetyModeControl
+	
+	
+
+	
+	
+	
+	
+	
+
+	
+	
+
+	
+
+	connection CDressingControlIso on snaggingDetected to stm_dressing on snaggingDetected ( _async )
+	connection CDressingControlIso on invalidTrajectory to stm_dressing on invalidTrajectory ( _async )
+	connection CDressingControlIso on invalidPoseDetected to stm_dressing on invalidPoseDetected ( _async )
+	connection CDressingControlIso on userInterrupt to stm_dressing on userInterrupt ( _async )
+
+	connection CDressingControlIso on poseDetected to stm_dressing on poseDetected ( _async )
+	connection CDressingControlIso on dressingRequest to stm_dressing on dressingRequest ( _async )
+	connection CDressingControlIso on garmentDetected to stm_dressing on garmentDetected ( _async )
+
+	connection CDressingControlIso on armConfig to stm_dressing on armConfig ( _async )
+	connection CDressingControlIso on gripCorrect to stm_dressing on gripCorrect ( _async )
+
+	connection CDressingControlIso on secondHandDetected to stm_dressing on secondHandDetected ( _async )
+
+	connection CDressingControlIso on userDressed to stm_dressing on userDressed ( _async )
+
+connection stm_dressing on correctedMovement to CDressingControlIso on correctedMovement ( _async )
+connection CDressingControlIso on gripperEngaged to stm_dressing on gripperEngaged ( _async )
+
+	connection CDressingControlIso on userMoved to stm_dressing on userMoved ( _async )
+
+	connection stm_dressing on garmentAtHand to CDressingControlIso on garmentAtHand ( _async )
+	connection stm_dressing on arrivedAtGarment to CDressingControlIso on arrivedAtGarment ( _async )
+	connection stm_dressing on garmentGripped to CDressingControlIso on garmentGripped ( _async )
+	connection stm_dressing on orientedGarment to CDressingControlIso on orientedGarment ( _async )
+
+	connection stm_dressing on checkHRI to CDressingControlIso on checkHRI ( _async )
+
+	connection CDressingControlIso on allowHRI to stm_dressing on allowHRI ( _async )
+
+connection stm_dressing on movementStart to CDressingControlIso on movementStart ( _async )
+connection CDressingControlIso on movementEnd to stm_dressing on movementEnd ( _async )
+
+	connection stm_dressing on forceStart to CDressingControlIso on forceStart ( _async )
+
+	connection CDressingControlIso on forceEnd to stm_dressing on forceEnd ( _async )
+sref stm_dressing = SDressingControl
+	connection stm_dressing on dressedJoint to CDressingControlIso on dressedJoint ( _async )
+connection stm_dressing on gripTimeoutHRI to CDressingControlIso on gripTimeoutHRI ( _async )
+	connection CDressingControlIso on handlingCorrect to stm_dressing on handlingCorrect ( _async )
+}
+

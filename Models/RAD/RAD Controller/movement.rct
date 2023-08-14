@@ -28,45 +28,26 @@ uses FrankaArmEvents uses ForceEvents
 	transition t1 {
 		from NotEngaged
 		to FreeMovement
-		trigger 
-		
-	
-	
-		
-		
-		
-		
-		
-		
-		movementStart ? vtarget
 		action arrivedAtTarget = false
 	}
 	transition t6 {
 		from NotEngaged
 		to ForceApplication
-		trigger 
-	
-		
-		
-		
-		
-		
-		
-		
-		forceStart ? vtarget
 		action arrivedAtTarget = false
 	}
 	transition t2 {
 		from FreeMovement
 		to NotEngaged
 		condition arrivedAtTarget
-		action movementEnded ; movementEnd
+		action 
+	movementEnded ; movementEnd
 	}
 	transition t3 {
 		from ForceApplication
 		to NotEngaged
 		condition arrivedAtTarget
-		action movementEnded ; forceEnd
+		action 
+	movementEnded ; forceEnd
 	}
 requires PIDState
 
@@ -84,7 +65,7 @@ requires PIDState
 		}
 
 		state SensePosition {
-			entry endEffectorPosition ? vcurrent ; PIDUpdate ( vcurrent )
+			entry endEffectorPosition ? vcurrent ; PIDUpdate ( vcurrent ) ; checkMovementAllowed
 		}
 		state s0 {
 			entry wait ( step ) ; stepMoved ; arrivedAtTarget = dist ( vtarget , vcurrent ) <= EPSILON
@@ -104,6 +85,7 @@ requires PIDState
 			to s0
 			trigger 
 			
+		
 		endEffectorPosition ? vcurrent
 		}
 		transition t0 {
@@ -128,7 +110,7 @@ requires PIDState
 	state ForceApplication {
 		initial i0
 		state CheckForce {
-			entry forceEndEffector ? fcurrent ; PIDUpdate ( fcurrent )
+			entry forceEndEffector ? fcurrent ; PIDUpdate ( fcurrent ) ; checkMovementAllowed
 		}
 		state Move {
 			entry setEEForces ( o )
@@ -165,6 +147,7 @@ requires PIDState
 			to s0
 			trigger 
 			
+		
 		endEffectorPosition ? vcurrent
 		}
 	transition t0 {

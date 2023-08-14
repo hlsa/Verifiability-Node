@@ -1,0 +1,49 @@
+import definitions::*
+import radcontrol_isolated::*
+
+module RobotAssistedDressingIsolated {
+	robotic platform Franka {
+		uses DressingEvents provides FrankaArmControl uses HRICoordination provides SensorOperations uses MovementEvents provides HRIOperations 
+		
+		uses ForceEvents
+	
+		
+		
+		
+	
+	
+		
+
+	
+	provides SafetyModeControl }
+
+connection Franka on poseDetected to ctrl_ref0 on poseDetected ( _async )
+	connection Franka on snaggingDetected to ctrl_ref0 on snaggingDetected ( _async )
+	connection Franka on userInterrupt to ctrl_ref0 on userInterrupt ( _async )
+	connection Franka on garmentDetected to ctrl_ref0 on garmentDetected ( _async )
+	connection ctrl_ref0 on dressedJoint to Franka on dressedJoint ( _async )
+	connection Franka on invalidPoseDetected to ctrl_ref0 on invalidPoseDetected ( _async )
+	connection Franka on gripCorrect to ctrl_ref0 on gripCorrect ( _async )
+	connection Franka on gripperEngaged to ctrl_ref0 on gripperEngaged ( _async )
+	connection ctrl_ref0 on orientedGarment to Franka on orientedGarment ( _async )
+	connection Franka on dressingRequest to ctrl_ref0 on dressingRequest ( _async )
+	connection Franka on secondHandDetected to ctrl_ref0 on secondHandDetected ( _async )
+	connection Franka on userMoved to ctrl_ref0 on userMoved ( _async )
+	connection Franka on invalidTrajectory to ctrl_ref0 on invalidTrajectory ( _async )
+	connection ctrl_ref0 on movementStart to Franka on movementStart ( _async )
+	connection Franka on movementEnd to ctrl_ref0 on movementEnd ( _async )
+	connection ctrl_ref0 on forceStart to Franka on forceStart ( _async )
+	connection Franka on forceEnd to ctrl_ref0 on forceEnd ( _async )
+	connection Franka on allowHRI to ctrl_ref0 on allowHRI ( _async )
+	connection ctrl_ref0 on checkHRI to Franka on checkHRI ( _async )
+	connection Franka on armConfig to ctrl_ref0 on armConfig ( _async )
+	connection ctrl_ref0 on arrivedAtGarment to Franka on arrivedAtGarment ( _async )
+	connection Franka on userDressed to ctrl_ref0 on userDressed ( _async )
+	connection ctrl_ref0 on garmentGripped to Franka on garmentGripped ( _async )
+	connection ctrl_ref0 on correctedMovement to Franka on correctedMovement ( _async )
+	connection ctrl_ref0 on garmentAtHand to Franka on garmentAtHand ( _async )
+	cref ctrl_ref0 = CDressingControlIso
+connection ctrl_ref0 on gripTimeoutHRI to Franka on gripTimeoutHRI ( _async )
+	connection Franka on handlingCorrect to ctrl_ref0 on handlingCorrect ( _async )
+}
+

@@ -11,65 +11,70 @@ stm SDressingControl {
 	
 	var currentJoint : int = 2
 	state GarmentAcquisition {
-		state LookingForGarment {
-			entry detectGarment ( )
-		}
 		initial i0
 
-		state EngageGarment {
-			entry grip()
+		state confirmGripCorrect {
+			entry checkCorrectHandling ( )
+		}
+		junction j0
+
+		state Gripped {
 		}
 		transition t0 {
 			from i0
-			to LookingForGarment
+			to GripGarment
 		}
-		transition t1 {
-			from LookingForGarment
-			to Moving
-			trigger 
-		
-		
-			
-			
-			garmentDetected ? garmentPosition
-			action movementStart ! garmentPosition
-		}
-
 		transition t5 {
 			from j0
 			to Gripped
 		condition isHandlingCorrect
 			action orientedGarment
 		}
-	state Moving {
+		state GripGarment {
+			state LookingForGarment {
+				entry detectGarment ( )
+			}
+			initial i0
+			state Moving {
+			entry movementStart ! garmentPosition
+			}
+			state EngageGarment {
+				entry grip ( )
+			}
+			transition t0 {
+				from i0
+				to LookingForGarment
+			}
+			transition t1 {
+				from LookingForGarment
+				to Moving
+				trigger garmentDetected ? garmentPosition
+				<{ 1
+			}
+			}
+			transition t2 {
+				from Moving
+				to EngageGarment
+				trigger movementEnd
+			}
+		state CheckGrip {
+			}
+			transition t3 {
+				from EngageGarment
+				to CheckGrip
+				trigger gripCorrect ? isGripperEngaged
+			}
+			transition t4 {
+				from CheckGrip
+				to LookingForGarment
+				condition not isGripperEngaged
+			}
 		}
 		final f0
-
-		transition t2 {
-			from Moving
-			to EngageGarment
-			trigger 
-		movementEnd
-		}
-	state confirmGripCorrect {
-			entry checkCorrectHandling ( )
-		}
-		junction j0
-
-		junction j1
 		transition t3 {
 			from confirmGripCorrect
 			to j0
-			trigger 
-		
-		handlingCorrect ? isHandlingCorrect
-		}
-		transition t4 {
-			from EngageGarment
-			to j1
-			trigger 
-		
-		gripCorrect ? isGripperEngaged
+			trigger handlingCorrect ? isHandlingCorrect
 		}
 		transition t7 {
 			from j0
@@ -80,25 +85,24 @@ stm SDressingControl {
 		not isHandlingCorrect
 			action reorientGarment ( )
 		}
-		transition t8 {
-			from j1
-			to confirmGripCorrect
-			condition isGripperEngaged
-			action garmentGripped
-		}
-		state Gripped {
-		}
-		transition t9 {
-			from j1
-			to LookingForGarment
-			condition not isGripperEngaged
-		}
-	entry garmentAcquired = false
-	transition t6 {
+		transition t6 {
 			from Gripped
 			to f0
 			action garmentAcquired = true
 		}
+	transition t1 {
+			from GripGarment
+			to confirmGripCorrect
+			condition isGripperEngaged
+			action garmentGripped
+		}
+		transition t2 {
+			from GripGarment
+			to f0
+			condition sinceEntry ( GarmentAcquisition::GripGarment ) > 6
+			action gripTimeoutHRI
+		}
+	entry garmentAcquired = false
 	}
 	state GarmentToUser {
 		initial i0
@@ -125,11 +129,13 @@ stm SDressingControl {
 			from Moving
 			to f0
 			trigger 
+			
 			movementEnd
-			action garmentAtHand ; garmentWithUser = true
+			action 
+		garmentAtHand ; garmentWithUser = true
 		}
 		state Moving {
-		entry movementStart ! targetPosition
+			entry movementStart ! targetPosition
 		}
 	}
 	state DressingLoop {
@@ -138,7 +144,7 @@ stm SDressingControl {
 			entry detectUserPose ( )
 		}
 		state MovingToJoint {
-		entry forceStart ! targetPosition
+			entry forceStart ! targetPosition
 		}
 		final f0
 		transition t0 {
@@ -178,6 +184,7 @@ stm SDressingControl {
 			to FaultCheck
 			trigger 
 			
+		
 		forceEnd
 		}
 		state FaultCheck {
@@ -224,7 +231,7 @@ transition t0 {
 		trigger 
 	dressingRequest
 	}
-requires SensorOperations event dressedJoint : int
+requires SensorOperations 
 uses MovementEvents var garmentAcquired : boolean = false
 	var garmentWithUser : boolean = false
 var targetPosition : vector(real, 3)
@@ -258,13 +265,15 @@ var firstArmDressed : boolean = false
 			from DetectSecondHand
 			to MovingToSecondHand
 			trigger 
+			
 			secondHandDetected ? targetPosition
 			action movementStart ! targetPosition
 		}
 		transition t3 {
 			from MovingToSecondHand
 			to CheckingUserDressed
-			trigger movementEnd
+			trigger 
+		movementEnd
 		}
 		transition t4 {
 			from CheckingUserDressed
